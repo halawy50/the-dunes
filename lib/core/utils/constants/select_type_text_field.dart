@@ -1,0 +1,10 @@
+
+enum SelectTypeTextField {
+  EMAIL,
+  PASSWORD,
+  TEXT,
+  NUMBER,
+  PHONE_NUMBER,
+  LIST_SINGLE_SELECT,
+  LIST_MULTI_SELECT
+}

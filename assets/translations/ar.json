@@ -1,0 +1,30 @@
+{
+  "gender": {
+    "male": "زكر",
+    "female": "انثي"
+  },
+  "login": {
+    "get_started": "ابدأ الآن",
+    "login_description": "يرجى تسجيل الدخول باستخدام بيانات الاعتماد الخاصة بك للمتابعة",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "input_email": "أدخل بريدك الإلكتروني",
+    "input_password": "أدخل كلمة المرور",
+    "login_button": "تسجيل الدخول",
+    "fill_all_fields": "يرجى ملء جميع الحقول",
+    "login_success": "تم تسجيل الدخول بنجاح!",
+    "email_invalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+    "password_min_length": "يجب أن تكون كلمة المرور على الأقل 6 أحرف"
+  },
+  "common": {
+    "required": "*",
+    "select_all": "تحديد الكل"
+  },
+  "errors": {
+    "page_not_found": "الصفحة غير موجودة: {uri}"
+  },
+  "file": {
+    "text_split_success": "تم تقسيم النص إلى {count} ملف(ات)",
+    "text_split_error": "خطأ في تقسيم النص: {error}"
+  }
+}

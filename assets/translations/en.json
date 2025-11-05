@@ -1,0 +1,30 @@
+{
+  "gender": {
+    "male": "Male",
+    "female": "female"
+  },
+  "login": {
+    "get_started": "Get Started Now",
+    "login_description": "Kindly log in using your credentials to continue",
+    "email": "Email",
+    "password": "Password",
+    "input_email": "Input your email",
+    "input_password": "Input your password",
+    "login_button": "Login",
+    "fill_all_fields": "Please fill in all fields",
+    "login_success": "Login successful!",
+    "email_invalid": "Please enter a valid email address",
+    "password_min_length": "Password must be at least 6 characters"
+  },
+  "common": {
+    "required": "*",
+    "select_all": "Select All"
+  },
+  "errors": {
+    "page_not_found": "Page not found: {uri}"
+  },
+  "file": {
+    "text_split_success": "Text split into {count} file(s)",
+    "text_split_error": "Error splitting text: {error}"
+  }
+}
