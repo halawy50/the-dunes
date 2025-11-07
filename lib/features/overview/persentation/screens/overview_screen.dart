@@ -18,7 +18,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = sl<OverviewCubit>();
+        final cubit = di<OverviewCubit>();
         cubit.init();
         return cubit;
       },

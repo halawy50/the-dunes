@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_dunes/core/utils/app_snackbar.dart';
+import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/dependency_injection/injection_container.dart';
 import 'package:the_dunes/features/booking/persentation/cubit/booking_cubit.dart';
 
@@ -17,7 +18,7 @@ class _BookingScreenState extends State<BookingScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = sl<BookingCubit>();
+        final cubit = di<BookingCubit>();
         cubit.init();
         return cubit;
       },
@@ -40,15 +41,22 @@ class _BookingScreenState extends State<BookingScreen> {
         child: BlocBuilder<BookingCubit, BookingState>(
           builder: (context, state) {
             if (state is BookingLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Container(
+                color: AppColor.GRAY_F6F6F6,
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
               );
             }
 
-            return const Padding(
-              padding: EdgeInsets.all(24.0),
+            return Container(
+              width: double.infinity,
+              color: AppColor.GRAY_F6F6F6,
+              padding: const EdgeInsets.all(24.0),
               child: Center(
-                child: Text('Booking Screen'),
+                child: Text(
+                  'booking.title'.tr(),
+                  style: const TextStyle(fontSize: 20),
+                ),
               ),
             );
           },

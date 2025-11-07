@@ -18,7 +18,8 @@
   },
   "common": {
     "required": "*",
-    "select_all": "Select All"
+    "select_all": "Select All",
+    "logout": "Logout"
   },
   "errors": {
     "page_not_found": "Page not found: {uri}"
@@ -26,5 +27,70 @@
   "file": {
     "text_split_success": "Text split into {count} file(s)",
     "text_split_error": "Error splitting text: {error}"
+  },
+  "navbar": {
+    "analysis": "Analysis",
+    "analysis_subtitle": "View and track the analysis of all booked services",
+    "brand_title": "THE DUNES",
+    "brand_subtitle": "Travel & Tourism",
+    "bookings": "Bookings",
+    "bookings_subtitle": "Manage and monitor all customer bookings",
+    "pickup_time": "Pickup Time",
+    "pickup_time_subtitle": "Manage pickup timings and schedules",
+    "receipt_voucher": "Receipt Voucher",
+    "receipt_voucher_subtitle": "Review and approve payment receipts",
+    "employees": "Employees",
+    "employees_subtitle": "Oversee your team and permissions",
+    "services": "Services",
+    "services_subtitle": "Configure travel packages and activities",
+    "hotels": "Hotels",
+    "hotels_subtitle": "Track partner hotels and availability",
+    "history": "History",
+    "history_subtitle": "Check previous records and adjustments",
+    "settings": "Settings",
+    "settings_subtitle": "Update company preferences"
+  },
+  "analysis": {
+    "title": "Analysis",
+    "success": "Analysis data refreshed"
+  },
+  "booking": {
+    "title": "Bookings",
+    "success": "Booking action completed",
+    "pickup_time": "Pickup Time",
+    "pickup_time_subtitle": "Manage pickup timings and schedules",
+    "pickup_time_success": "Pickup time updated"
+  },
+  "receipt_voucher": {
+    "title": "Receipt Voucher",
+    "success": "Receipt voucher updated"
+  },
+  "employees": {
+    "title": "Employees",
+    "success": "Employee data synced"
+  },
+  "services": {
+    "title": "Services",
+    "success": "Service list refreshed"
+  },
+  "hotels": {
+    "title": "Hotels",
+    "success": "Hotel list refreshed"
+  },
+  "history": {
+    "title": "History",
+    "success": "History updated"
+  },
+  "setting": {
+    "title": "Settings",
+    "success": "Settings saved"
+  },
+  "notification": {
+    "title": "Notifications",
+    "success": "Notifications updated"
+  },
+  "overview": {
+    "title": "Overview",
+    "success": "Overview refreshed"
   }
 }

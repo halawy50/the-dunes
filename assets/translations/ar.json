@@ -18,7 +18,8 @@
   },
   "common": {
     "required": "*",
-    "select_all": "تحديد الكل"
+    "select_all": "تحديد الكل",
+    "logout": "تسجيل الخروج"
   },
   "errors": {
     "page_not_found": "الصفحة غير موجودة: {uri}"
@@ -26,5 +27,70 @@
   "file": {
     "text_split_success": "تم تقسيم النص إلى {count} ملف(ات)",
     "text_split_error": "خطأ في تقسيم النص: {error}"
+  },
+  "navbar": {
+    "analysis": "التحليل",
+    "analysis_subtitle": "عرض ومتابعة تحليل جميع الخدمات المحجوزة",
+    "brand_title": "ذا ديونز",
+    "brand_subtitle": "للسفر والسياحة",
+    "bookings": "الحجوزات",
+    "bookings_subtitle": "إدارة ومتابعة جميع حجوزات العملاء",
+    "pickup_time": "مواعيد الاستلام",
+    "pickup_time_subtitle": "إدارة جداول ومواعيد الاستلام",
+    "receipt_voucher": "سندات القبض",
+    "receipt_voucher_subtitle": "مراجعة واعتماد سندات الدفع",
+    "employees": "الموظفون",
+    "employees_subtitle": "إدارة الفريق والصلاحيات",
+    "services": "الخدمات",
+    "services_subtitle": "تهيئة الباقات والأنشطة السياحية",
+    "hotels": "الفنادق",
+    "hotels_subtitle": "متابعة الفنادق الشريكة والتوافر",
+    "history": "السجل",
+    "history_subtitle": "مراجعة السجلات والتعديلات السابقة",
+    "settings": "الإعدادات",
+    "settings_subtitle": "تحديث إعدادات الشركة"
+  },
+  "analysis": {
+    "title": "التحليل",
+    "success": "تم تحديث بيانات التحليل"
+  },
+  "booking": {
+    "title": "الحجوزات",
+    "success": "تم تنفيذ عملية الحجز",
+    "pickup_time": "مواعيد الاستلام",
+    "pickup_time_subtitle": "إدارة جداول ومواعيد الاستلام",
+    "pickup_time_success": "تم تحديث مواعيد الاستلام"
+  },
+  "receipt_voucher": {
+    "title": "سندات القبض",
+    "success": "تم تحديث سندات القبض"
+  },
+  "employees": {
+    "title": "الموظفون",
+    "success": "تم تحديث بيانات الموظفين"
+  },
+  "services": {
+    "title": "الخدمات",
+    "success": "تم تحديث قائمة الخدمات"
+  },
+  "hotels": {
+    "title": "الفنادق",
+    "success": "تم تحديث قائمة الفنادق"
+  },
+  "history": {
+    "title": "السجل",
+    "success": "تم تحديث السجل"
+  },
+  "setting": {
+    "title": "الإعدادات",
+    "success": "تم حفظ الإعدادات"
+  },
+  "notification": {
+    "title": "الإشعارات",
+    "success": "تم تحديث الإشعارات"
+  },
+  "overview": {
+    "title": "نظرة عامة",
+    "success": "تم تحديث النظرة العامة"
   }
 }

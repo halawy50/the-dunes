@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_dunes/core/utils/app_snackbar.dart';
+import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/dependency_injection/injection_container.dart';
 import 'package:the_dunes/features/services/persentation/cubit/service_cubit.dart';
 
@@ -17,7 +18,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = sl<ServiceCubit>();
+        final cubit = di<ServiceCubit>();
         cubit.init();
         return cubit;
       },
@@ -26,7 +27,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
           if (state is ServiceSuccess) {
             AppSnackbar.showTranslated(
               context: context,
-              translationKey: 'service.success',
+              translationKey: 'services.success',
               type: SnackbarType.success,
             );
           } else if (state is ServiceError) {
@@ -40,15 +41,22 @@ class _ServiceScreenState extends State<ServiceScreen> {
         child: BlocBuilder<ServiceCubit, ServiceState>(
           builder: (context, state) {
             if (state is ServiceLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Container(
+                color: AppColor.GRAY_F6F6F6,
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
               );
             }
 
-            return const Padding(
-              padding: EdgeInsets.all(24.0),
+            return Container(
+              width: double.infinity,
+              color: AppColor.GRAY_F6F6F6,
+              padding: const EdgeInsets.all(24.0),
               child: Center(
-                child: Text('Service Screen'),
+                child: Text(
+                  'services.title'.tr(),
+                  style: const TextStyle(fontSize: 20),
+                ),
               ),
             );
           },

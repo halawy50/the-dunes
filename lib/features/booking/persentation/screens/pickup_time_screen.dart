@@ -1,36 +1,36 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/utils/app_snackbar.dart';
+import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/dependency_injection/injection_container.dart';
-import 'package:the_dunes/features/history/persentation/cubit/history_cubit.dart';
+import 'package:the_dunes/features/booking/persentation/cubit/pickup_time_cubit.dart';
 
-class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+class PickupTimeScreen extends StatefulWidget {
+  const PickupTimeScreen({super.key});
 
   @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
+  State<PickupTimeScreen> createState() => _PickupTimeScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
+class _PickupTimeScreenState extends State<PickupTimeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = di<HistoryCubit>();
+        final cubit = di<PickupTimeCubit>();
         cubit.init();
         return cubit;
       },
-      child: BlocListener<HistoryCubit, HistoryState>(
+      child: BlocListener<PickupTimeCubit, PickupTimeState>(
         listener: (context, state) {
-          if (state is HistorySuccess) {
+          if (state is PickupTimeSuccess) {
             AppSnackbar.showTranslated(
               context: context,
-              translationKey: 'history.success',
+              translationKey: 'booking.pickup_time_success',
               type: SnackbarType.success,
             );
-          } else if (state is HistoryError) {
+          } else if (state is PickupTimeError) {
             AppSnackbar.showTranslated(
               context: context,
               translationKey: state.message,
@@ -40,17 +40,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
         },
         child: Scaffold(
           backgroundColor: AppColor.GRAY_F6F6F6,
-          body: BlocBuilder<HistoryCubit, HistoryState>(
+          body: BlocBuilder<PickupTimeCubit, PickupTimeState>(
             builder: (context, state) {
-              if (state is HistoryLoading) {
-                return const Center(child: CircularProgressIndicator());
+              if (state is PickupTimeLoading) {
+                return Container(
+                  color: AppColor.GRAY_F6F6F6,
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(),
+                );
               }
 
-              return Padding(
+              return Container(
+                width: double.infinity,
+                color: AppColor.GRAY_F6F6F6,
                 padding: const EdgeInsets.all(24.0),
                 child: Center(
                   child: Text(
-                    'history.title'.tr(),
+                    'booking.pickup_time'.tr(),
                     style: const TextStyle(fontSize: 20),
                   ),
                 ),

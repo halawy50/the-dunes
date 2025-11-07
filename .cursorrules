@@ -1,0 +1,65 @@
+# Project Rules for THE DUNES ERP System
+
+## ⚠️ CRITICAL RULES - MUST FOLLOW
+
+### 1. File Length Limit
+- **NO screen file should exceed 150 lines**
+- If a screen exceeds 150 lines, **MUST** split it into smaller widgets
+- Extract complex UI sections into separate widget files in `widgets/` folder
+- Example: If `analysis_screen.dart` is 200 lines, create:
+  - `analysis_screen.dart` (main structure, < 150 lines)
+  - `analysis_header_widget.dart`
+  - `analysis_content_widget.dart`
+  - `analysis_footer_widget.dart`
+
+### 2. Clean Architecture Compliance
+- **MUST** follow Clean Architecture structure:
+  - Domain layer: Entities, Repository interfaces, Use cases
+  - Data layer: Models, Repository implementations
+  - Presentation layer: Cubits, Screens, Widgets
+- **NEVER** mix layers (e.g., don't import data models in domain layer)
+- **ALWAYS** use dependency injection (GetIt) for all dependencies
+- **ALWAYS** use Cubit for state management (NO setState in complex screens)
+
+### 3. Internationalization (i18n) - NO HARDCODED TEXT
+- **NEVER** use hardcoded text strings in code
+- **ALWAYS** add translations to `assets/translations/en.json` and `assets/translations/ar.json` FIRST
+- **ALWAYS** use `.tr()` extension for all user-facing text
+- **BEFORE** adding any text to UI:
+  1. Add translation key to both `en.json` and `ar.json`
+  2. Use the translation key with `.tr()` in code
+- Example:
+  ```dart
+  // ❌ WRONG - Hardcoded text
+  Text('Welcome to Dashboard')
+  
+  // ✅ CORRECT - Translated text
+  // First add to en.json: "dashboard.welcome": "Welcome to Dashboard"
+  // First add to ar.json: "dashboard.welcome": "مرحباً بك في لوحة التحكم"
+  Text('dashboard.welcome'.tr())
+  ```
+
+### 4. State Management
+- **MUST** use Cubit (flutter_bloc) for state management
+- **MUST** use StatelessWidget when possible (use Cubit for state)
+- **MUST** register all Cubits in `injection_container.dart`
+- **MUST** use BlocProvider, BlocListener, and BlocBuilder pattern
+
+### 5. Code Organization
+- **MUST** keep each feature in its own folder under `features/`
+- **MUST** separate concerns: screens, widgets, cubits in separate files
+- **MUST** use meaningful file and class names
+- **MUST** follow the existing folder structure
+
+## Code Review Checklist
+
+Before submitting any code, ensure:
+- [ ] No screen file exceeds 150 lines
+- [ ] All text is translated (no hardcoded strings)
+- [ ] Clean Architecture structure is followed
+- [ ] Cubit is used for state management
+- [ ] Dependencies are registered in `injection_container.dart`
+- [ ] Routes are added to `app_router.dart` if needed
+- [ ] All translations are added to both `en.json` and `ar.json`
+- [ ] RTL support is considered for Arabic locale
+
