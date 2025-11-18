@@ -14,15 +14,34 @@
     "fill_all_fields": "Please fill in all fields",
     "login_success": "Login successful!",
     "email_invalid": "Please enter a valid email address",
-    "password_min_length": "Password must be at least 6 characters"
+    "password_min_length": "Password must be at least 6 characters",
+    "invalid_credentials": "Invalid email or password. Please try again.",
+    "server_error": "Server error. Please try again later.",
+    "connection_error": "Unable to connect to server. Please check your internet connection.",
+    "login_failed": "Login failed. Please try again."
   },
   "common": {
     "required": "*",
     "select_all": "Select All",
-    "logout": "Logout"
+    "logout": "Logout",
+    "user": "User",
+    "no_permissions": "No permissions available"
   },
   "errors": {
-    "page_not_found": "Page not found: {uri}"
+    "page_not_found": "Page not found: {uri}",
+    "bad_request": "Bad Request",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "not_found": "Not Found",
+    "internal_server_error": "Internal Server Error",
+    "unknown_error": "Unknown Error",
+    "connection_failed": "Unable to connect to server. Please try again later.",
+    "unexpected_error": "An unexpected error occurred. Please try again.",
+    "invalid_response": "Invalid response format from server",
+    "request_failed": "Request failed",
+    "parse_error": "Failed to parse error response",
+    "not_logged_in": "You are not logged in. Please login to continue.",
+    "no_page_permission": "You don't have permission to access this page."
   },
   "file": {
     "text_split_success": "Text split into {count} file(s)",
@@ -45,6 +64,10 @@
     "services_subtitle": "Configure travel packages and activities",
     "hotels": "Hotels",
     "hotels_subtitle": "Track partner hotels and availability",
+    "operations": "Operations",
+    "operations_subtitle": "Manage business operations and activities",
+    "camp": "Camp",
+    "camp_subtitle": "Manage camp bookings and reservations",
     "history": "History",
     "history_subtitle": "Check previous records and adjustments",
     "settings": "Settings",
@@ -76,6 +99,14 @@
   "hotels": {
     "title": "Hotels",
     "success": "Hotel list refreshed"
+  },
+  "operations": {
+    "title": "Operations",
+    "success": "Operations updated"
+  },
+  "camp": {
+    "title": "Camp",
+    "success": "Camp bookings updated"
   },
   "history": {
     "title": "History",

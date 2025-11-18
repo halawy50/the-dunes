@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/utils/constants/assets/images.dart';
-import 'package:the_dunes/core/utils/constants/select_type_text_field.dart';
 import 'package:the_dunes/features/login/persentation/cubit/login_cubit.dart';
 
 import 'login_button.dart';
-import 'login_input_text.dart';
+import 'login_form_fields.dart';
 
 class LoginContent extends StatelessWidget {
   const LoginContent({
@@ -48,20 +47,9 @@ class LoginContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        LoginInputText(
-          controller: emailController,
-          selectTypeTextField: SelectTypeTextField.EMAIL,
-          headerHintKey: 'login.email',
-          hintKey: 'login.input_email',
-          isRequired: true,
-        ),
-        const SizedBox(height: 15),
-        LoginInputText(
-          controller: passwordController,
-          selectTypeTextField: SelectTypeTextField.PASSWORD,
-          headerHintKey: 'login.password',
-          hintKey: 'login.input_password',
-          isRequired: true,
+        LoginFormFields(
+          emailController: emailController,
+          passwordController: passwordController,
         ),
         const SizedBox(height: 20),
         BlocBuilder<LoginCubit, LoginState>(

@@ -2,64 +2,129 @@
 
 ## ⚠️ CRITICAL RULES - MUST FOLLOW
 
-### 1. File Length Limit
-- **NO screen file should exceed 150 lines**
-- If a screen exceeds 150 lines, **MUST** split it into smaller widgets
-- Extract complex UI sections into separate widget files in `widgets/` folder
-- Example: If `analysis_screen.dart` is 200 lines, create:
-  - `analysis_screen.dart` (main structure, < 150 lines)
-  - `analysis_header_widget.dart`
-  - `analysis_content_widget.dart`
-  - `analysis_footer_widget.dart`
+### 1. File Length Limit - STRICT 100 LINE RULE
+- **ABSOLUTE RULE: NO file should exceed 100 lines**
+- This applies to ALL files: screens, widgets, cubits, models, repositories, data sources, etc.
+- If any file exceeds 100 lines, **MUST IMMEDIATELY** split it into smaller files
+- Split strategy based on Clean Architecture:
+  - **Screens**: Extract widgets to `widgets/` folder
+  - **Models**: Split into factory, json_helper, or separate model files
+  - **Repositories**: Extract data source logic to separate files
+  - **Cubits**: Extract state classes to separate files
+  - **Widgets**: Extract sub-widgets to separate files
+- Example: If `analysis_screen.dart` is 120 lines, create:
+  - `analysis_screen.dart` (main structure, < 100 lines)
+  - `analysis_header_widget.dart` (< 100 lines)
+  - `analysis_content_widget.dart` (< 100 lines)
+  - `analysis_footer_widget.dart` (< 100 lines)
 
-### 2. Clean Architecture Compliance
-- **MUST** follow Clean Architecture structure:
-  - Domain layer: Entities, Repository interfaces, Use cases
-  - Data layer: Models, Repository implementations
-  - Presentation layer: Cubits, Screens, Widgets
-- **NEVER** mix layers (e.g., don't import data models in domain layer)
-- **ALWAYS** use dependency injection (GetIt) for all dependencies
-- **ALWAYS** use Cubit for state management (NO setState in complex screens)
-
-### 3. Internationalization (i18n) - NO HARDCODED TEXT
-- **NEVER** use hardcoded text strings in code
-- **ALWAYS** add translations to `assets/translations/en.json` and `assets/translations/ar.json` FIRST
-- **ALWAYS** use `.tr()` extension for all user-facing text
-- **BEFORE** adding any text to UI:
-  1. Add translation key to both `en.json` and `ar.json`
+### 2. Internationalization (i18n) - ZERO HARDCODED TEXT
+- **ABSOLUTE RULE: NO hardcoded text strings anywhere in the codebase**
+- This includes:
+  - UI text (buttons, labels, titles, messages)
+  - Error messages
+  - Exception messages
+  - Log messages (user-facing)
+  - Placeholder text
+  - Validation messages
+  - Any string that appears to users
+- **BEFORE** writing any code with text:
+  1. Add translation key to ALL language files: `en.json`, `ar.json`, `ru.json`, `hi.json`, `de.json`, `es.json`
   2. Use the translation key with `.tr()` in code
+- **ALWAYS** add translations to ALL 6 language files simultaneously
+- Translation key structure: `feature.section.key` (e.g., `login.error.invalid_credentials`)
 - Example:
   ```dart
   // ❌ WRONG - Hardcoded text
   Text('Welcome to Dashboard')
+  throw ApiException(message: 'Connection failed')
+  print('Error occurred')
   
   // ✅ CORRECT - Translated text
-  // First add to en.json: "dashboard.welcome": "Welcome to Dashboard"
-  // First add to ar.json: "dashboard.welcome": "مرحباً بك في لوحة التحكم"
+  // First add to ALL translation files:
+  // en.json: "dashboard.welcome": "Welcome to Dashboard"
+  // ar.json: "dashboard.welcome": "مرحباً بك في لوحة التحكم"
+  // ru.json: "dashboard.welcome": "Добро пожаловать в панель управления"
+  // ... (all 6 languages)
   Text('dashboard.welcome'.tr())
+  throw ApiException(message: 'errors.connection_failed'.tr())
   ```
+
+### 3. Clean Architecture Compliance
+- **MUST** strictly follow Clean Architecture structure:
+  - **Domain layer** (`domain/`):
+    - `entities/`: Business objects (pure Dart classes)
+    - `repositories/`: Repository interfaces (abstract classes)
+    - `usecases/`: Business logic (single responsibility)
+  - **Data layer** (`data/`):
+    - `models/`: Data models (JSON serializable)
+    - `datasources/`: Data sources (remote, local)
+    - `repositories/`: Repository implementations
+  - **Presentation layer** (`presentation/`):
+    - `cubits/`: State management
+    - `screens/`: Screen widgets (< 100 lines)
+    - `widgets/`: Reusable widgets (< 100 lines)
+- **NEVER** mix layers:
+  - Domain layer should NOT import data or presentation
+  - Data layer can import domain
+  - Presentation layer can import domain and data
+- **ALWAYS** use dependency injection (GetIt) for all dependencies
+- **ALWAYS** register dependencies in `injection_container.dart`
 
 ### 4. State Management
 - **MUST** use Cubit (flutter_bloc) for state management
 - **MUST** use StatelessWidget when possible (use Cubit for state)
 - **MUST** register all Cubits in `injection_container.dart`
 - **MUST** use BlocProvider, BlocListener, and BlocBuilder pattern
+- **MUST** separate state classes into separate files if they exceed 100 lines
 
-### 5. Code Organization
+### 5. Code Organization & File Structure
 - **MUST** keep each feature in its own folder under `features/`
+- **MUST** follow this structure for each feature:
+  ```
+  features/
+    feature_name/
+      data/
+        datasources/
+        models/
+        repositories/
+      domain/
+        entities/
+        repositories/
+        usecases/
+      presentation/
+        cubits/
+        screens/
+        widgets/
+  ```
 - **MUST** separate concerns: screens, widgets, cubits in separate files
 - **MUST** use meaningful file and class names
 - **MUST** follow the existing folder structure
 
+### 6. File Splitting Rules
+When a file exceeds 100 lines, split based on type:
+- **Screens**: Extract UI sections to `widgets/` folder
+- **Models**: Split JSON logic to `*_factory.dart` and `*_json_helper.dart`
+- **Cubits**: Extract state to `*_state.dart` file
+- **Repositories**: Extract data source calls to separate methods/files
+- **Widgets**: Extract sub-widgets to separate widget files
+- **Data Sources**: Split API calls to separate methods if needed
+
 ## Code Review Checklist
 
 Before submitting any code, ensure:
-- [ ] No screen file exceeds 150 lines
-- [ ] All text is translated (no hardcoded strings)
+- [ ] **NO file exceeds 100 lines** (check ALL files, not just screens)
+- [ ] **ALL text is translated** (no hardcoded strings anywhere)
+- [ ] **ALL translations added to ALL 6 language files** (en, ar, ru, hi, de, es)
 - [ ] Clean Architecture structure is followed
+- [ ] Layers are not mixed (domain, data, presentation)
 - [ ] Cubit is used for state management
 - [ ] Dependencies are registered in `injection_container.dart`
 - [ ] Routes are added to `app_router.dart` if needed
-- [ ] All translations are added to both `en.json` and `ar.json`
 - [ ] RTL support is considered for Arabic locale
+- [ ] Files are split appropriately if they exceed 100 lines
+
+## Enforcement
+
+These rules are **MANDATORY** and **NON-NEGOTIABLE**. Any code that violates these rules will be rejected and must be refactored immediately.
 

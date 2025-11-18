@@ -30,7 +30,7 @@ class NavbarItem extends StatelessWidget {
           color: background,
           borderRadius: BorderRadius.circular(12),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Align(
           alignment: isRTL ? Alignment.centerRight : Alignment.centerLeft,
           child: Text(
@@ -38,7 +38,7 @@ class NavbarItem extends StatelessWidget {
             style: TextStyle(
               color: foreground,
               fontWeight: FontWeight.w600,
-              fontSize: 14,
+              fontSize: 13,
             ),
           ),
         ),

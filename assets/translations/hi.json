@@ -1,0 +1,128 @@
+{
+  "gender": {
+    "male": "पुरुष",
+    "female": "महिला"
+  },
+  "login": {
+    "get_started": "अभी शुरू करें",
+    "login_description": "कृपया जारी रखने के लिए अपनी साख का उपयोग करके लॉगिन करें",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "input_email": "अपना ईमेल दर्ज करें",
+    "input_password": "अपना पासवर्ड दर्ज करें",
+    "login_button": "लॉगिन",
+    "fill_all_fields": "कृपया सभी फ़ील्ड भरें",
+    "login_success": "लॉगिन सफल!",
+    "email_invalid": "कृपया एक वैध ईमेल पता दर्ज करें",
+    "password_min_length": "पासवर्ड कम से कम 6 वर्ण का होना चाहिए",
+    "invalid_credentials": "अमान्य ईमेल या पासवर्ड। कृपया पुनः प्रयास करें।",
+    "server_error": "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
+    "connection_error": "सर्वर से कनेक्ट नहीं हो सका। कृपया अपना इंटरनेट कनेक्शन जांचें।",
+    "login_failed": "लॉगिन विफल। कृपया पुनः प्रयास करें।"
+  },
+  "common": {
+    "required": "*",
+    "select_all": "सभी चुनें",
+    "logout": "लॉगआउट",
+    "user": "उपयोगकर्ता",
+    "no_permissions": "कोई अनुमतियां उपलब्ध नहीं"
+  },
+  "errors": {
+    "page_not_found": "पृष्ठ नहीं मिला: {uri}",
+    "bad_request": "गलत अनुरोध",
+    "unauthorized": "अनधिकृत",
+    "forbidden": "निषिद्ध",
+    "not_found": "नहीं मिला",
+    "internal_server_error": "आंतरिक सर्वर त्रुटि",
+    "unknown_error": "अज्ञात त्रुटि",
+    "connection_failed": "सर्वर से कनेक्ट नहीं हो सका। कृपया बाद में पुनः प्रयास करें।",
+    "unexpected_error": "एक अप्रत्याशित त्रुटि हुई। कृपया पुनः प्रयास करें।",
+    "invalid_response": "सर्वर से अमान्य प्रतिक्रिया प्रारूप",
+    "request_failed": "अनुरोध विफल",
+    "parse_error": "त्रुटि प्रतिक्रिया पार्स करने में विफल",
+    "not_logged_in": "आप लॉग इन नहीं हैं। कृपया जारी रखने के लिए लॉगिन करें।",
+    "no_page_permission": "आपके पास इस पृष्ठ तक पहुंचने की अनुमति नहीं है।"
+  },
+  "file": {
+    "text_split_success": "टेक्स्ट {count} फ़ाइल(ों) में विभाजित",
+    "text_split_error": "टेक्स्ट विभाजित करने में त्रुटि: {error}"
+  },
+  "navbar": {
+    "analysis": "विश्लेषण",
+    "analysis_subtitle": "सभी बुक की गई सेवाओं के विश्लेषण को देखें और ट्रैक करें",
+    "brand_title": "THE DUNES",
+    "brand_subtitle": "Travel & Tourism",
+    "bookings": "बुकिंग",
+    "bookings_subtitle": "सभी ग्राहक बुकिंग का प्रबंधन और निगरानी",
+    "pickup_time": "पिकअप समय",
+    "pickup_time_subtitle": "पिकअप समय और अनुसूची का प्रबंधन",
+    "receipt_voucher": "रसीद वाउचर",
+    "receipt_voucher_subtitle": "भुगतान रसीदों की समीक्षा और अनुमोदन",
+    "employees": "कर्मचारी",
+    "employees_subtitle": "टीम और अनुमतियों का प्रबंधन",
+    "services": "सेवाएं",
+    "services_subtitle": "यात्रा पैकेज और गतिविधियों को कॉन्फ़िगर करें",
+    "hotels": "होटल",
+    "hotels_subtitle": "साझेदार होटल और उपलब्धता को ट्रैक करें",
+    "operations": "संचालन",
+    "operations_subtitle": "व्यावसायिक संचालन और गतिविधियों का प्रबंधन",
+    "camp": "कैंप",
+    "camp_subtitle": "कैंप बुकिंग और आरक्षण का प्रबंधन",
+    "history": "इतिहास",
+    "history_subtitle": "पिछले रिकॉर्ड और समायोजन की जांच करें",
+    "settings": "सेटिंग्स",
+    "settings_subtitle": "कंपनी वरीयताएं अपडेट करें"
+  },
+  "analysis": {
+    "title": "विश्लेषण",
+    "success": "विश्लेषण डेटा अपडेट किया गया"
+  },
+  "booking": {
+    "title": "बुकिंग",
+    "success": "बुकिंग कार्रवाई पूरी",
+    "pickup_time": "पिकअप समय",
+    "pickup_time_subtitle": "पिकअप समय और अनुसूची का प्रबंधन",
+    "pickup_time_success": "पिकअप समय अपडेट किया गया"
+  },
+  "receipt_voucher": {
+    "title": "रसीद वाउचर",
+    "success": "रसीद वाउचर अपडेट किया गया"
+  },
+  "employees": {
+    "title": "कर्मचारी",
+    "success": "कर्मचारी डेटा सिंक किया गया"
+  },
+  "services": {
+    "title": "सेवाएं",
+    "success": "सेवा सूची अपडेट की गई"
+  },
+  "hotels": {
+    "title": "होटल",
+    "success": "होटल सूची अपडेट की गई"
+  },
+  "operations": {
+    "title": "संचालन",
+    "success": "संचालन अपडेट किया गया"
+  },
+  "camp": {
+    "title": "कैंप",
+    "success": "कैंप बुकिंग अपडेट की गई"
+  },
+  "history": {
+    "title": "इतिहास",
+    "success": "इतिहास अपडेट किया गया"
+  },
+  "setting": {
+    "title": "सेटिंग्स",
+    "success": "सेटिंग्स सहेजी गईं"
+  },
+  "notification": {
+    "title": "सूचनाएं",
+    "success": "सूचनाएं अपडेट की गईं"
+  },
+  "overview": {
+    "title": "अवलोकन",
+    "success": "अवलोकन अपडेट किया गया"
+  }
+}
+

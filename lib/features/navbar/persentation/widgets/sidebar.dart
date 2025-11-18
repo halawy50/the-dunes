@@ -26,8 +26,8 @@ class Sidebar extends StatelessWidget {
         .toList();
 
     return Container(
-      width: 240,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      width: 220,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: const BoxDecoration(color: AppColor.WHITE),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,8 +35,8 @@ class Sidebar extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(AppImages.LOGO_BLACK, width: 48, height: 48),
-              const SizedBox(width: 12),
+              Image.asset(AppImages.LOGO_BLACK, width: 40, height: 40),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +48,7 @@ class Sidebar extends StatelessWidget {
                         style: TextStyle(
                           color: AppColor.YELLOW,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -59,7 +59,7 @@ class Sidebar extends StatelessWidget {
                         'Travel & Tourism',
                         style: TextStyle(
                           color: AppColor.BLACK_0,
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                     ),
@@ -68,7 +68,7 @@ class Sidebar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
           Expanded(
             child: ListView.separated(
               padding: EdgeInsets.zero,
@@ -80,14 +80,14 @@ class Sidebar extends StatelessWidget {
                   onTap: () => onSectionSelected(section),
                 );
               },
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemCount: mainSections.length,
             ),
           ),
           if (hasSettings) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             const Divider(height: 1, color: AppColor.GRAY_D8D8D8),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             NavbarItem(
               title: NavbarSection.settings.translationKey.tr(),
               isSelected: selectedSection == NavbarSection.settings,

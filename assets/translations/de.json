@@ -1,0 +1,128 @@
+{
+  "gender": {
+    "male": "Männlich",
+    "female": "Weiblich"
+  },
+  "login": {
+    "get_started": "Jetzt starten",
+    "login_description": "Bitte melden Sie sich mit Ihren Anmeldedaten an, um fortzufahren",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "input_email": "Geben Sie Ihre E-Mail ein",
+    "input_password": "Geben Sie Ihr Passwort ein",
+    "login_button": "Anmelden",
+    "fill_all_fields": "Bitte füllen Sie alle Felder aus",
+    "login_success": "Anmeldung erfolgreich!",
+    "email_invalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "password_min_length": "Das Passwort muss mindestens 6 Zeichen lang sein",
+    "invalid_credentials": "Ungültige E-Mail oder Passwort. Bitte versuchen Sie es erneut.",
+    "server_error": "Serverfehler. Bitte versuchen Sie es später erneut.",
+    "connection_error": "Verbindung zum Server nicht möglich. Bitte überprüfen Sie Ihre Internetverbindung.",
+    "login_failed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut."
+  },
+  "common": {
+    "required": "*",
+    "select_all": "Alle auswählen",
+    "logout": "Abmelden",
+    "user": "Benutzer",
+    "no_permissions": "Keine Berechtigungen verfügbar"
+  },
+  "errors": {
+    "page_not_found": "Seite nicht gefunden: {uri}",
+    "bad_request": "Ungültige Anfrage",
+    "unauthorized": "Nicht autorisiert",
+    "forbidden": "Verboten",
+    "not_found": "Nicht gefunden",
+    "internal_server_error": "Interner Serverfehler",
+    "unknown_error": "Unbekannter Fehler",
+    "connection_failed": "Verbindung zum Server nicht möglich. Bitte versuchen Sie es später erneut.",
+    "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    "invalid_response": "Ungültiges Antwortformat vom Server",
+    "request_failed": "Anfrage fehlgeschlagen",
+    "parse_error": "Fehler beim Parsen der Fehlerantwort",
+    "not_logged_in": "Sie sind nicht angemeldet. Bitte melden Sie sich an, um fortzufahren.",
+    "no_page_permission": "Sie haben keine Berechtigung, auf diese Seite zuzugreifen."
+  },
+  "file": {
+    "text_split_success": "Text in {count} Datei(en) aufgeteilt",
+    "text_split_error": "Fehler beim Aufteilen des Textes: {error}"
+  },
+  "navbar": {
+    "analysis": "Analyse",
+    "analysis_subtitle": "Anzeigen und Verfolgen der Analyse aller gebuchten Dienstleistungen",
+    "brand_title": "THE DUNES",
+    "brand_subtitle": "Travel & Tourism",
+    "bookings": "Buchungen",
+    "bookings_subtitle": "Verwaltung und Überwachung aller Kundenbuchungen",
+    "pickup_time": "Abholzeit",
+    "pickup_time_subtitle": "Verwaltung von Abholzeiten und Zeitplänen",
+    "receipt_voucher": "Quittung",
+    "receipt_voucher_subtitle": "Überprüfung und Genehmigung von Zahlungsquittungen",
+    "employees": "Mitarbeiter",
+    "employees_subtitle": "Verwaltung von Team und Berechtigungen",
+    "services": "Dienstleistungen",
+    "services_subtitle": "Konfiguration von Reisepaketen und Aktivitäten",
+    "hotels": "Hotels",
+    "hotels_subtitle": "Verfolgung von Partnerhotels und Verfügbarkeit",
+    "operations": "Operationen",
+    "operations_subtitle": "Verwaltung von Geschäftsoperationen und Aktivitäten",
+    "camp": "Lager",
+    "camp_subtitle": "Verwaltung von Lagerbuchungen und Reservierungen",
+    "history": "Verlauf",
+    "history_subtitle": "Überprüfung früherer Aufzeichnungen und Anpassungen",
+    "settings": "Einstellungen",
+    "settings_subtitle": "Aktualisierung der Unternehmenseinstellungen"
+  },
+  "analysis": {
+    "title": "Analyse",
+    "success": "Analysedaten aktualisiert"
+  },
+  "booking": {
+    "title": "Buchungen",
+    "success": "Buchungsaktion abgeschlossen",
+    "pickup_time": "Abholzeit",
+    "pickup_time_subtitle": "Verwaltung von Abholzeiten und Zeitplänen",
+    "pickup_time_success": "Abholzeit aktualisiert"
+  },
+  "receipt_voucher": {
+    "title": "Quittung",
+    "success": "Quittung aktualisiert"
+  },
+  "employees": {
+    "title": "Mitarbeiter",
+    "success": "Mitarbeiterdaten synchronisiert"
+  },
+  "services": {
+    "title": "Dienstleistungen",
+    "success": "Dienstleistungsliste aktualisiert"
+  },
+  "hotels": {
+    "title": "Hotels",
+    "success": "Hotelliste aktualisiert"
+  },
+  "operations": {
+    "title": "Operationen",
+    "success": "Operationen aktualisiert"
+  },
+  "camp": {
+    "title": "Lager",
+    "success": "Lagerbuchungen aktualisiert"
+  },
+  "history": {
+    "title": "Verlauf",
+    "success": "Verlauf aktualisiert"
+  },
+  "setting": {
+    "title": "Einstellungen",
+    "success": "Einstellungen gespeichert"
+  },
+  "notification": {
+    "title": "Benachrichtigungen",
+    "success": "Benachrichtigungen aktualisiert"
+  },
+  "overview": {
+    "title": "Übersicht",
+    "success": "Übersicht aktualisiert"
+  }
+}
+

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:the_dunes/features/login/data/models/permissions_model.dart';
 
 part 'navbar_state.dart';
 
@@ -11,8 +12,40 @@ enum NavbarSection {
   employees,
   services,
   hotels,
+  operations,
+  camp,
   history,
   settings,
+}
+
+extension NavbarSectionPermissions on NavbarSection {
+  bool isAllowed(PermissionsModel? permissions) {
+    if (permissions == null) return false;
+    switch (this) {
+      case NavbarSection.analysis:
+        return permissions.analysisScreen;
+      case NavbarSection.bookings:
+        return permissions.bookingScreen;
+      case NavbarSection.pickupTime:
+        return permissions.pickupTimeScreen;
+      case NavbarSection.receiptVoucher:
+        return permissions.receiptVoucherScreen;
+      case NavbarSection.employees:
+        return true;
+      case NavbarSection.services:
+        return permissions.serviceScreen;
+      case NavbarSection.hotels:
+        return permissions.hotelScreen;
+      case NavbarSection.operations:
+        return permissions.operationsScreen;
+      case NavbarSection.camp:
+        return permissions.campScreen;
+      case NavbarSection.history:
+        return permissions.historyScreen;
+      case NavbarSection.settings:
+        return permissions.settingScreen;
+    }
+  }
 }
 
 extension NavbarSectionX on NavbarSection {
@@ -32,6 +65,10 @@ extension NavbarSectionX on NavbarSection {
         return 'navbar.services';
       case NavbarSection.hotels:
         return 'navbar.hotels';
+      case NavbarSection.operations:
+        return 'navbar.operations';
+      case NavbarSection.camp:
+        return 'navbar.camp';
       case NavbarSection.history:
         return 'navbar.history';
       case NavbarSection.settings:
@@ -55,6 +92,10 @@ extension NavbarSectionX on NavbarSection {
         return 'navbar.services_subtitle';
       case NavbarSection.hotels:
         return 'navbar.hotels_subtitle';
+      case NavbarSection.operations:
+        return 'navbar.operations_subtitle';
+      case NavbarSection.camp:
+        return 'navbar.camp_subtitle';
       case NavbarSection.history:
         return 'navbar.history_subtitle';
       case NavbarSection.settings:
@@ -78,6 +119,10 @@ extension NavbarSectionX on NavbarSection {
         return '/services';
       case NavbarSection.hotels:
         return '/hotels';
+      case NavbarSection.operations:
+        return '/operations';
+      case NavbarSection.camp:
+        return '/camp';
       case NavbarSection.history:
         return '/history';
       case NavbarSection.settings:
@@ -101,6 +146,10 @@ extension NavbarSectionX on NavbarSection {
         return 'assets/icons/converte.svg';
       case NavbarSection.hotels:
         return 'assets/icons/dollar_circle.svg';
+      case NavbarSection.operations:
+        return 'assets/icons/converte.svg';
+      case NavbarSection.camp:
+        return 'assets/icons/calendar_tick.svg';
       case NavbarSection.history:
         return 'assets/icons/back.svg';
       case NavbarSection.settings:

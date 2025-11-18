@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:the_dunes/core/data/datasources/token_storage.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/features/navbar/persentation/widgets/action_circle_button.dart';
 import 'package:the_dunes/features/navbar/persentation/widgets/language_switcher.dart';
@@ -20,7 +21,7 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: const BoxDecoration(
         color: AppColor.WHITE,
         boxShadow: [
@@ -40,16 +41,16 @@ class TopBar extends StatelessWidget {
                 Text(
                   titleKey.tr(),
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: AppColor.BLACK_0,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 3),
                 Text(
                   subtitleKey.tr(),
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     color: AppColor.GRAY_DARK,
                   ),
                 ),
@@ -57,13 +58,31 @@ class TopBar extends StatelessWidget {
             ),
           ),
           const LanguageSwitcher(),
-          const SizedBox(width: 24),
+          const SizedBox(width: 16),
           ActionCircleButton(
             asset: 'assets/icons/notification.svg',
             onTap: () {},
           ),
-          const SizedBox(width: 20),
-          UserChip(name: 'Mohamed Farouk', initials: 'MF', onLogout: onLogout),
+          const SizedBox(width: 16),
+          FutureBuilder(
+            future: TokenStorage.getUserData(),
+            builder: (context, snapshot) {
+              final userData = snapshot.data;
+              final name = userData?['name'] as String? ?? 'common.user'.tr();
+              final initials = name
+                  .split(' ')
+                  .take(2)
+                  .map((word) => word.isNotEmpty ? word[0] : '')
+                  .join()
+                  .toUpperCase();
+              
+              return UserChip(
+                name: name,
+                initials: initials,
+                onLogout: onLogout,
+              );
+            },
+          ),
         ],
       ),
     );

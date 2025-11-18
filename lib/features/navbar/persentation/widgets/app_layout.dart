@@ -21,27 +21,30 @@ class AppLayout extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColor.GRAY_WHITE,
       body: SafeArea(
-        child: Directionality(
-          textDirection: isRTL ? ui.TextDirection.rtl : ui.TextDirection.ltr,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              sidebar,
-              Expanded(
-                child: Column(
-                  children: [
-                    topBar,
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        color: AppColor.GRAY_WHITE,
-                        child: body,
+        child: SelectionArea(
+          selectionControls: materialTextSelectionControls,
+          child: Directionality(
+            textDirection: isRTL ? ui.TextDirection.rtl : ui.TextDirection.ltr,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                sidebar,
+                Expanded(
+                  child: Column(
+                    children: [
+                      topBar,
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          color: AppColor.GRAY_WHITE,
+                          child: body,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

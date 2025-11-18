@@ -1,0 +1,47 @@
+import 'package:the_dunes/features/login/data/models/permissions_model.dart';
+
+class PermissionsJsonHelper {
+  static Map<String, dynamic> toJson(PermissionsModel permissions) => {
+        'overviewScreen': permissions.overviewScreen,
+        'analysisScreen': permissions.analysisScreen,
+        'bookingScreen': permissions.bookingScreen,
+        'showAllBooking': permissions.showAllBooking,
+        'showMyBookAdded': permissions.showMyBookAdded,
+        'addNewBook': permissions.addNewBook,
+        'editBook': permissions.editBook,
+        'deleteBook': permissions.deleteBook,
+        'receiptVoucherScreen': permissions.receiptVoucherScreen,
+        'showAllReceiptVoucher': permissions.showAllReceiptVoucher,
+        'showReceiptVoucherAdded': permissions.showReceiptVoucherAdded,
+        'addNewReceiptVoucherMe': permissions.addNewReceiptVoucherMe,
+        'addNewReceiptVoucherOtherEmployee':
+            permissions.addNewReceiptVoucherOtherEmployee,
+        'editReceiptVoucher': permissions.editReceiptVoucher,
+        'deleteReceiptVoucher': permissions.deleteReceiptVoucher,
+        'pickupTimeScreen': permissions.pickupTimeScreen,
+        'showAllPickup': permissions.showAllPickup,
+        'editAnyPickup': permissions.editAnyPickup,
+        'serviceScreen': permissions.serviceScreen,
+        'showAllService': permissions.showAllService,
+        'addNewService': permissions.addNewService,
+        'editService': permissions.editService,
+        'deleteService': permissions.deleteService,
+        'hotelScreen': permissions.hotelScreen,
+        'showAllHotels': permissions.showAllHotels,
+        'addNewHotels': permissions.addNewHotels,
+        'editHotels': permissions.editHotels,
+        'deleteHotels': permissions.deleteHotels,
+        'campScreen': permissions.campScreen,
+        'showAllCampBookings': permissions.showAllCampBookings,
+        'changeStateBooking': permissions.changeStateBooking,
+        'operationsScreen': permissions.operationsScreen,
+        'showAllOperations': permissions.showAllOperations,
+        'addNewOperation': permissions.addNewOperation,
+        'editOperation': permissions.editOperation,
+        'deleteOperation': permissions.deleteOperation,
+        'historyScreen': permissions.historyScreen,
+        'showAllHistory': permissions.showAllHistory,
+        'settingScreen': permissions.settingScreen,
+      };
+}
+

@@ -11,6 +11,8 @@ class LoginInputText extends StatelessWidget {
   final TextEditingController? controller;
   final bool isRequired;
   final Function(String)? onTextChanged;
+  final VoidCallback? onSubmitted;
+  final FocusNode? focusNode;
 
   const LoginInputText({
     super.key,
@@ -20,6 +22,8 @@ class LoginInputText extends StatelessWidget {
     this.controller,
     this.isRequired = false,
     this.onTextChanged,
+    this.onSubmitted,
+    this.focusNode,
   });
 
   @override
@@ -34,6 +38,8 @@ class LoginInputText extends StatelessWidget {
       inputColor: AppColor.WHITE,
       isRequired: isRequired,
       onTextChanged: onTextChanged,
+      onSubmitted: onSubmitted,
+      focusNode: focusNode,
     );
   }
 }

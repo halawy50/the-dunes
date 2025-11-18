@@ -18,14 +18,14 @@ class ActionCircleButton extends StatelessWidget {
       onTap: onTap,
       customBorder: const CircleBorder(),
       child: Container(
-        width: 40,
-        height: 40,
+        width: 36,
+        height: 36,
         decoration: const BoxDecoration(shape: BoxShape.circle),
         alignment: Alignment.center,
         child: SvgPicture.asset(
           asset,
-          width: 18,
-          height: 18,
+          width: 16,
+          height: 16,
           colorFilter: const ColorFilter.mode(
             AppColor.BLACK_0,
             BlendMode.srcIn,

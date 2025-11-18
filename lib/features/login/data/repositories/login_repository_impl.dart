@@ -1,49 +1,77 @@
+import 'package:the_dunes/core/data/datasources/token_storage.dart';
+import 'package:the_dunes/core/dependency_injection/injection_container.dart'
+    as di;
+import 'package:the_dunes/core/network/api_client.dart';
+import 'package:the_dunes/core/network/api_exception.dart';
+import 'package:the_dunes/features/login/data/datasources/login_remote_data_source.dart';
 import 'package:the_dunes/features/login/data/models/user_model.dart';
 import 'package:the_dunes/features/login/domain/entities/user_entity.dart';
 import 'package:the_dunes/features/login/domain/repositories/login_repository.dart';
 
 class LoginRepositoryImpl implements LoginRepository {
-  // TODO: Add your data source here (API, Local Storage, etc.)
-  // final LoginRemoteDataSource remoteDataSource;
-  // final LoginLocalDataSource localDataSource;
+  final LoginRemoteDataSource remoteDataSource;
 
-  LoginRepositoryImpl(
-    // this.remoteDataSource,
-    // this.localDataSource,
-  );
+  LoginRepositoryImpl(this.remoteDataSource);
 
   @override
   Future<UserEntity> login(String email, String password) async {
-    // TODO: Implement actual login logic
-    // Example:
-    // try {
-    //   final userModel = await remoteDataSource.login(email, password);
-    //   await localDataSource.cacheUser(userModel);
-    //   return userModel;
-    // } catch (e) {
-    //   throw ServerException(e.toString());
-    // }
+    try {
+      final response = await remoteDataSource.login(email, password);
 
-    // Mock implementation for now
-    await Future.delayed(const Duration(seconds: 1));
-    return UserModel(
-      id: '1',
-      email: email,
-      name: 'User',
-    );
+      if (response.success && response.data != null) {
+        await TokenStorage.saveToken(response.data!.token);
+        
+        if (response.data!.employee.permissions != null) {
+          await TokenStorage.savePermissions(
+            response.data!.employee.permissions!,
+          );
+        }
+        
+        await TokenStorage.saveUserData({
+          'id': response.data!.employee.id,
+          'name': response.data!.employee.name,
+          'email': response.data!.employee.email,
+          'image': response.data!.employee.image,
+        });
+        
+        final userModel = UserModel.fromEmployeeData(response.data!.employee);
+        return userModel;
+      } else {
+        throw ApiException(
+          message: response.message,
+          error: response.error,
+          statusCode: 400,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(
+        message: e.toString(),
+        statusCode: 500,
+      );
+    }
   }
 
   @override
   Future<void> logout() async {
-    // TODO: Implement logout logic
-    // await localDataSource.clearUser();
-    // await remoteDataSource.logout();
+    await TokenStorage.deleteToken();
+    di.di<ApiClient>().setToken(null);
   }
 
   @override
   Future<UserEntity?> getCurrentUser() async {
-    // TODO: Implement get current user logic
-    // return await localDataSource.getCachedUser();
-    return null;
+    final token = await TokenStorage.getToken();
+    if (token == null) return null;
+    
+    final userData = await TokenStorage.getUserData();
+    if (userData == null) return null;
+    
+    return UserModel(
+      id: userData['id'].toString(),
+      email: userData['email'] ?? '',
+      name: userData['name'],
+      image: userData['image'],
+    );
   }
 }

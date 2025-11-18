@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:the_dunes/core/network/api_exception.dart';
 import 'package:the_dunes/features/login/domain/entities/user_entity.dart';
 import 'package:the_dunes/features/login/domain/usecases/login_usecase.dart';
 
@@ -70,7 +71,16 @@ class LoginCubit extends Cubit<LoginState> {
         print('[LoginCubit] ❌ Login failed with error: $e');
         print('[LoginCubit] Error type: ${e.runtimeType}');
       }
-      emit(LoginError(e.toString()));
+      
+      String errorMessage;
+      if (e is ApiException) {
+        // Use the message from API response directly
+        errorMessage = e.message;
+      } else {
+        errorMessage = 'login.login_failed';
+      }
+      
+      emit(LoginError(errorMessage));
     }
   }
 

@@ -45,16 +45,30 @@ class _LoginScreenState extends State<LoginScreen> {
             // Navigate to navbar screen (analysis page)
             context.go(AppRouter.home);
           } else if (state is LoginError) {
-            AppSnackbar.showTranslated(
-              context: context,
-              translationKey: state.message,
-              type: SnackbarType.error,
-            );
+            // Check if message is a translation key (contains dots) or plain text from API
+            if (state.message.contains('.') && 
+                !state.message.contains(' ') &&
+                state.message.split('.').length >= 2) {
+              // It's a translation key
+              AppSnackbar.showTranslated(
+                context: context,
+                translationKey: state.message,
+                type: SnackbarType.error,
+              );
+            } else {
+              // It's a plain text message from API
+              AppSnackbar.showError(
+                context,
+                state.message,
+              );
+            }
           }
         },
         child: Scaffold(
           body: SafeArea(
-            child: Stack(
+            child: SelectionArea(
+              selectionControls: materialTextSelectionControls,
+              child: Stack(
               children: [
                 Container(
                   width: double.infinity,
@@ -96,6 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
               ],
+            ),
             ),
           ),
         ),
