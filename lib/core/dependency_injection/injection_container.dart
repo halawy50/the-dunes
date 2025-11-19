@@ -1,39 +1,74 @@
 import 'package:get_it/get_it.dart';
+import 'package:the_dunes/core/network/api_client.dart';
+import 'package:the_dunes/features/anylisis/persentation/cubit/analysis_cubit.dart';
+import 'package:the_dunes/features/booking/data/datasources/booking_options_remote_data_source.dart';
+import 'package:the_dunes/features/booking/data/datasources/booking_remote_data_source.dart';
+import 'package:the_dunes/features/booking/persentation/cubit/booking_cubit.dart';
+import 'package:the_dunes/features/booking/persentation/cubit/new_booking_cubit.dart';
+import 'package:the_dunes/features/booking/persentation/cubit/pickup_time_cubit.dart';
+import 'package:the_dunes/features/camp/persentation/cubit/camp_cubit.dart';
+import 'package:the_dunes/features/employees/persentation/cubit/employee_cubit.dart';
+import 'package:the_dunes/features/history/persentation/cubit/history_cubit.dart';
+import 'package:the_dunes/features/hotels/persentation/cubit/hotel_cubit.dart';
+import 'package:the_dunes/features/operations/persentation/cubit/operation_cubit.dart';
+import 'package:the_dunes/features/login/data/datasources/login_remote_data_source.dart';
 import 'package:the_dunes/features/login/data/repositories/login_repository_impl.dart';
 import 'package:the_dunes/features/login/domain/repositories/login_repository.dart';
 import 'package:the_dunes/features/login/domain/usecases/login_usecase.dart';
 import 'package:the_dunes/features/login/persentation/cubit/login_cubit.dart';
+import 'package:the_dunes/features/navbar/persentation/cubit/navbar_cubit.dart';
+import 'package:the_dunes/features/recipt_voucher/persentation/cubit/receipt_voucher_cubit.dart';
+import 'package:the_dunes/features/services/persentation/cubit/service_cubit.dart';
+import 'package:the_dunes/features/setting/persentation/cubit/setting_cubit.dart';
 
-final sl = GetIt.instance;
+final di = GetIt.instance;
 
 Future<void> init() async {
-  // Features - Login
-  // Cubit
-  sl.registerFactory(
-    () => LoginCubit(
-      sl(),
-    ),
+  // Reset GetIt if already initialized (for hot reload)
+  if (di.isRegistered<ApiClient>()) {
+    await di.reset();
+  }
+
+  // Network
+  di.registerLazySingleton(() => ApiClient());
+
+  // Data Sources
+  di.registerLazySingleton<LoginRemoteDataSource>(
+    () => LoginRemoteDataSourceImpl(di()),
+  );
+  di.registerLazySingleton<BookingRemoteDataSource>(
+    () => BookingRemoteDataSource(di()),
+  );
+  di.registerLazySingleton<BookingOptionsRemoteDataSource>(
+    () => BookingOptionsRemoteDataSource(di()),
+  );
+
+  // Repositories
+  di.registerLazySingleton<LoginRepository>(
+    () => LoginRepositoryImpl(di()),
   );
 
   // Use cases
-  sl.registerLazySingleton(() => LoginUseCase(sl()));
+  di.registerLazySingleton(() => LoginUseCase(di()));
 
-  // Repository
-  sl.registerLazySingleton<LoginRepository>(
-    () => LoginRepositoryImpl(),
+  // Cubits
+  di.registerFactory(() => LoginCubit(di()));
+  di.registerFactory(() => NavbarCubit());
+  di.registerFactory(() => AnalysisCubit());
+  di.registerFactory(() => BookingCubit(di<BookingRemoteDataSource>()));
+  di.registerFactory(
+    () => NewBookingCubit(
+      di<BookingOptionsRemoteDataSource>(),
+      di<BookingRemoteDataSource>(),
+    ),
   );
-
-  // TODO: Add data sources when you implement them
-  // sl.registerLazySingleton<LoginRemoteDataSource>(
-  //   () => LoginRemoteDataSourceImpl(client: sl()),
-  // );
-  //
-  // sl.registerLazySingleton<LoginLocalDataSource>(
-  //   () => LoginLocalDataSourceImpl(sharedPreferences: sl()),
-  // );
-
-  // Core - External
-  // TODO: Add external dependencies (SharedPreferences, etc.)
-  // final sharedPreferences = await SharedPreferences.getInstance();
-  // sl.registerLazySingleton(() => sharedPreferences);
+  di.registerFactory(() => PickupTimeCubit());
+  di.registerFactory(() => ReceiptVoucherCubit());
+  di.registerFactory(() => EmployeeCubit());
+  di.registerFactory(() => ServiceCubit());
+  di.registerFactory(() => HotelCubit());
+  di.registerFactory(() => OperationCubit());
+  di.registerFactory(() => CampCubit());
+  di.registerFactory(() => HistoryCubit());
+  di.registerFactory(() => SettingCubit());
 }

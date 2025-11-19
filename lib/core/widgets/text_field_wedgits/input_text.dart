@@ -20,6 +20,8 @@ class InputText extends StatefulWidget {
   final TextEditingController? controller;
   final Function(String)? onTextChanged;
   final Function(List<String>)? onFilesSplit;
+  final VoidCallback? onSubmitted;
+  final FocusNode? focusNode;
 
   const InputText({
     super.key,
@@ -34,6 +36,8 @@ class InputText extends StatefulWidget {
     this.controller,
     this.onTextChanged,
     this.onFilesSplit,
+    this.onSubmitted,
+    this.focusNode,
   });
 
   @override
@@ -217,15 +221,28 @@ class _InputTextState extends State<InputText> {
 
       default:
         final isPassword = widget.selectTypeTextField == SelectTypeTextField.PASSWORD;
+        final isEmail = widget.selectTypeTextField == SelectTypeTextField.EMAIL;
         return MouseRegion(
           onEnter: (_) => setState(() => _isHovered = true),
           onExit: (_) => setState(() => _isHovered = false),
           child: TextField(
             controller: _textController,
+            focusNode: widget.focusNode,
             cursorColor: AppColor.WHITE,
             style: TextStyle(color: widget.inputColor),
             keyboardType: _getKeyboardType(),
             obscureText: isPassword ? _obscurePassword : false,
+            autofillHints: isEmail 
+                ? [AutofillHints.email]
+                : isPassword 
+                    ? [AutofillHints.password]
+                    : null,
+            textInputAction: isEmail 
+                ? TextInputAction.next
+                : isPassword 
+                    ? TextInputAction.done
+                    : TextInputAction.next,
+            onSubmitted: (_) => widget.onSubmitted?.call(),
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderSide: BorderSide(

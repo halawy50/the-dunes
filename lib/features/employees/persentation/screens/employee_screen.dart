@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_dunes/core/utils/app_snackbar.dart';
+import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/dependency_injection/injection_container.dart';
 import 'package:the_dunes/features/employees/persentation/cubit/employee_cubit.dart';
 
@@ -17,7 +18,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = sl<EmployeeCubit>();
+        final cubit = di<EmployeeCubit>();
         cubit.init();
         return cubit;
       },
@@ -26,7 +27,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           if (state is EmployeeSuccess) {
             AppSnackbar.showTranslated(
               context: context,
-              translationKey: 'employee.success',
+              translationKey: 'employees.success',
               type: SnackbarType.success,
             );
           } else if (state is EmployeeError) {
@@ -40,15 +41,22 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         child: BlocBuilder<EmployeeCubit, EmployeeState>(
           builder: (context, state) {
             if (state is EmployeeLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Container(
+                color: AppColor.GRAY_F6F6F6,
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
               );
             }
 
-            return const Padding(
-              padding: EdgeInsets.all(24.0),
+            return Container(
+              width: double.infinity,
+              color: AppColor.GRAY_F6F6F6,
+              padding: const EdgeInsets.all(24.0),
               child: Center(
-                child: Text('Employee Screen'),
+                child: Text(
+                  'employees.title'.tr(),
+                  style: const TextStyle(fontSize: 20),
+                ),
               ),
             );
           },

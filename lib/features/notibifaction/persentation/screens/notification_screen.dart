@@ -18,7 +18,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = sl<NotificationCubit>();
+        final cubit = di<NotificationCubit>();
         cubit.init();
         return cubit;
       },

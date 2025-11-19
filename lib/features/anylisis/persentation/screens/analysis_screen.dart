@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/utils/app_snackbar.dart';
+import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/dependency_injection/injection_container.dart';
 import 'package:the_dunes/features/anylisis/persentation/cubit/analysis_cubit.dart';
 
@@ -18,7 +18,7 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = sl<AnalysisCubit>();
+        final cubit = di<AnalysisCubit>();
         cubit.init();
         return cubit;
       },
@@ -39,20 +39,21 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
           }
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: Text('analysis.title'.tr()),
-            backgroundColor: AppColor.BLACK_0,
-          ),
+          backgroundColor: AppColor.GRAY_F6F6F6,
           body: BlocBuilder<AnalysisCubit, AnalysisState>(
             builder: (context, state) {
               if (state is AnalysisLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               }
 
-              return const Center(
-                child: Text('Analysis Screen'),
+              return Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Center(
+                  child: Text(
+                    'analysis.title'.tr(),
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ),
               );
             },
           ),

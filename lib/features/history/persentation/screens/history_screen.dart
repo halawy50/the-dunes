@@ -18,7 +18,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = sl<HistoryCubit>();
+        final cubit = di<HistoryCubit>();
         cubit.init();
         return cubit;
       },
@@ -39,20 +39,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
           }
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: Text('history.title'.tr()),
-            backgroundColor: AppColor.BLACK_0,
-          ),
+          backgroundColor: AppColor.GRAY_F6F6F6,
           body: BlocBuilder<HistoryCubit, HistoryState>(
             builder: (context, state) {
               if (state is HistoryLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               }
 
-              return const Center(
-                child: Text('History Screen'),
+              return Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Center(
+                  child: Text(
+                    'history.title'.tr(),
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ),
               );
             },
           ),

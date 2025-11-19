@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:the_dunes/core/network/api_exception.dart';
 import 'package:the_dunes/features/login/domain/entities/user_entity.dart';
 import 'package:the_dunes/features/login/domain/usecases/login_usecase.dart';
 
@@ -21,7 +22,9 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> login(String email, String password) async {
     if (kDebugMode) {
       print('[LoginCubit] Login process started');
-      print('[LoginCubit] Email: ${email.isNotEmpty ? '${email.substring(0, email.indexOf('@') > 0 ? email.indexOf('@') : email.length)}@***' : 'empty'}');
+      print(
+        '[LoginCubit] Email: ${email.isNotEmpty ? '${email.substring(0, email.indexOf('@') > 0 ? email.indexOf('@') : email.length)}@***' : 'empty'}',
+      );
       print('[LoginCubit] Password length: ${password.length}');
     }
 
@@ -34,21 +37,26 @@ class LoginCubit extends Cubit<LoginState> {
 
     // Validate email format
     if (!_isValidEmail(email)) {
-      if (kDebugMode) print('[LoginCubit] ❌ Validation failed: Invalid email format');
+      if (kDebugMode)
+        print('[LoginCubit] ❌ Validation failed: Invalid email format');
       emit(LoginError('login.email_invalid'));
       return;
     }
 
     // Validate password length (minimum 6 characters)
     if (password.length < 6) {
-      if (kDebugMode) print('[LoginCubit] ❌ Validation failed: Password too short (${password.length} < 6)');
+      if (kDebugMode)
+        print(
+          '[LoginCubit] ❌ Validation failed: Password too short (${password.length} < 6)',
+        );
       emit(LoginError('login.password_min_length'));
       return;
     }
 
-    if (kDebugMode) print('[LoginCubit] ✅ Validation passed, starting login API call...');
+    if (kDebugMode)
+      print('[LoginCubit] ✅ Validation passed, starting login API call...');
     emit(LoginLoading());
-    
+
     try {
       final user = await loginUseCase(email, password);
       if (kDebugMode) {
@@ -63,7 +71,16 @@ class LoginCubit extends Cubit<LoginState> {
         print('[LoginCubit] ❌ Login failed with error: $e');
         print('[LoginCubit] Error type: ${e.runtimeType}');
       }
-      emit(LoginError(e.toString()));
+      
+      String errorMessage;
+      if (e is ApiException) {
+        // Use the message from API response directly
+        errorMessage = e.message;
+      } else {
+        errorMessage = 'login.login_failed';
+      }
+      
+      emit(LoginError(errorMessage));
     }
   }
 
