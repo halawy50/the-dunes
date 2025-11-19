@@ -12,7 +12,6 @@ class BookingInitial extends BookingState {}
 class BookingLoading extends BookingState {}
 
 class BookingSuccess extends BookingState {
-  // TODO: Add success data here
   const BookingSuccess();
 }
 

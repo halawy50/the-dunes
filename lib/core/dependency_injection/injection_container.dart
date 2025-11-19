@@ -1,7 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:the_dunes/core/network/api_client.dart';
 import 'package:the_dunes/features/anylisis/persentation/cubit/analysis_cubit.dart';
+import 'package:the_dunes/features/booking/data/datasources/booking_options_remote_data_source.dart';
+import 'package:the_dunes/features/booking/data/datasources/booking_remote_data_source.dart';
 import 'package:the_dunes/features/booking/persentation/cubit/booking_cubit.dart';
+import 'package:the_dunes/features/booking/persentation/cubit/new_booking_cubit.dart';
 import 'package:the_dunes/features/booking/persentation/cubit/pickup_time_cubit.dart';
 import 'package:the_dunes/features/camp/persentation/cubit/camp_cubit.dart';
 import 'package:the_dunes/features/employees/persentation/cubit/employee_cubit.dart';
@@ -33,6 +36,12 @@ Future<void> init() async {
   di.registerLazySingleton<LoginRemoteDataSource>(
     () => LoginRemoteDataSourceImpl(di()),
   );
+  di.registerLazySingleton<BookingRemoteDataSource>(
+    () => BookingRemoteDataSource(di()),
+  );
+  di.registerLazySingleton<BookingOptionsRemoteDataSource>(
+    () => BookingOptionsRemoteDataSource(di()),
+  );
 
   // Repositories
   di.registerLazySingleton<LoginRepository>(
@@ -46,7 +55,13 @@ Future<void> init() async {
   di.registerFactory(() => LoginCubit(di()));
   di.registerFactory(() => NavbarCubit());
   di.registerFactory(() => AnalysisCubit());
-  di.registerFactory(() => BookingCubit());
+  di.registerFactory(() => BookingCubit(di<BookingRemoteDataSource>()));
+  di.registerFactory(
+    () => NewBookingCubit(
+      di<BookingOptionsRemoteDataSource>(),
+      di<BookingRemoteDataSource>(),
+    ),
+  );
   di.registerFactory(() => PickupTimeCubit());
   di.registerFactory(() => ReceiptVoucherCubit());
   di.registerFactory(() => EmployeeCubit());

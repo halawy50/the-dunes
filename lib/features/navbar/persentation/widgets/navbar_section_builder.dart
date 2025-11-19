@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:the_dunes/features/anylisis/persentation/screens/analysis_screen.dart';
 import 'package:the_dunes/features/booking/persentation/screens/booking_screen.dart';
+import 'package:the_dunes/features/booking/persentation/screens/new_book_screen.dart';
 import 'package:the_dunes/features/booking/persentation/screens/pickup_time_screen.dart';
 import 'package:the_dunes/features/camp/persentation/screens/camp_screen.dart';
 import 'package:the_dunes/features/employees/persentation/screens/employee_screen.dart';
@@ -13,7 +15,13 @@ import 'package:the_dunes/features/services/persentation/screens/service_screen.
 import 'package:the_dunes/features/setting/persentation/screens/setting_screen.dart';
 
 class NavbarSectionBuilder {
-  static Widget buildSectionPage(NavbarSection section) {
+  static Widget buildSectionPage(NavbarSection section, BuildContext context) {
+    if (section == NavbarSection.bookings) {
+      final path = GoRouterState.of(context).uri.path;
+      if (path == '/booking/new') {
+        return const NewBookScreen();
+      }
+    }
     switch (section) {
       case NavbarSection.analysis:
         return const AnalysisScreen();

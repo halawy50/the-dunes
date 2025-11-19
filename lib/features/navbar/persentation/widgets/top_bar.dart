@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_dunes/core/data/datasources/token_storage.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
+import 'package:the_dunes/features/navbar/persentation/cubit/navbar_cubit.dart';
 import 'package:the_dunes/features/navbar/persentation/widgets/action_circle_button.dart';
 import 'package:the_dunes/features/navbar/persentation/widgets/language_switcher.dart';
 import 'package:the_dunes/features/navbar/persentation/widgets/user_chip.dart';
@@ -34,6 +36,29 @@ class TopBar extends StatelessWidget {
       ),
       child: Row(
         children: [
+          BlocBuilder<NavbarCubit, NavbarState>(
+            builder: (context, state) {
+              if (state.isSidebarVisible) {
+                return const SizedBox.shrink();
+              }
+              return Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.menu,
+                      size: 24,
+                      color: AppColor.BLACK_0,
+                    ),
+                    onPressed: () {
+                      context.read<NavbarCubit>().toggleSidebar();
+                    },
+                    tooltip: 'common.show_menu'.tr(),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+              );
+            },
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

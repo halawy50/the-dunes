@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/utils/constants/assets/images.dart';
 import 'package:the_dunes/features/navbar/persentation/cubit/navbar_cubit.dart';
@@ -65,6 +66,23 @@ class Sidebar extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              BlocBuilder<NavbarCubit, NavbarState>(
+                builder: (context, state) {
+                  return IconButton(
+                    icon: const Icon(
+                      Icons.menu_open,
+                      size: 20,
+                      color: AppColor.BLACK_0,
+                    ),
+                    onPressed: () {
+                      context.read<NavbarCubit>().toggleSidebar();
+                    },
+                    tooltip: 'common.hide_menu'.tr(),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  );
+                },
               ),
             ],
           ),

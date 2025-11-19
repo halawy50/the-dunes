@@ -170,4 +170,8 @@ class NavbarCubit extends Cubit<NavbarState> {
     if (state.selectedSection == section) return;
     emit(state.copyWith(selectedSection: section));
   }
+
+  void toggleSidebar() {
+    emit(state.copyWith(isSidebarVisible: !state.isSidebarVisible));
+  }
 }

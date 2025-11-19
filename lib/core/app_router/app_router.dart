@@ -11,11 +11,12 @@ class AppRouter {
   static final GlobalKey<NavigatorState> navbarKey = GlobalKey<NavigatorState>();
 
   static NavbarSection? getSectionFromPath(String path) {
+    if (path.startsWith('/booking')) {
+      return NavbarSection.bookings;
+    }
     switch (path) {
       case '/analysis':
         return NavbarSection.analysis;
-      case '/booking':
-        return NavbarSection.bookings;
       case '/pickup_time':
         return NavbarSection.pickupTime;
       case '/receipt_voucher':

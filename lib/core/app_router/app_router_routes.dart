@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:the_dunes/core/app_router/app_router.dart';
+import 'package:the_dunes/features/booking/persentation/screens/new_book_screen.dart';
 import 'package:the_dunes/features/login/persentation/screens/login_screen.dart';
 import 'package:the_dunes/features/navbar/persentation/cubit/navbar_cubit.dart';
 import 'package:the_dunes/features/navbar/persentation/screens/navbar_screen.dart';
@@ -44,6 +45,10 @@ class AppRouterRoutes {
           GoRoute(
             path: '/booking',
             builder: (context, state) => const SizedBox.shrink(),
+          ),
+          GoRoute(
+            path: '/booking/new',
+            builder: (context, state) => const NewBookScreen(),
           ),
         ],
       ),

@@ -69,8 +69,8 @@ class NavbarContentBuilder {
             switchInCurve: Curves.easeInOut,
             switchOutCurve: Curves.easeInOut,
             child: KeyedSubtree(
-              key: ValueKey(validSection),
-              child: NavbarSectionBuilder.buildSectionPage(validSection),
+              key: ValueKey(GoRouterState.of(context).uri.path),
+              child: NavbarSectionBuilder.buildSectionPage(validSection, context),
             ),
           ),
         );
