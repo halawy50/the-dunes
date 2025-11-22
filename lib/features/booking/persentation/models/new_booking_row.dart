@@ -6,8 +6,10 @@ import 'package:the_dunes/features/booking/persentation/models/new_booking_servi
 
 class NewBookingRow {
   String? ticketNumber;
+  String? voucher;
   String? orderNumber;
   String? pickupTime;
+  String? pickupStatus;
   String guestName;
   String? phoneNumber;
   LocationModel? location;
@@ -29,8 +31,10 @@ class NewBookingRow {
 
   NewBookingRow({
     this.ticketNumber,
+    this.voucher,
     this.orderNumber,
     this.pickupTime,
+    this.pickupStatus,
     required this.guestName,
     this.phoneNumber,
     this.location,
@@ -57,10 +61,12 @@ class NewBookingRow {
       service.calculateTotal();
       total += service.totalPrice;
     }
+    // Total Price is based on sum of services prices only (without VAT)
     priceBeforeDiscount = total;
     priceAfterDiscount = priceBeforeDiscount * (1 - discount / 100);
     vat = priceAfterDiscount * 0.05;
-    netProfit = priceAfterDiscount + vat;
+    // netProfit (Total Price) = price after discount
+    netProfit = priceAfterDiscount;
   }
 
 }

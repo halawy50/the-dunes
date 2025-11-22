@@ -27,6 +27,7 @@ class NewBookDropdowns {
     return BaseTableDropdownHelpers.statusDropdown(
       value: row.status,
       items: statuses,
+      hint: 'booking.status',
       onChanged: (value) {
         if (value != null) {
           row.status = value;
@@ -40,12 +41,14 @@ class NewBookDropdowns {
     BuildContext context,
     NewBookingRow row,
     int index,
-    NewBookingCubit cubit,
-  ) => NewBookDropdownsLocationAgent.buildAgentDropdown(
+    NewBookingCubit cubit, {
+    bool hasError = false,
+  }) => NewBookDropdownsLocationAgent.buildAgentDropdown(
         context,
         row,
         index,
         cubit,
+        hasError: hasError,
       );
 
   static Widget buildHotelDropdown(
@@ -58,6 +61,7 @@ class NewBookDropdowns {
     return BaseTableDropdownHelpers.modelDropdown<int>(
       value: row.hotel?.id,
       items: hotels.map((h) => h.id).toList(),
+      hint: 'booking.hotel_name',
       onChanged: (value) {
         if (value != null) {
           row.hotel = hotels.firstWhere((h) => h.id == value);
@@ -97,6 +101,7 @@ class NewBookDropdowns {
   ) {
     return BaseTableDropdownHelpers.paymentDropdown(
       value: row.payment,
+      hint: 'booking.payment',
       onChanged: (value) {
         if (value != null) {
           row.payment = value;
@@ -114,9 +119,30 @@ class NewBookDropdowns {
   ) {
     return BaseTableDropdownHelpers.currencyDropdown(
       value: row.currency,
+      hint: 'booking.currency',
       onChanged: (value) {
         if (value != null) {
           row.currency = value;
+          cubit.updateBookingRow(index, row);
+        }
+      },
+    );
+  }
+
+  static Widget buildPickupStatusDropdown(
+    BuildContext context,
+    NewBookingRow row,
+    int index,
+    NewBookingCubit cubit,
+  ) {
+    final pickupStatuses = ['YET', 'INWAY', 'PICKED'];
+    return BaseTableDropdownHelpers.statusDropdown(
+      value: row.pickupStatus ?? 'YET',
+      items: pickupStatuses,
+      hint: 'booking.pickup_status',
+      onChanged: (value) {
+        if (value != null) {
+          row.pickupStatus = value;
           cubit.updateBookingRow(index, row);
         }
       },

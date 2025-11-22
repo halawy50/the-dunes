@@ -15,13 +15,25 @@ class BaseTableTextCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text ?? placeholder,
-      style: style ??
-          TextStyle(
-            fontSize: 12,
-            color: text == null ? AppColor.GRAY_HULF : AppColor.BLACK_0,
+    return SizedBox(
+      height: 40,
+      width: double.infinity,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Text(
+            text ?? placeholder,
+            style: style ??
+                TextStyle(
+                  fontSize: 13,
+                  color: text == null || text!.isEmpty ? AppColor.GRAY_HULF : AppColor.BLACK_0,
+                ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
+        ),
+      ),
     );
   }
 }

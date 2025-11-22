@@ -47,6 +47,9 @@
     "internal_server_error": "आंतरिक सर्वर त्रुटि",
     "unknown_error": "अज्ञात त्रुटि",
     "connection_failed": "सर्वर से कनेक्ट नहीं हो सका। कृपया बाद में पुनः प्रयास करें।",
+    "connection_error": "सर्वर से कनेक्ट नहीं हो सका। कृपया अपना इंटरनेट कनेक्शन जांचें।",
+    "connection_timeout": "कनेक्शन टाइमआउट। कृपया पुनः प्रयास करें।",
+    "server_error": "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
     "unexpected_error": "एक अप्रत्याशित त्रुटि हुई। कृपया पुनः प्रयास करें।",
     "invalid_response": "सर्वर से अमान्य प्रतिक्रिया प्रारूप",
     "request_failed": "अनुरोध विफल",
@@ -122,6 +125,7 @@
     "search_by_name": "नाम से खोजें",
     "filter": "फ़िल्टर",
     "services": "सेवाएं",
+    "service": "सेवा",
     "adult": "वयस्क",
     "child": "बच्चा",
     "kid": "छोटा बच्चा",
@@ -139,7 +143,14 @@
     "p_after_discount": "छूट के बाद मूल्य",
     "vat": "वैट",
     "net_profit": "शुद्ध लाभ",
-    "select_agent_location": "पहले एजेंट और स्थान चुनें"
+    "select_agent_location": "पहले एजेंट और स्थान चुनें",
+    "loading": "लोड हो रहा है...",
+    "select_service": "सेवा चुनें",
+    "agent_required": "एजेंट आवश्यक है",
+    "location_required": "स्थान आवश्यक है",
+    "error_loading_services": "सेवाएं लोड करने में त्रुटि",
+    "no_services_available": "कोई सेवाएं उपलब्ध नहीं हैं",
+    "saved_successfully": "बुकिंग सफलतापूर्वक सहेजी गई!"
   },
   "receipt_voucher": {
     "title": "रसीद वाउचर",

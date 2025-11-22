@@ -14,43 +14,52 @@ class NewBookingRowConverter {
       employeeId: employeeId,
       guestName: row.guestName,
       phoneNumber: row.phoneNumber,
-      statusBook: row.status,
+      // Default status to PENDING if empty
+      statusBook: row.status.isNotEmpty ? row.status.toUpperCase() : 'PENDING',
       agentName: row.agent?.id ?? 0,
       agentNameStr: row.agent?.name,
-      locationId: row.location?.id,
+      // If location is Global (id = -1), send null so it won't be included in the request
+      // Otherwise, send the location ID (even if it's a default selection)
+      locationId: (row.location?.id != null && row.location!.id == -1) ? null : row.location?.id,
       locationName: row.location?.name,
       hotelName: row.hotel?.name,
       room: row.room,
       note: row.note,
       driver: row.driver?.name,
       carNumber: row.carNumber,
-      payment: row.payment,
+      // Convert payment to uppercase (CASH, CARD, PENDING)
+      payment: row.payment.toUpperCase(),
       typeOperation: 'BOOKING',
       services: _convertServices(row.services),
       priceBeforePercentage: row.priceBeforeDiscount,
       priceAfterPercentage: row.priceAfterDiscount,
       finalPrice: row.netProfit,
-      voucher: row.ticketNumber,
+      voucher: row.voucher,
       orderNumber: row.orderNumber,
       pickupTime: row.pickupTime,
+      // Set default pickupStatus to 'YET' if not selected
+      pickupStatus: row.pickupStatus ?? 'YET',
     );
   }
 
   static List<BookingServiceModel> _convertServices(
     List<NewBookingService> services,
   ) {
-    return services.map((s) {
+    return services
+        .where((s) => s.serviceAgent != null) // Filter out services without selection
+        .map((s) {
       return BookingServiceModel(
         id: 0,
-        serviceId: s.serviceAgent?.serviceId ?? 0,
-        serviceName: s.serviceAgent?.serviceName,
-        locationId: s.serviceAgent?.locationId,
+        serviceId: s.serviceAgent!.serviceId,
+        serviceName: s.serviceAgent!.serviceName,
+        // locationId can be null for global services
+        locationId: s.serviceAgent!.locationId,
         adultNumber: s.adult,
         childNumber: s.child,
         kidNumber: s.kid,
-        adultPrice: s.serviceAgent?.adultPrice ?? 0.0,
-        childPrice: s.serviceAgent?.childPrice ?? 0.0,
-        kidPrice: s.serviceAgent?.kidPrice ?? 0.0,
+        adultPrice: s.serviceAgent!.adultPrice,
+        childPrice: s.serviceAgent!.childPrice ?? 0.0,
+        kidPrice: s.serviceAgent!.kidPrice ?? 0.0,
         totalPriceService: s.totalPrice,
       );
     }).toList();

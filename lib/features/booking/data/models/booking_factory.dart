@@ -5,7 +5,7 @@ class BookingFactory {
   static BookingModel fromJson(Map<String, dynamic> json) {
     return BookingModel(
       id: json['id'] ?? 0,
-      time: json['time'],
+      time: json['time']?.toString() ?? json['createAt']?.toString(),
       voucher: json['voucher'],
       orderNumber: json['orderNumber'],
       pickupTime: json['pickupTime']?.toString(),
@@ -15,8 +15,13 @@ class BookingFactory {
       guestName: json['guestName'] ?? '',
       phoneNumber: json['phoneNumber'],
       statusBook: json['statusBook'] ?? 'PENDING',
-      agentName: json['agentName'] ?? 0,
-      agentNameStr: json['agentNameStr'],
+      // API returns agentId (int) and agentName (String)
+      // agentName in model is actually the agent ID (int)
+      agentName: (json['agentId'] ?? 0) as int,
+      // agentNameStr in model is the agent name (String)
+      agentNameStr: json['agentName'] is String 
+          ? json['agentName'] as String
+          : json['agentNameStr'],
       locationId: json['locationId'],
       locationName: json['locationName'],
       hotelName: json['hotelName'],
@@ -35,7 +40,7 @@ class BookingFactory {
       priceBeforePercentage: (json['priceBeforePercentage'] ?? 0.0).toDouble(),
       priceAfterPercentage: (json['priceAfterPercentage'] ?? 0.0).toDouble(),
       finalPrice: (json['finalPrice'] ?? 0.0).toDouble(),
-      bookingDate: json['bookingDate'],
+      bookingDate: json['bookingDate']?.toString() ?? json['createAt']?.toString(),
     );
   }
 }

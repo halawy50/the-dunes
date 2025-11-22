@@ -4,7 +4,7 @@ import 'package:the_dunes/features/booking/data/models/booking_service_model.dar
 
 class BookingModel {
   final int id;
-  final int? time;
+  final String? time;
   final String? voucher;
   final String? orderNumber;
   final String? pickupTime;

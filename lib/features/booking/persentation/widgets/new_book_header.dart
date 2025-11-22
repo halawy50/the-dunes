@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:the_dunes/core/utils/app_snackbar.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/features/booking/persentation/cubit/new_booking_cubit.dart';
 
@@ -10,8 +11,38 @@ class NewBookHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+    return BlocListener<NewBookingCubit, NewBookingState>(
+      listener: (context, state) {
+        // Only show errors for saving operations, not for init errors
+        if (state is NewBookingError) {
+          // Check if this is a save error (state was NewBookingSaving before)
+          // We'll show the error message
+          final message = state.message;
+          if (message.contains('booking.') || 
+              message.contains('errors.')) {
+            AppSnackbar.showTranslated(
+              context: context,
+              translationKey: message,
+              type: SnackbarType.error,
+            );
+          } else {
+            AppSnackbar.show(
+              context: context,
+              message: message,
+              type: SnackbarType.error,
+            );
+          }
+        } else if (state is NewBookingSaved) {
+          AppSnackbar.showTranslated(
+            context: context,
+            translationKey: 'booking.saved_successfully',
+            type: SnackbarType.success,
+          );
+          context.go('/booking');
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: const BoxDecoration(
         color: AppColor.WHITE,
         boxShadow: [
@@ -51,18 +82,50 @@ class NewBookHeader extends StatelessWidget {
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              context.read<NewBookingCubit>().saveBookings();
+          BlocBuilder<NewBookingCubit, NewBookingState>(
+            buildWhen: (previous, current) {
+              // Rebuild when state changes or when rows change
+              return previous.runtimeType != current.runtimeType ||
+                     current is NewBookingLoaded;
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.YELLOW,
-              foregroundColor: AppColor.WHITE,
-            ),
-            child: Text('common.save'.tr()),
+            builder: (context, state) {
+              final cubit = context.read<NewBookingCubit>();
+              final validCount = cubit.getValidBookingsCount();
+              final isLoading = state is NewBookingSaving;
+              
+              return ElevatedButton(
+                onPressed: isLoading || validCount == 0
+                    ? null
+                    : () {
+                        cubit.saveBookings();
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isLoading || validCount == 0
+                      ? AppColor.GRAY_HULF
+                      : AppColor.YELLOW,
+                  foregroundColor: AppColor.WHITE,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
+                child: isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(AppColor.WHITE),
+                        ),
+                      )
+                    : Text(
+                        validCount > 0
+                            ? '${'common.save'.tr()} (${validCount})'
+                            : 'common.save'.tr(),
+                      ),
+              );
+            },
           ),
         ],
       ),
+    ),
     );
   }
 }

@@ -22,10 +22,28 @@ class NewBookingService {
   });
 
   void calculateTotal() {
-    adultPrice = (serviceAgent?.adultPrice ?? 0.0) * adult;
-    childPrice = (serviceAgent?.childPrice ?? 0.0) * child;
-    kidPrice = (serviceAgent?.kidPrice ?? 0.0) * kid;
-    totalPrice = adultPrice + childPrice + kidPrice;
+    if (serviceAgent != null) {
+      // Set unit prices from service agent (these are per-person prices)
+      adultPrice = serviceAgent!.adultPrice;
+      childPrice = serviceAgent!.childPrice ?? 0.0;
+      kidPrice = serviceAgent!.kidPrice ?? 0.0;
+      
+      // Calculate total price based on quantity × unit price
+      totalPrice = (adultPrice * adult) + (childPrice * child) + (kidPrice * kid);
+      
+      print('[NewBookingService] 💰 Calculating total:');
+      print('  Adult: $adult × $adultPrice = ${adultPrice * adult}');
+      print('  Child: $child × $childPrice = ${childPrice * child}');
+      print('  Kid: $kid × $kidPrice = ${kidPrice * kid}');
+      print('  Total: $totalPrice');
+    } else {
+      // Reset all prices if no service is selected
+      adultPrice = 0.0;
+      childPrice = 0.0;
+      kidPrice = 0.0;
+      totalPrice = 0.0;
+      print('[NewBookingService] 💰 No service selected, prices reset to 0');
+    }
   }
 }
 

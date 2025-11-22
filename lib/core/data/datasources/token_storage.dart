@@ -9,13 +9,44 @@ class TokenStorage {
   static const String _userDataKey = 'user_data';
 
   static Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tokenKey, token);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final success = await prefs.setString(_tokenKey, token);
+      if (success) {
+        print('[TokenStorage] ✅ Token saved successfully');
+        print('[TokenStorage]    Token length: ${token.length}');
+        print('[TokenStorage]    Token preview: ${token.substring(0, token.length > 30 ? 30 : token.length)}...');
+        
+        // Verify token was saved
+        final saved = await prefs.getString(_tokenKey);
+        if (saved == token) {
+          print('[TokenStorage] ✅ Token verification: SUCCESS');
+        } else {
+          print('[TokenStorage] ❌ Token verification: FAILED');
+        }
+      } else {
+        print('[TokenStorage] ❌ Failed to save token!');
+      }
+    } catch (e) {
+      print('[TokenStorage] ❌ Error saving token: $e');
+      rethrow;
+    }
   }
 
   static Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_tokenKey);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(_tokenKey);
+      if (token != null && token.isNotEmpty) {
+        print('[TokenStorage] ✅ Token retrieved: ${token.length} chars');
+      } else {
+        print('[TokenStorage] ⚠️ No token found in storage');
+      }
+      return token;
+    } catch (e) {
+      print('[TokenStorage] ❌ Error getting token: $e');
+      return null;
+    }
   }
 
   static Future<void> deleteToken() async {

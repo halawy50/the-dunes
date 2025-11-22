@@ -6,7 +6,11 @@ import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/core/utils/constants/assets/images.dart';
 import 'package:the_dunes/core/utils/app_snackbar.dart';
 import 'package:the_dunes/core/app_router/app_router.dart';
+import 'package:the_dunes/core/data/datasources/auth_remote_data_source.dart';
+import 'package:the_dunes/core/data/datasources/token_storage.dart';
 import 'package:the_dunes/core/dependency_injection/injection_container.dart';
+import 'package:the_dunes/core/network/api_client.dart';
+import 'package:the_dunes/features/login/data/models/permissions_model.dart';
 import 'package:the_dunes/features/login/persentation/cubit/login_cubit.dart';
 
 import '../widgets/login_content.dart';
@@ -22,6 +26,73 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _hasCheckedToken = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkTokenAndAutoLogin();
+  }
+
+  Future<void> _checkTokenAndAutoLogin() async {
+    if (_hasCheckedToken) return;
+    _hasCheckedToken = true;
+
+    final token = await TokenStorage.getToken();
+    if (token == null || token.isEmpty) {
+      print('[LoginScreen] No token found, showing login form');
+      return;
+    }
+
+    print('[LoginScreen] Token found, checking validity...');
+    
+    try {
+      final apiClient = di<ApiClient>();
+      apiClient.setToken(token);
+      
+      final authDataSource = AuthRemoteDataSource(apiClient);
+      final response = await authDataSource.checkToken();
+      
+      if (response['success'] == true && 
+          response['data'] != null &&
+          response['data']['isValid'] == true) {
+        print('[LoginScreen] ✅ Token is valid, auto-login...');
+        
+        final data = response['data'] as Map<String, dynamic>;
+        if (data['employee'] != null) {
+          final employee = data['employee'] as Map<String, dynamic>;
+          
+          if (employee['permissions'] != null) {
+            final permissions = PermissionsModel.fromJson(
+              employee['permissions'] as Map<String, dynamic>,
+            );
+            await TokenStorage.savePermissions(permissions);
+          }
+          
+          await TokenStorage.saveUserData({
+            'id': employee['id'],
+            'name': employee['name'],
+            'email': employee['email'],
+            'image': employee['image'],
+          });
+        }
+        
+        // Navigate to home
+        if (mounted) {
+          context.go(AppRouter.home);
+        }
+      } else {
+        print('[LoginScreen] ❌ Token is invalid, showing login form');
+        await TokenStorage.deleteToken();
+        apiClient.setToken(null);
+      }
+    } catch (e) {
+      print('[LoginScreen] ❌ Error checking token: $e');
+      // If 401 or any error, clear token and show login form
+      await TokenStorage.deleteToken();
+      di<ApiClient>().setToken(null);
+    }
+  }
 
   @override
   void dispose() {

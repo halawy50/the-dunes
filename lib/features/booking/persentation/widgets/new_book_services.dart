@@ -60,10 +60,13 @@ class NewBookServices extends StatelessWidget {
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        BaseTableWidget<NewBookingService>(
-          columns: columns,
-          data: row.services,
-          config: BaseTableConfig.editableConfig,
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: BaseTableWidget<NewBookingService>(
+            columns: columns,
+            data: row.services,
+            config: BaseTableConfig.editableConfig,
+          ),
         ),
         const SizedBox(height: 8),
         ElevatedButton.icon(

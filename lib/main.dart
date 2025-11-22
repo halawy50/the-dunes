@@ -22,10 +22,13 @@ void main() async {
   // Initialize API language
   ApiLanguageHelper.initializeApiLanguage();
   
-  // Load saved token if exists
+  // Load saved token if exists and set it in ApiClient
   final savedToken = await TokenStorage.getToken();
-  if (savedToken != null) {
+  if (savedToken != null && savedToken.isNotEmpty) {
     di.di<ApiClient>().setToken(savedToken);
+    print('[Main] ✅ Token loaded and set in ApiClient: ${savedToken.substring(0, savedToken.length > 20 ? 20 : savedToken.length)}...');
+  } else {
+    print('[Main] ⚠️ No saved token found');
   }
   
   runApp(

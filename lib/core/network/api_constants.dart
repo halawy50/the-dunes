@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ApiConstants {
   // Use 127.0.0.1 for web to avoid CORS issues, localhost for mobile/desktop
+  // Update the port to match your API server
   static String get baseUrl => kIsWeb 
       ? 'http://127.0.0.1:8080'
       : 'http://localhost:8080';
@@ -38,6 +39,8 @@ class ApiConstants {
   static String agentByIdEndpoint(int id) => '$agentsEndpoint/$id';
   static String agentServicesEndpoint(int agentId) =>
       '$agentsEndpoint/$agentId/services';
+  static String agentGlobalServicesEndpoint(int agentId) =>
+      '$agentsEndpoint/$agentId/services/global';
 
   // Service Agents endpoints
   static const String serviceAgentsEndpoint = '$apiPrefix/service-agents';

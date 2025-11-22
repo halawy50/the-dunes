@@ -6,11 +6,13 @@ class BaseTableDropdownHelpers {
     required String? value,
     required List<String> items,
     required void Function(String?) onChanged,
+    String? hint,
   }) {
     return BaseTableDropdownCell<String>(
       value: value,
       items: items,
       onChanged: onChanged,
+      hint: hint ?? 'booking.status',
     );
   }
 
@@ -20,12 +22,16 @@ class BaseTableDropdownHelpers {
     required void Function(T?) onChanged,
     required String Function(T) getDisplayText,
     String? Function(T)? getValue,
+    String? hint,
+    bool hasError = false,
   }) {
     return BaseTableDropdownCell<T>(
       value: value,
       items: items,
       onChanged: onChanged,
       displayText: getDisplayText,
+      hint: hint,
+      hasError: hasError,
     );
   }
 
@@ -33,12 +39,14 @@ class BaseTableDropdownHelpers {
     required String? value,
     required void Function(String?) onChanged,
     List<String>? payments,
+    String? hint,
   }) {
     final paymentOptions = payments ?? ['Cash', 'Card', 'Online'];
     return BaseTableDropdownCell<String>(
       value: value,
       items: paymentOptions,
       onChanged: onChanged,
+      hint: hint ?? 'booking.payment',
     );
   }
 
@@ -46,12 +54,14 @@ class BaseTableDropdownHelpers {
     required String? value,
     required void Function(String?) onChanged,
     List<String>? currencies,
+    String? hint,
   }) {
     final currencyOptions = currencies ?? ['AED', 'USD', 'EUR'];
     return BaseTableDropdownCell<String>(
       value: value,
       items: currencyOptions,
       onChanged: onChanged,
+      hint: hint ?? 'booking.currency',
     );
   }
 

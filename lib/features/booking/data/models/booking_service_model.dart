@@ -42,13 +42,19 @@ class BookingServiceModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    final json = <String, dynamic>{
       'serviceId': serviceId,
-      'locationId': locationId,
       'adultNumber': adultNumber,
       'childNumber': childNumber,
       'kidNumber': kidNumber,
     };
+    
+    // Only include locationId if it's not null and not -1 (Global)
+    if (locationId != null && locationId! > 0) {
+      json['locationId'] = locationId;
+    }
+    
+    return json;
   }
 }
 

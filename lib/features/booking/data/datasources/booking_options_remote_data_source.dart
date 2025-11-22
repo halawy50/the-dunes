@@ -15,25 +15,31 @@ class BookingOptionsRemoteDataSource {
 
   Future<List<LocationModel>> getAllLocations() async {
     try {
+      print('Fetching locations from: ${ApiConstants.locationsAllEndpoint}');
       final response = await apiClient.get(ApiConstants.locationsAllEndpoint);
+      print('Locations response: $response');
       final data = response['data'] as List<dynamic>? ?? [];
+      print('Locations data: $data');
       return data.map((json) => LocationModel.fromJson(json)).toList();
-    } on ApiException {
-      rethrow;
     } catch (e) {
-      throw ApiException(message: e.toString(), statusCode: 500);
+      // Return empty list instead of throwing - page should work even if endpoint fails
+      print('⚠️ Error in getAllLocations (returning empty list): $e');
+      return [];
     }
   }
 
   Future<List<AgentModel>> getAllAgents() async {
     try {
+      print('Fetching agents from: ${ApiConstants.agentsAllEndpoint}');
       final response = await apiClient.get(ApiConstants.agentsAllEndpoint);
+      print('Agents response: $response');
       final data = response['data'] as List<dynamic>? ?? [];
+      print('Agents data: $data');
       return data.map((json) => AgentModel.fromJson(json)).toList();
-    } on ApiException {
-      rethrow;
     } catch (e) {
-      throw ApiException(message: e.toString(), statusCode: 500);
+      // Return empty list instead of throwing - page should work even if endpoint fails
+      print('⚠️ Error in getAllAgents (returning empty list): $e');
+      return [];
     }
   }
 
@@ -63,10 +69,30 @@ class BookingOptionsRemoteDataSource {
       );
       final data = response['data'] as List<dynamic>? ?? [];
       return data.map((json) => ServiceAgentModel.fromJson(json)).toList();
-    } on ApiException {
-      rethrow;
     } catch (e) {
-      throw ApiException(message: e.toString(), statusCode: 500);
+      // Return empty list instead of throwing - dropdown should work even if endpoint fails
+      print('⚠️ Error in getServicesByAgentAndLocation (returning empty list): $e');
+      return [];
+    }
+  }
+
+  Future<List<ServiceAgentModel>> getServicesByAgentOnly({
+    required int agentId,
+  }) async {
+    try {
+      print('Fetching global services for agent $agentId from: ${ApiConstants.agentGlobalServicesEndpoint(agentId)}');
+      // Use the dedicated endpoint for global services (services without location)
+      final response = await apiClient.get(
+        ApiConstants.agentGlobalServicesEndpoint(agentId),
+      );
+      final data = response['data'] as List<dynamic>? ?? [];
+      final services = data.map((json) => ServiceAgentModel.fromJson(json)).toList();
+      print('✅ Retrieved ${services.length} global services for agent $agentId');
+      return services;
+    } catch (e) {
+      // Return empty list instead of throwing - dropdown should work even if endpoint fails
+      print('⚠️ Error in getServicesByAgentOnly (returning empty list): $e');
+      return [];
     }
   }
 
@@ -75,9 +101,9 @@ class BookingOptionsRemoteDataSource {
       final response = await apiClient.get('/api/drivers/all');
       final data = response['data'] as List<dynamic>? ?? [];
       return data.map((json) => DriverModel.fromJson(json)).toList();
-    } on ApiException {
-      rethrow;
     } catch (e) {
+      // Return default list instead of throwing - page should work even if endpoint fails
+      print('⚠️ Error in getDrivers (returning default list): $e');
       return [
         DriverModel(id: 1, name: 'NON'),
         DriverModel(id: 2, name: 'AZAM', phoneNumber: '+971 55 524 6715'),
@@ -93,9 +119,9 @@ class BookingOptionsRemoteDataSource {
       final response = await apiClient.get('/api/hotels/all');
       final data = response['data'] as List<dynamic>? ?? [];
       return data.map((json) => HotelModel.fromJson(json)).toList();
-    } on ApiException {
-      rethrow;
     } catch (e) {
+      // Return default list instead of throwing - page should work even if endpoint fails
+      print('⚠️ Error in getHotels (returning default list): $e');
       return [
         HotelModel(id: 1, name: 'Rixos The Palm Hotel & Suites'),
       ];

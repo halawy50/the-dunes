@@ -19,7 +19,23 @@ class LoginRepositoryImpl implements LoginRepository {
       final response = await remoteDataSource.login(email, password);
 
       if (response.success && response.data != null) {
-        await TokenStorage.saveToken(response.data!.token);
+        final token = response.data!.token;
+        
+        // Save token to storage
+        await TokenStorage.saveToken(token);
+        print('[LoginRepository] ✅ Token saved to TokenStorage: ${token.substring(0, token.length > 30 ? 30 : token.length)}...');
+        
+        // Update token in ApiClient immediately after login
+        di.di<ApiClient>().setToken(token);
+        print('[LoginRepository] ✅ Token set in ApiClient: ${token.substring(0, token.length > 30 ? 30 : token.length)}...');
+        
+        // Verify token is set
+        final verifyToken = await TokenStorage.getToken();
+        if (verifyToken != null && verifyToken == token) {
+          print('[LoginRepository] ✅ Token verification: SUCCESS');
+        } else {
+          print('[LoginRepository] ❌ Token verification: FAILED');
+        }
         
         if (response.data!.employee.permissions != null) {
           await TokenStorage.savePermissions(

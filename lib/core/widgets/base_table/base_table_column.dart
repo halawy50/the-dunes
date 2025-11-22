@@ -6,6 +6,8 @@ class BaseTableColumn<T> {
   final Widget Function(T item, int index) cellBuilder;
   final bool isEditable;
   final void Function(T item, dynamic newValue)? onCellEdit;
+  final EdgeInsets? headerPadding;
+  final String? headerHint;
 
   const BaseTableColumn({
     required this.headerKey,
@@ -13,6 +15,8 @@ class BaseTableColumn<T> {
     required this.cellBuilder,
     this.isEditable = false,
     this.onCellEdit,
+    this.headerPadding,
+    this.headerHint,
   });
 }
 

@@ -22,11 +22,13 @@ class BaseTableCellFactory {
     required void Function(String) onChanged,
     String? hint,
     bool isNumeric = false,
+    bool hasError = false,
   }) {
     return EditableCell(
       value: value,
       hint: hint,
       isNumeric: isNumeric,
+      hasError: hasError,
       onChanged: onChanged,
     );
   }
