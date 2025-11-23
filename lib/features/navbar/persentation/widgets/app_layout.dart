@@ -21,7 +21,7 @@ class AppLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final isRTL = context.locale.languageCode == 'ar';
     return Scaffold(
-      backgroundColor: AppColor.GRAY_WHITE,
+      backgroundColor: AppColor.WHITE,
       body: SafeArea(
         child: SelectionArea(
           selectionControls: materialTextSelectionControls,
@@ -43,7 +43,7 @@ class AppLayout extends StatelessWidget {
                       child: Column(
                         children: [
                           topBar,
-                          Expanded(
+                          Flexible(
                             child: Container(
                               width: double.infinity,
                               color: AppColor.GRAY_WHITE,

@@ -69,6 +69,7 @@
     "brand_subtitle": "Travel & Tourism",
     "bookings": "Бронирования",
     "bookings_subtitle": "Управление и мониторинг всех бронирований клиентов",
+    "title": "Бронирования",
     "pickup_time": "Время получения",
     "pickup_time_subtitle": "Управление расписанием получения",
     "receipt_voucher": "Квитанция",
@@ -94,6 +95,7 @@
   },
   "booking": {
     "title": "Бронирования",
+    "bookings_subtitle": "Управление и мониторинг всех бронирований клиентов",
     "success": "Действие бронирования выполнено",
     "pickup_time": "Время получения",
     "pickup_time_subtitle": "Управление расписанием получения",
@@ -127,6 +129,7 @@
     "invoice": "Счет",
     "search_by_name": "Поиск по имени",
     "filter": "Фильтр",
+    "load_more": "Загрузить еще",
     "services": "Услуги",
     "service": "Услуга",
     "adult": "Взрослый",

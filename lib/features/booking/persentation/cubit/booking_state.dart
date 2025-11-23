@@ -11,6 +11,8 @@ class BookingInitial extends BookingState {}
 
 class BookingLoading extends BookingState {}
 
+class BookingLoadingMore extends BookingState {}
+
 class BookingSuccess extends BookingState {
   const BookingSuccess();
 }

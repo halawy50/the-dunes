@@ -4,9 +4,15 @@ import 'package:the_dunes/core/utils/constants/app_colors.dart';
 
 class BookingTableHelpers {
   static Widget buildStatusCell(String? status) {
+    final statusUpper = status?.toUpperCase();
+    final isYet = statusUpper == 'YET';
     return BaseTableCellFactory.status(
       status: status ?? '-',
       color: _getStatusColor(status),
+      textStyle: TextStyle(
+        fontSize: 12,
+        color: isYet ? AppColor.BLACK : AppColor.WHITE,
+      ),
     );
   }
 
@@ -22,7 +28,7 @@ class BookingTableHelpers {
       case 'PICKED':
         return Colors.green;
       case 'YET':
-        return Colors.orange;
+        return Colors.grey.shade300; // رمادي فاتح
       default:
         return AppColor.GRAY_DARK;
     }

@@ -21,7 +21,7 @@ class BaseTableTextCell extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
           child: Text(
             text ?? placeholder,
             style: style ??

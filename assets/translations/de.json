@@ -69,6 +69,7 @@
     "brand_subtitle": "Travel & Tourism",
     "bookings": "Buchungen",
     "bookings_subtitle": "Verwaltung und Überwachung aller Kundenbuchungen",
+    "title": "Buchungen",
     "pickup_time": "Abholzeit",
     "pickup_time_subtitle": "Verwaltung von Abholzeiten und Zeitplänen",
     "receipt_voucher": "Quittung",
@@ -94,6 +95,7 @@
   },
   "booking": {
     "title": "Buchungen",
+    "bookings_subtitle": "Verwaltung und Überwachung aller Kundenbuchungen",
     "success": "Buchungsaktion abgeschlossen",
     "pickup_time": "Abholzeit",
     "pickup_time_subtitle": "Verwaltung von Abholzeiten und Zeitplänen",
@@ -127,6 +129,7 @@
     "invoice": "Rechnung",
     "search_by_name": "Nach Namen suchen",
     "filter": "Filter",
+    "load_more": "Mehr laden",
     "services": "Dienstleistungen",
     "service": "Dienst",
     "adult": "Erwachsener",

@@ -69,6 +69,7 @@
     "brand_subtitle": "للسفر والسياحة",
     "bookings": "الحجوزات",
     "bookings_subtitle": "إدارة ومتابعة جميع حجوزات العملاء",
+    "title": "الحجوزات",
     "pickup_time": "مواعيد الاستلام",
     "pickup_time_subtitle": "إدارة جداول ومواعيد الاستلام",
     "receipt_voucher": "سندات القبض",
@@ -94,6 +95,7 @@
   },
   "booking": {
     "title": "الحجوزات",
+    "bookings_subtitle": "إدارة ومتابعة جميع حجوزات العملاء",
     "success": "تم تنفيذ عملية الحجز",
     "pickup_time": "مواعيد الاستلام",
     "pickup_time_subtitle": "إدارة جداول ومواعيد الاستلام",
@@ -127,6 +129,7 @@
     "invoice": "الفاتورة",
     "search_by_name": "البحث بالاسم",
     "filter": "تصفية",
+    "load_more": "المزيد",
     "services": "الخدمات",
     "service": "خدمة",
     "adult": "بالغ",

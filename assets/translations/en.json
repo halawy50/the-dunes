@@ -69,6 +69,7 @@
     "brand_subtitle": "Travel & Tourism",
     "bookings": "Bookings",
     "bookings_subtitle": "Manage and monitor all customer bookings",
+    "title": "Bookings",
     "pickup_time": "Pickup Time",
     "pickup_time_subtitle": "Manage pickup timings and schedules",
     "receipt_voucher": "Receipt Voucher",
@@ -94,6 +95,7 @@
   },
   "booking": {
     "title": "Bookings",
+    "bookings_subtitle": "Manage and monitor all customer bookings",
     "success": "Booking action completed",
     "pickup_time": "Pickup Time",
     "pickup_time_subtitle": "Manage pickup timings and schedules",
@@ -127,6 +129,7 @@
     "invoice": "Invoice",
     "search_by_name": "Search By Name",
     "filter": "Filter",
+    "load_more": "Load More",
     "services": "Services",
     "service": "Service",
     "adult": "Adult",

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/features/booking/data/models/booking_model.dart';
 import 'package:the_dunes/features/booking/persentation/cubit/booking_cubit.dart';
-import 'package:the_dunes/core/widgets/base_table/base_table_pagination.dart';
 import 'package:the_dunes/core/widgets/base_table/base_table_header.dart';
 import 'package:the_dunes/features/booking/persentation/widgets/booking_table_widget.dart';
 
@@ -30,11 +29,11 @@ class BookingScreenContent extends StatefulWidget {
 }
 
 class _BookingScreenContentState extends State<BookingScreenContent> {
-  final ScrollController _pageScrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
-    _pageScrollController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -52,75 +51,118 @@ class _BookingScreenContentState extends State<BookingScreenContent> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<BookingCubit>();
-    final bookings = cubit.bookings?.data ?? [];
-    final filteredBookings = _getFilteredBookings(bookings);
-    final pagination = cubit.bookings?.pagination;
+    return BlocBuilder<BookingCubit, BookingState>(
+      builder: (context, state) {
+        final cubit = context.read<BookingCubit>();
+        final bookings = cubit.allBookings;
+        final filteredBookings = _getFilteredBookings(bookings);
+        final hasMore = cubit.hasMore;
+        final isLoadingMore = state is BookingLoadingMore;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Scrollbar(
-          controller: _pageScrollController,
-          thumbVisibility: true,
-          thickness: 8,
-          radius: const Radius.circular(4),
-          child: SingleChildScrollView(
-            controller: _pageScrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
-              child: Container(
-                width: double.infinity,
-                color: AppColor.GRAY_F6F6F6,
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BaseTableHeader(
-                      onAdd: () => context.go('/booking/new'),
-                      onDownload: () {},
-                      onInvoice: () {},
-                      onSearch: widget.onSearchChanged,
-                      onFilter: () {},
-                      addButtonText: 'booking.new_book'.tr(),
-                      downloadButtonText: 'booking.download_sheet'.tr(),
-                      invoiceButtonText: 'booking.invoice'.tr(),
-                      searchHint: 'booking.search_by_name'.tr(),
-                      filterButtonText: 'booking.filter'.tr(),
+        return SingleChildScrollView(
+          controller: _scrollController,
+          physics: const ClampingScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              // Dropdown ثابت عند horizontal scroll
+              // Container(
+              //   color: AppColor.GRAY_F6F6F6,
+              //   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     children: [
+              //       DropdownButton<int>(
+              //         value: cubit.pageSize,
+              //         items: const [
+              //           DropdownMenuItem(value: 50, child: Text('50')),
+              //           DropdownMenuItem(value: 100, child: Text('100')),
+              //           DropdownMenuItem(value: 150, child: Text('150')),
+              //           DropdownMenuItem(value: 200, child: Text('200')),
+              //           DropdownMenuItem(value: 250, child: Text('250')),
+              //         ],
+              //         onChanged: (value) {
+              //           if (value != null) {
+              //             cubit.setPageSize(value);
+              //           }
+              //         },
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                  color: AppColor.WHITE,
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BaseTableHeader(
+                          onAdd: () => context.go('/booking/new'),
+                          onDownload: () {},
+                          onInvoice: () {},
+                          onSearch: widget.onSearchChanged,
+                          onFilter: () {},
+                          addButtonText: 'booking.new_book'.tr(),
+                          downloadButtonText: 'booking.download_sheet'.tr(),
+                          invoiceButtonText: 'booking.invoice'.tr(),
+                          searchHint: 'booking.search_by_name'.tr(),
+                          filterButtonText: 'booking.filter'.tr(),
+                        ),
+                        const SizedBox(height: 12),
+                        BookingTableWidget(
+                          bookings: filteredBookings,
+                          selectedBookings: widget.selectedBookings,
+                          onBookingSelect: widget.onBookingSelect,
+                          onBookingEdit: widget.onBookingEdit,
+                        ),
+                        if (hasMore || isLoadingMore) ...[
+                          const SizedBox(height: 12),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: Center(
+                              child: isLoadingMore
+                                  ? const Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: () async {
+                                        await cubit.loadMoreBookings();
+                                        // Auto scroll to bottom after loading
+                                        if (_scrollController.hasClients) {
+                                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                                            _scrollController.animateTo(
+                                              _scrollController.position.maxScrollExtent,
+                                              duration: const Duration(milliseconds: 300),
+                                              curve: Curves.easeOut,
+                                            );
+                                          });
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColor.YELLOW,
+                                        foregroundColor: AppColor.WHITE,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 12,
+                                        ),
+                                      ),
+                                      child: Text('booking.load_more'.tr()),
+                                    ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: constraints.maxHeight - 200,
-                      child: BookingTableWidget(
-                        bookings: filteredBookings,
-                        selectedBookings: widget.selectedBookings,
-                        onBookingSelect: widget.onBookingSelect,
-                        onBookingEdit: widget.onBookingEdit,
-                      ),
-                    ),
-                    if (pagination != null) ...[
-                      const SizedBox(height: 12),
-                      BaseTablePagination(
-                        currentPage: pagination.currentPage,
-                        totalPages: pagination.totalPages,
-                        onPrevious: () {
-                          if (pagination.currentPage > 1) {
-                            cubit.loadBookings(page: pagination.currentPage - 1);
-                          }
-                        },
-                        onNext: () {
-                          if (pagination.currentPage < pagination.totalPages) {
-                            cubit.loadBookings(page: pagination.currentPage + 1);
-                          }
-                        },
-                      ),
-                    ],
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         );
       },

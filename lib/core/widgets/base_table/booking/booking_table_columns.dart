@@ -18,29 +18,30 @@ class BookingTableColumns {
       ),
       BaseTableColumn<BookingModel>(
         headerKey: 'booking.date',
-        width: 100,
+        width: 180,
         cellBuilder: (item, index) => BaseTableCellFactory.text(
-          text: item.bookingDate,
+          text: item.bookingDate ?? item.time ?? '-',
         ),
       ),
       BaseTableColumn<BookingModel>(
-        headerKey: 'booking.ticket_number',
-        width: 120,
-        isEditable: true,
-        cellBuilder: (item, index) => BaseTableCellFactory.editable(
-          value: item.voucher,
-          hint: 'booking.ticket_number',
-          onChanged: (value) => onBookingEdit(item, {'voucher': value}),
+        headerKey: 'booking.guest_name',
+        width: 180,
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.guestName,
         ),
       ),
       BaseTableColumn<BookingModel>(
-        headerKey: 'booking.order_number',
+        headerKey: 'booking.voucher',
         width: 120,
-        isEditable: true,
-        cellBuilder: (item, index) => BaseTableCellFactory.editable(
-          value: item.orderNumber,
-          hint: 'booking.order_number',
-          onChanged: (value) => onBookingEdit(item, {'orderNumber': value}),
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.voucher ?? '',
+        ),
+      ),
+      BaseTableColumn<BookingModel>(
+        headerKey: 'booking.status',
+        width: 100,
+        cellBuilder: (item, index) => BookingTableHelpers.buildStatusBookCell(
+          item.statusBook,
         ),
       ),
       BaseTableColumn<BookingModel>(
@@ -58,23 +59,6 @@ class BookingTableColumns {
         ),
       ),
       BaseTableColumn<BookingModel>(
-        headerKey: 'booking.employee',
-        width: 150,
-        cellBuilder: (item, index) => BaseTableCellFactory.text(
-          text: item.employeeName,
-        ),
-      ),
-      BaseTableColumn<BookingModel>(
-        headerKey: 'booking.guest_name',
-        width: 180,
-        isEditable: true,
-        cellBuilder: (item, index) => BaseTableCellFactory.editable(
-          value: item.guestName,
-          hint: 'booking.guest_name',
-          onChanged: (value) => onBookingEdit(item, {'guestName': value}),
-        ),
-      ),
-      BaseTableColumn<BookingModel>(
         headerKey: 'booking.location',
         width: 120,
         cellBuilder: (item, index) => BaseTableCellFactory.text(
@@ -84,18 +68,8 @@ class BookingTableColumns {
       BaseTableColumn<BookingModel>(
         headerKey: 'booking.phone_number',
         width: 150,
-        isEditable: true,
-        cellBuilder: (item, index) => BaseTableCellFactory.editable(
-          value: item.phoneNumber,
-          hint: 'booking.phone_number',
-          onChanged: (value) => onBookingEdit(item, {'phoneNumber': value}),
-        ),
-      ),
-      BaseTableColumn<BookingModel>(
-        headerKey: 'booking.status',
-        width: 100,
-        cellBuilder: (item, index) => BookingTableHelpers.buildStatusBookCell(
-          item.statusBook,
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.phoneNumber,
         ),
       ),
       BaseTableColumn<BookingModel>(
@@ -108,51 +82,29 @@ class BookingTableColumns {
       BaseTableColumn<BookingModel>(
         headerKey: 'booking.hotel_name',
         width: 200,
-        isEditable: true,
-        cellBuilder: (item, index) => BaseTableCellFactory.editable(
-          value: item.hotelName,
-          hint: 'booking.hotel_name',
-          onChanged: (value) => onBookingEdit(item, {'hotelName': value}),
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.hotelName,
         ),
       ),
       BaseTableColumn<BookingModel>(
         headerKey: 'booking.room',
         width: 80,
-        isEditable: true,
-        cellBuilder: (item, index) => BaseTableCellFactory.number(
-          value: item.room,
-          hint: 'booking.room',
-          onChanged: (value) => onBookingEdit(item, {'room': value}),
-        ),
-      ),
-      BaseTableColumn<BookingModel>(
-        headerKey: 'booking.note',
-        width: 200,
-        isEditable: true,
-        cellBuilder: (item, index) => BaseTableCellFactory.editable(
-          value: item.note,
-          hint: 'booking.note',
-          onChanged: (value) => onBookingEdit(item, {'note': value}),
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.room?.toString() ?? '',
         ),
       ),
       BaseTableColumn<BookingModel>(
         headerKey: 'booking.driver',
         width: 100,
-        isEditable: true,
-        cellBuilder: (item, index) => BaseTableCellFactory.editable(
-          value: item.driver,
-          hint: 'booking.driver',
-          onChanged: (value) => onBookingEdit(item, {'driver': value}),
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.driver,
         ),
       ),
       BaseTableColumn<BookingModel>(
         headerKey: 'booking.car_number',
         width: 100,
-        isEditable: true,
-        cellBuilder: (item, index) => BaseTableCellFactory.number(
-          value: item.carNumber,
-          hint: 'booking.car_number',
-          onChanged: (value) => onBookingEdit(item, {'carNumber': value}),
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.carNumber?.toString() ?? '',
         ),
       ),
       BaseTableColumn<BookingModel>(

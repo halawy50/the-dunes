@@ -68,6 +68,7 @@
     "brand_subtitle": "Travel & Tourism",
     "bookings": "बुकिंग",
     "bookings_subtitle": "सभी ग्राहक बुकिंग का प्रबंधन और निगरानी",
+    "title": "बुकिंग",
     "pickup_time": "पिकअप समय",
     "pickup_time_subtitle": "पिकअप समय और अनुसूची का प्रबंधन",
     "receipt_voucher": "रसीद वाउचर",
@@ -93,6 +94,7 @@
   },
   "booking": {
     "title": "बुकिंग",
+    "bookings_subtitle": "सभी ग्राहक बुकिंग का प्रबंधन और निगरानी",
     "success": "बुकिंग कार्रवाई पूरी",
     "pickup_time": "पिकअप समय",
     "pickup_time_subtitle": "पिकअप समय और अनुसूची का प्रबंधन",
@@ -124,6 +126,7 @@
     "invoice": "चालान",
     "search_by_name": "नाम से खोजें",
     "filter": "फ़िल्टर",
+    "load_more": "और लोड करें",
     "services": "सेवाएं",
     "service": "सेवा",
     "adult": "वयस्क",

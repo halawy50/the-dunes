@@ -69,6 +69,7 @@
     "brand_subtitle": "Travel & Tourism",
     "bookings": "Reservas",
     "bookings_subtitle": "Gestionar y monitorear todas las reservas de clientes",
+    "title": "Reservas",
     "pickup_time": "Hora de recogida",
     "pickup_time_subtitle": "Gestionar horarios y programaciones de recogida",
     "receipt_voucher": "Recibo",
@@ -94,6 +95,7 @@
   },
   "booking": {
     "title": "Reservas",
+    "bookings_subtitle": "Gestionar y monitorear todas las reservas de clientes",
     "success": "Acción de reserva completada",
     "pickup_time": "Hora de recogida",
     "pickup_time_subtitle": "Gestionar horarios y programaciones de recogida",
@@ -127,6 +129,7 @@
     "invoice": "Factura",
     "search_by_name": "Buscar por nombre",
     "filter": "Filtro",
+    "load_more": "Cargar más",
     "services": "Servicios",
     "service": "Servicio",
     "adult": "Adulto",

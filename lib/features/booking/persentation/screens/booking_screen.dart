@@ -21,9 +21,6 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<BookingCubit>().init();
-    });
   }
 
   void _handleBookingSelect(BookingModel booking, bool isSelected) {
@@ -44,7 +41,7 @@ class _BookingScreenState extends State<BookingScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => di<BookingCubit>(),
-      child: BlocListener<BookingCubit, BookingState>(
+        child: BlocListener<BookingCubit, BookingState>(
         listener: (context, state) {
           if (state is BookingSuccess) {
             AppSnackbar.showTranslated(
@@ -62,6 +59,13 @@ class _BookingScreenState extends State<BookingScreen> {
         },
         child: BlocBuilder<BookingCubit, BookingState>(
           builder: (context, state) {
+            // Initialize on first build
+            if (state is BookingInitial) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<BookingCubit>().init();
+              });
+            }
+
             if (state is BookingLoading && state is! BookingSuccess) {
               return Container(
                 color: AppColor.GRAY_F6F6F6,

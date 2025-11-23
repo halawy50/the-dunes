@@ -50,15 +50,6 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
   // Cache for sub-columns to avoid rebuilding them
   final Map<int, List<BaseTableColumn<dynamic>>> _subColumnsCache = {};
 
-  // Check if a field is required (for booking table)
-  bool _isRequiredField(String headerKey) {
-    const requiredFields = [
-      'booking.guest_name',
-      'booking.agent_name',
-    ];
-    return requiredFields.contains(headerKey);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -104,7 +95,9 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
     }
     
     // Auto-expand row if a new sub-row was added to it (only check existing rows)
-    if (widget.data.length == oldWidget.data.length && widget.data.isNotEmpty) {
+    if (widget.data.length == oldWidget.data.length && 
+        widget.data.isNotEmpty && 
+        widget.getSubRows != null) {
       // Use a flag to only check once
       bool foundExpansion = false;
       for (int index = 0; index < widget.data.length && !foundExpansion; index++) {
@@ -166,13 +159,13 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
       headingRowHeight: 60,
       dataRowMinHeight: widget.config.rowMinHeight ?? 40,
       dataRowMaxHeight: widget.config.rowMinHeight ?? 40,
-      horizontalMargin: 12,
-      columnSpacing: 8,
+      horizontalMargin: 0,
+      columnSpacing: 0,
       columns: [
         if (widget.getSubRows != null)
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
               child: Tooltip(
                 message: 'common.collapse_all'.tr(),
                 child: IconButton(
@@ -190,7 +183,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
         if (widget.showCheckbox)
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
               child: Checkbox(
                 value: widget.selectedRows.length == widget.data.length &&
                     widget.data.isNotEmpty,
@@ -205,42 +198,21 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
             ),
           ),
         ...widget.columns.map((col) {
-          // Check if this is a required field
-          final isRequired = _isRequiredField(col.headerKey);
           return DataColumn(
             label: Padding(
               padding: col.headerPadding ?? 
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                  const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
               child: SizedBox(
                 width: col.width,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            col.headerKey.tr(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                        if (isRequired)
-                          const Text(
-                            ' *',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                              color: Colors.red,
-                            ),
-                          ),
-                      ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Text(
+                    col.headerKey.tr(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -254,16 +226,16 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: Container(
-          decoration: BoxDecoration(
-            color: widget.config.backgroundColor ?? AppColor.WHITE,
-            borderRadius: BorderRadius.circular(widget.config.borderRadius ?? 8),
-            border: widget.config.showBorder
-                ? Border.all(color: AppColor.GRAY_D8D8D8)
-                : null,
-          ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: widget.config.backgroundColor ?? AppColor.BLACK,
+          borderRadius: BorderRadius.circular(widget.config.borderRadius ?? 8),
+          border: widget.config.showBorder
+              ? Border.all(color: AppColor.GRAY_D8D8D8)
+              : null,
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: _buildDataTable(),
         ),
       ),
@@ -326,8 +298,8 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
                 height: 40,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                    left: 8,
-                    right: 8,
+                    left: 5,
+                    right: 5,
                     top: 8,
                     bottom: 4,
                   ),
@@ -390,7 +362,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
                       width: col.width,
                       height: 50,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -450,7 +422,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
                         width: col.width,
                         height: 40,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
                           child: col.cellBuilder(subRow, subIndex),
                         ),
                       ),
@@ -491,7 +463,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
                   width: subColumns.isNotEmpty ? subColumns.first.width : 300,
                   height: 50, // Larger height for easier touch
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
                     child: Container(
                       padding: EdgeInsets.zero,
                       margin: EdgeInsets.zero,
