@@ -59,114 +59,101 @@ class _BookingScreenContentState extends State<BookingScreenContent> {
         final hasMore = cubit.hasMore;
         final isLoadingMore = state is BookingLoadingMore;
 
-        return SingleChildScrollView(
-          controller: _scrollController,
-          physics: const ClampingScrollPhysics(),
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              // Dropdown ثابت عند horizontal scroll
-              // Container(
-              //   color: AppColor.GRAY_F6F6F6,
-              //   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.end,
-              //     children: [
-              //       DropdownButton<int>(
-              //         value: cubit.pageSize,
-              //         items: const [
-              //           DropdownMenuItem(value: 50, child: Text('50')),
-              //           DropdownMenuItem(value: 100, child: Text('100')),
-              //           DropdownMenuItem(value: 150, child: Text('150')),
-              //           DropdownMenuItem(value: 200, child: Text('200')),
-              //           DropdownMenuItem(value: 250, child: Text('250')),
-              //         ],
-              //         onChanged: (value) {
-              //           if (value != null) {
-              //             cubit.setPageSize(value);
-              //           }
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              SingleChildScrollView(
+        return Column(
+          children: [
+            // Header ثابت - لا يتحرك عند السحب الأفقي
+            Container(
+              color: AppColor.WHITE,
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: BaseTableHeader(
+                onAdd: () => context.go('/booking/new'),
+                onDownload: () {},
+                onInvoice: () {},
+                onSearch: widget.onSearchChanged,
+                onFilter: () {},
+                addButtonText: 'booking.new_book'.tr(),
+                downloadButtonText: 'booking.download_sheet'.tr(),
+                invoiceButtonText: 'booking.invoice'.tr(),
+                searchHint: 'booking.search_by_name'.tr(),
+                filterButtonText: 'booking.filter'.tr(),
+              ),
+            ),
+            // الجدول مع إمكانية السحب الأفقي
+            Expanded(
+              child: SingleChildScrollView(
+                controller: _scrollController,
                 physics: const ClampingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                  color: AppColor.WHITE,
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        BaseTableHeader(
-                          onAdd: () => context.go('/booking/new'),
-                          onDownload: () {},
-                          onInvoice: () {},
-                          onSearch: widget.onSearchChanged,
-                          onFilter: () {},
-                          addButtonText: 'booking.new_book'.tr(),
-                          downloadButtonText: 'booking.download_sheet'.tr(),
-                          invoiceButtonText: 'booking.invoice'.tr(),
-                          searchHint: 'booking.search_by_name'.tr(),
-                          filterButtonText: 'booking.filter'.tr(),
-                        ),
-                        const SizedBox(height: 12),
-                        BookingTableWidget(
-                          bookings: filteredBookings,
-                          selectedBookings: widget.selectedBookings,
-                          onBookingSelect: widget.onBookingSelect,
-                          onBookingEdit: widget.onBookingEdit,
-                        ),
-                        if (hasMore || isLoadingMore) ...[
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    color: AppColor.WHITE,
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           const SizedBox(height: 12),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20.0),
-                            child: Center(
-                              child: isLoadingMore
-                                  ? const Padding(
-                                      padding: EdgeInsets.all(16.0),
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  : ElevatedButton(
-                                      onPressed: () async {
-                                        await cubit.loadMoreBookings();
-                                        // Auto scroll to bottom after loading
-                                        if (_scrollController.hasClients) {
-                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                            _scrollController.animateTo(
-                                              _scrollController.position.maxScrollExtent,
-                                              duration: const Duration(milliseconds: 300),
-                                              curve: Curves.easeOut,
-                                            );
-                                          });
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColor.YELLOW,
-                                        foregroundColor: AppColor.WHITE,
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 24,
-                                          vertical: 12,
-                                        ),
-                                      ),
-                                      child: Text('booking.load_more'.tr()),
-                                    ),
-                            ),
+                          BookingTableWidget(
+                            bookings: filteredBookings,
+                            selectedBookings: widget.selectedBookings,
+                            onBookingSelect: widget.onBookingSelect,
+                            onBookingEdit: widget.onBookingEdit,
                           ),
+                          if (hasMore || isLoadingMore) ...[
+                            const SizedBox(height: 12),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 20.0),
+                              child: Center(
+                                child: isLoadingMore
+                                    ? const Padding(
+                                        padding: EdgeInsets.all(16.0),
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: () async {
+                                          await cubit.loadMoreBookings();
+                                          // Auto scroll to bottom after loading
+                                          if (_scrollController.hasClients) {
+                                            WidgetsBinding.instance
+                                                .addPostFrameCallback((_) {
+                                                  _scrollController.animateTo(
+                                                    _scrollController
+                                                        .position
+                                                        .maxScrollExtent,
+                                                    duration: const Duration(
+                                                      milliseconds: 300,
+                                                    ),
+                                                    curve: Curves.easeOut,
+                                                  );
+                                                });
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppColor.YELLOW,
+                                          foregroundColor: AppColor.WHITE,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 12,
+                                          ),
+                                        ),
+                                        child: Text('booking.load_more'.tr()),
+                                      ),
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
   }
 }
-

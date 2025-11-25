@@ -49,24 +49,24 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
   final Map<int, bool> _expandedRows = {};
   // Cache for sub-columns to avoid rebuilding them
   final Map<int, List<BaseTableColumn<dynamic>>> _subColumnsCache = {};
+  bool _isInitialLoad = true;
 
   @override
   void initState() {
     super.initState();
-    // Only auto-expand the first row if it's the only row and has sub-rows
-    // Don't change existing rows' states
-    if (widget.getSubRows != null && widget.data.length == 1) {
-      final firstItem = widget.data.first;
-      final subRows = widget.getSubRows!(firstItem);
-      if (subRows.isNotEmpty) {
-        _expandedRows[0] = true;
-      }
-    }
+    // Don't auto-expand any rows on initial load
+    // Rows should start collapsed by default
+    _isInitialLoad = true;
   }
 
   @override
   void didUpdateWidget(BaseTableWidget<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    
+    // Mark that initial load is complete after first update
+    if (_isInitialLoad) {
+      _isInitialLoad = false;
+    }
     
     // Only clear cache if data changed significantly (new row added)
     final rowsAdded = widget.data.length > oldWidget.data.length;
@@ -138,10 +138,30 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
     }
   }
 
+  bool _isFirstRowExpanded() {
+    if (widget.getSubRows == null || widget.data.isEmpty) return false;
+    final firstRow = widget.data.first;
+    final subRows = widget.getSubRows!(firstRow);
+    if (subRows.isEmpty) return false;
+    return _expandedRows[0] ?? false;
+  }
+
   void _collapseAllRows() {
-    if (mounted) {
+    if (mounted && widget.getSubRows != null && widget.data.isNotEmpty) {
       setState(() {
-        _expandedRows.clear();
+        // Only toggle the first row (index 0)
+        final firstRow = widget.data.first;
+        final subRows = widget.getSubRows!(firstRow);
+        if (subRows.isNotEmpty) {
+          final isFirstExpanded = _expandedRows[0] ?? false;
+          if (isFirstExpanded) {
+            // Close first row
+            _expandedRows.remove(0);
+          } else {
+            // Open first row
+            _expandedRows[0] = true;
+          }
+        }
       });
     }
   }
@@ -158,7 +178,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
       ),
       headingRowHeight: 60,
       dataRowMinHeight: widget.config.rowMinHeight ?? 40,
-      dataRowMaxHeight: widget.config.rowMinHeight ?? 40,
+      dataRowMaxHeight: double.infinity,
       horizontalMargin: 0,
       columnSpacing: 0,
       columns: [
@@ -168,14 +188,33 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
               child: Tooltip(
                 message: 'common.collapse_all'.tr(),
-                child: IconButton(
-                  icon: const Icon(Icons.expand_less, size: 20),
-                  onPressed: () {
-                    _collapseAllRows();
-                  },
-                  color: AppColor.BLACK,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+                child: SizedBox(
+                  width: 40,
+                  child: Center(
+                    child: Material(
+                      color: Colors.transparent,
+                      shape: const CircleBorder(),
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: () {
+                          _collapseAllRows();
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.transparent,
+                          ),
+                          child: Icon(
+                            _isFirstRowExpanded() ? Icons.expand_less : Icons.expand_more,
+                            size: 18,
+                            color: AppColor.BLACK,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -257,25 +296,38 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
       final subRowsList = cachedSubRows ?? [];
       final hasSubRows = widget.getSubRows != null && subRowsList.isNotEmpty;
       
-      // Auto-expand newly added row (last row) if it has sub-rows
-      final isLastRow = index == widget.data.length - 1;
-      if (isLastRow && hasSubRows && subRowsList.isNotEmpty && !_expandedRows.containsKey(index)) {
-        // Mark as expanded immediately for this build cycle
-        _expandedRows[index] = true;
-      }
-      
+      // Don't auto-expand rows on initial load - they should start collapsed
+      // Only auto-expand newly added rows (handled in didUpdateWidget)
       final isExpanded = _expandedRows[index] ?? false;
 
       final mainRowCells = [
         if (widget.getSubRows != null)
           DataCell(
-            IconButton(
-              icon: Icon(
-                isExpanded ? Icons.expand_less : Icons.expand_more,
-                size: 18,
+            SizedBox(
+              width: 40,
+              child: Center(
+                child: Material(
+                  color: Colors.transparent,
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: hasSubRows ? () => _toggleRow(index) : null,
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: hasSubRows ? Colors.transparent : Colors.transparent,
+                      ),
+                      child: Icon(
+                        isExpanded ? Icons.expand_less : Icons.expand_more,
+                        size: 18,
+                        color: hasSubRows ? AppColor.BLACK : Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              onPressed: hasSubRows ? () => _toggleRow(index) : null,
-              color: hasSubRows ? AppColor.BLACK : Colors.grey,
             ),
           ),
         if (widget.showCheckbox)
@@ -420,7 +472,6 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
                     RepaintBoundary(
                       child: SizedBox(
                         width: col.width,
-                        height: 40,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
                           child: col.cellBuilder(subRow, subIndex),
