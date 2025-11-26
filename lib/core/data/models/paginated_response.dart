@@ -5,12 +5,16 @@ class PaginatedResponse<T> {
   final String message;
   final List<T> data;
   final PaginationInfo pagination;
+  final double? totalPrice;
+  final int? totalCount;
 
   PaginatedResponse({
     required this.success,
     required this.message,
     required this.data,
     required this.pagination,
+    this.totalPrice,
+    this.totalCount,
   });
 
   factory PaginatedResponse.fromJson(
@@ -27,6 +31,10 @@ class PaginatedResponse<T> {
       pagination: PaginationInfo.fromJson(
         json['pagination'] as Map<String, dynamic>,
       ),
+      totalPrice: json['totalPrice'] != null
+          ? (json['totalPrice'] as num).toDouble()
+          : null,
+      totalCount: json['totalCount'] as int?,
     );
   }
 }

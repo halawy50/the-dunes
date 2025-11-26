@@ -51,6 +51,7 @@ class NewBookTable extends StatelessWidget {
               data: rows,
               config: BaseTableConfig.editableConfig,
               getSubRows: (row) => row.services,
+              autoExpandAllOnInit: true,
               subRowColumns: (row, rowIndex) {
                 final columns = NewBookServiceColumns.buildColumns(
                   context,

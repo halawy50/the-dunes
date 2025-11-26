@@ -10,6 +10,9 @@ class BaseTableHeader extends StatelessWidget {
     this.onInvoice,
     required this.onSearch,
     this.onFilter,
+    this.onClearFilter,
+    this.onRefresh,
+    this.hasActiveFilter = false,
     this.addButtonText,
     this.downloadButtonText,
     this.invoiceButtonText,
@@ -22,6 +25,9 @@ class BaseTableHeader extends StatelessWidget {
   final VoidCallback? onInvoice;
   final void Function(String) onSearch;
   final VoidCallback? onFilter;
+  final VoidCallback? onClearFilter;
+  final VoidCallback? onRefresh;
+  final bool hasActiveFilter;
   final String? addButtonText;
   final String? downloadButtonText;
   final String? invoiceButtonText;
@@ -61,25 +67,60 @@ class BaseTableHeader extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (onFilter != null) ...[
-                  const SizedBox(width: 12),
-                  OutlinedButton.icon(
-                    onPressed: onFilter,
-                    icon: const Icon(Icons.filter_list, size: 16),
-                    label: Text(
-                      filterButtonText ?? 'common.filter'.tr(),
-                      style: const TextStyle(fontSize: 13),
+                  if (onFilter != null) ...[
+                    const SizedBox(width: 12),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: onFilter,
+                          icon: const Icon(Icons.filter_list, size: 16),
+                          label: Text(
+                            filterButtonText ?? 'common.filter'.tr(),
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            side: BorderSide(
+                              color: hasActiveFilter
+                                  ? AppColor.YELLOW
+                                  : AppColor.GRAY_D8D8D8,
+                              width: hasActiveFilter ? 2 : 1,
+                            ),
+                            backgroundColor: hasActiveFilter
+                                ? AppColor.YELLOW.withOpacity(0.1)
+                                : null,
+                          ),
+                        ),
+                        if (hasActiveFilter && onClearFilter != null)
+                          Positioned(
+                            right: -8,
+                            top: -8,
+                            child: Material(
+                              color: AppColor.YELLOW,
+                              shape: const CircleBorder(),
+                              child: InkWell(
+                                onTap: onClearFilter,
+                                customBorder: const CircleBorder(),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(4),
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 14,
+                                    color: AppColor.WHITE,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
-                      ),
-                    ),
-                  ),
+                  ],
                 ],
-              ],
-            ),
+              ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [

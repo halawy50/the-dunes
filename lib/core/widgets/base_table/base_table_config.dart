@@ -21,7 +21,7 @@ class BaseTableConfig {
   static const BaseTableConfig defaultConfig = BaseTableConfig(
     backgroundColor: AppColor.WHITE,
     headerColor: AppColor.GRAY_F6F6F6,
-    rowMinHeight: 40,
+    rowMinHeight: 56,
     rowMaxHeight: 200,
     borderRadius: 8,
     showBorder: false,

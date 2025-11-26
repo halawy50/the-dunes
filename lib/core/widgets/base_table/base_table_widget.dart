@@ -24,6 +24,7 @@ class BaseTableWidget<T> extends StatefulWidget {
     this.onAddNewRow,
     this.addNewRowTitle,
     this.onNewRowAdded,
+    this.autoExpandAllOnInit = false,
   });
 
   final List<BaseTableColumn<T>> columns;
@@ -40,6 +41,7 @@ class BaseTableWidget<T> extends StatefulWidget {
   final void Function(int rowIndex)? onAddNewRow;
   final String? addNewRowTitle;
   final void Function(int rowIndex)? onNewRowAdded;
+  final bool autoExpandAllOnInit;
 
   @override
   State<BaseTableWidget<T>> createState() => _BaseTableWidgetState<T>();
@@ -54,9 +56,23 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
   @override
   void initState() {
     super.initState();
-    // Don't auto-expand any rows on initial load
-    // Rows should start collapsed by default
     _isInitialLoad = true;
+    
+    // Auto-expand all rows on initial load if requested
+    if (widget.autoExpandAllOnInit && widget.getSubRows != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            for (int i = 0; i < widget.data.length; i++) {
+              final subRows = widget.getSubRows!(widget.data[i]);
+              if (subRows.isNotEmpty) {
+                _expandedRows[i] = true;
+              }
+            }
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -68,55 +84,64 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
       _isInitialLoad = false;
     }
     
-    // Only clear cache if data changed significantly (new row added)
-    final rowsAdded = widget.data.length > oldWidget.data.length;
-    if (rowsAdded) {
-      // Don't clear entire cache, just invalidate for new row
-      // Keep cache for existing rows to improve performance
+    // عند تغيير البيانات (مثل تغيير الصفحة)، لا نفتح الصفوف تلقائياً
+    // نتحقق من تغيير البيانات بطريقة أفضل - مقارنة جميع العناصر
+    final dataLengthChanged = widget.data.length != oldWidget.data.length;
+    bool dataReplaced = false;
+    
+    if (widget.data.length == oldWidget.data.length && 
+        widget.data.isNotEmpty && 
+        oldWidget.data.isNotEmpty) {
+      // مقارنة جميع العناصر للتحقق من استبدال البيانات
+      // إذا كان أي عنصر مختلف، فهذا يعني أن البيانات تغيرت بالكامل
+      try {
+        for (int i = 0; i < widget.data.length; i++) {
+          // محاولة استخدام id إذا كان موجوداً (مثل BookingModel)
+          final currentItem = widget.data[i];
+          final oldItem = oldWidget.data[i];
+          
+          // محاولة الوصول إلى خاصية id إذا كانت موجودة
+          bool itemsDifferent = false;
+          try {
+            // استخدام dynamic للوصول إلى id
+            final currentId = (currentItem as dynamic).id;
+            final oldId = (oldItem as dynamic).id;
+            itemsDifferent = currentId != oldId;
+          } catch (e) {
+            // إذا لم يكن هناك id، نستخدم toString
+            itemsDifferent = currentItem.toString() != oldItem.toString();
+          }
+          
+          if (itemsDifferent) {
+            dataReplaced = true;
+            break;
+          }
+        }
+      } catch (e) {
+        // إذا فشلت المقارنة، نفترض أن البيانات تغيرت
+        dataReplaced = true;
+      }
     }
     
+    // إذا تغيرت البيانات (صفحة جديدة أو استبدال)، نمسح حالة الصفوف المفتوحة دائماً
+    if (dataReplaced || dataLengthChanged) {
+      // دائماً نمسح جميع الصفوف المفتوحة عند تغيير البيانات
+      _expandedRows.clear();
+      return; // لا نفتح أي صفوف عند تغيير الصفحة
+    }
+    
+    // فقط عند إضافة صف جديد (وليس تغيير الصفحة)، نفتحه تلقائياً
+    final rowsAdded = widget.data.length > oldWidget.data.length;
     if (widget.getSubRows != null && rowsAdded) {
-      // Only handle newly added rows - preserve existing rows' states
       final newRowIndex = widget.data.length - 1;
       if (newRowIndex < widget.data.length) {
         final newRow = widget.data[newRowIndex];
         final subRows = widget.getSubRows!(newRow);
-        // Always expand new row if it has sub-rows
         if (subRows.isNotEmpty) {
-          // Expand immediately (synchronously) - don't wait for post frame
           if (mounted) {
             setState(() {
               _expandedRows[newRowIndex] = true;
             });
-          }
-        }
-        return; // Exit early - don't check sub-rows for existing rows
-      }
-    }
-    
-    // Auto-expand row if a new sub-row was added to it (only check existing rows)
-    if (widget.data.length == oldWidget.data.length && 
-        widget.data.isNotEmpty && 
-        widget.getSubRows != null) {
-      // Use a flag to only check once
-      bool foundExpansion = false;
-      for (int index = 0; index < widget.data.length && !foundExpansion; index++) {
-        if (index < oldWidget.data.length) {
-          final currentRow = widget.data[index];
-          final oldRow = oldWidget.data[index];
-          final currentSubRows = widget.getSubRows!(currentRow);
-          final oldSubRows = widget.getSubRows!(oldRow);
-          
-          // If number of sub-rows increased, auto-expand ONLY that specific row
-          if (currentSubRows.length > oldSubRows.length) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) {
-                setState(() {
-                  _expandedRows[index] = true;
-                });
-              }
-            });
-            foundExpansion = true;
           }
         }
       }
@@ -138,28 +163,38 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
     }
   }
 
-  bool _isFirstRowExpanded() {
+  bool _areAllRowsExpanded() {
     if (widget.getSubRows == null || widget.data.isEmpty) return false;
-    final firstRow = widget.data.first;
-    final subRows = widget.getSubRows!(firstRow);
-    if (subRows.isEmpty) return false;
-    return _expandedRows[0] ?? false;
+    bool hasAnySubRows = false;
+    for (int i = 0; i < widget.data.length; i++) {
+      final subRows = widget.getSubRows!(widget.data[i]);
+      if (subRows.isNotEmpty) {
+        hasAnySubRows = true;
+        if (!(_expandedRows[i] ?? false)) {
+          return false;
+        }
+      }
+    }
+    return hasAnySubRows;
   }
 
   void _collapseAllRows() {
-    if (mounted && widget.getSubRows != null && widget.data.isNotEmpty) {
+    if (mounted && widget.getSubRows != null) {
       setState(() {
-        // Only toggle the first row (index 0)
-        final firstRow = widget.data.first;
-        final subRows = widget.getSubRows!(firstRow);
-        if (subRows.isNotEmpty) {
-          final isFirstExpanded = _expandedRows[0] ?? false;
-          if (isFirstExpanded) {
-            // Close first row
-            _expandedRows.remove(0);
-          } else {
-            // Open first row
-            _expandedRows[0] = true;
+        // Check if all rows with sub-rows are expanded
+        bool allExpanded = _areAllRowsExpanded();
+        
+        // Toggle: if all expanded, collapse all; otherwise expand all
+        if (allExpanded) {
+          // Close all sub-rows
+          _expandedRows.clear();
+        } else {
+          // Expand all rows that have sub-rows
+          for (int i = 0; i < widget.data.length; i++) {
+            final subRows = widget.getSubRows!(widget.data[i]);
+            if (subRows.isNotEmpty) {
+              _expandedRows[i] = true;
+            }
           }
         }
       });
@@ -207,7 +242,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
                             color: Colors.transparent,
                           ),
                           child: Icon(
-                            _isFirstRowExpanded() ? Icons.expand_less : Icons.expand_more,
+                            _areAllRowsExpanded() ? Icons.expand_less : Icons.expand_more,
                             size: 18,
                             color: AppColor.BLACK,
                           ),
@@ -347,13 +382,13 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
               key: ValueKey('main_cell_${index}_$colIndex'),
               child: SizedBox(
                 width: col.width,
-                height: 40,
+                height: 56,
                 child: Padding(
                   padding: const EdgeInsets.only(
                     left: 5,
                     right: 5,
-                    top: 8,
-                    bottom: 4,
+                    top: 12,
+                    bottom: 8,
                   ),
                   child: col.cellBuilder(item, index),
                 ),

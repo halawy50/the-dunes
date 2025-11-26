@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:http/http.dart' as http;
-import 'package:the_dunes/core/network/api_constants.dart';
 import 'package:the_dunes/core/network/api_exception.dart';
 import 'package:the_dunes/core/network/api_response_handler.dart';
 
@@ -158,9 +157,13 @@ class ApiClientMethods {
 
   Future<Map<String, dynamic>> put(
     String endpoint,
-    Map<String, dynamic> body,
-  ) async {
-    final uri = Uri.parse('$baseUrl$endpoint');
+    Map<String, dynamic> body, {
+    Map<String, String>? queryParams,
+  }) async {
+    final baseUri = Uri.parse('$baseUrl$endpoint');
+    final uri = queryParams != null && queryParams.isNotEmpty
+        ? baseUri.replace(queryParameters: queryParams)
+        : baseUri;
     final headers = await getHeaders();
     
     if (kDebugMode) {

@@ -135,7 +135,7 @@ class NewBookDropdowns {
     int index,
     NewBookingCubit cubit,
   ) {
-    final pickupStatuses = ['YET', 'INWAY', 'PICKED'];
+    final pickupStatuses = ['YET', 'PICKED', 'INWAY'];
     return BaseTableDropdownHelpers.statusDropdown(
       value: row.pickupStatus ?? 'YET',
       items: pickupStatuses,

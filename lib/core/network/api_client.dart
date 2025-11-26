@@ -109,9 +109,10 @@ class ApiClient {
 
   Future<Map<String, dynamic>> put(
     String endpoint,
-    Map<String, dynamic> body,
-  ) async {
-    return _methods.put(endpoint, body);
+    Map<String, dynamic> body, {
+    Map<String, String>? queryParams,
+  }) async {
+    return _methods.put(endpoint, body, queryParams: queryParams);
   }
 
   Future<Map<String, dynamic>> delete(String endpoint) async {
