@@ -42,7 +42,7 @@ void main() async {
         Locale('es'),
       ],
       // path: 'translations',
-      path: 'assets/assets/translations',
+      path: 'assets/translations',
       useOnlyLangCode: true,
       saveLocale: true,
       child: const MyApp(),
