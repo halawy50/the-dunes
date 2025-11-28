@@ -31,8 +31,10 @@ jobs:
       - name: Build web
         run: flutter build web --release
       
-      - name: Copy vercel.json to build/web
-        run: cp vercel.json build/web/vercel.json
+      - name: Copy and update vercel.json to build/web
+        run: |
+          cp vercel.json build/web/vercel.json
+          python3 -c "import json; f=open('build/web/vercel.json'); d=json.load(f); f.close(); d['outputDirectory']='.'; d.pop('buildCommand', None); f=open('build/web/vercel.json','w'); json.dump(d, f, indent=2); f.close()"
       
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
