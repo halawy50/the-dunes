@@ -1,6 +1,7 @@
 {
-  "buildCommand": "echo 'Please build locally: flutter build web --release, then deploy build/web folder'",
+  "buildCommand": "mkdir -p build/web && echo 'Build handled by GitHub Actions - this is a placeholder' > build/web/.vercel-placeholder",
   "outputDirectory": "build/web",
+  "ignoreCommand": "exit 0",
   "framework": null,
   "rewrites": [
     {
