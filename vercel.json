@@ -1,12 +1,10 @@
 {
-  "buildCommand": "flutter build web --release",
+  "buildCommand": "echo 'Please build locally: flutter build web --release, then deploy build/web folder'",
   "outputDirectory": "build/web",
-  "devCommand": "flutter run -d chrome --web-port=3000",
-  "installCommand": "flutter pub get",
   "framework": null,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!assets|canvaskit|icons|favicon\\.png|manifest\\.json|flutter\\.js|flutter_bootstrap\\.js|main\\.dart\\.js|flutter_service_worker\\.js|version\\.json).*)",
       "destination": "/index.html"
     }
   ],

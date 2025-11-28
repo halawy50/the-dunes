@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:the_dunes/core/app_router/app_router.dart';
@@ -41,7 +42,8 @@ void main() async {
         Locale('de'),
         Locale('es'),
       ],
-      path: 'translations',
+      path: kDebugMode ? 'translations' : 'assets/translations',
+      
       useOnlyLangCode: true,
       saveLocale: true,
       child: const MyApp(),
