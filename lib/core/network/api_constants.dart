@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class ApiConstants {
   // Use 127.0.0.1 for web to avoid CORS issues, localhost for mobile/desktop
   static String get baseUrl => kIsWeb 
-      ? 'http://127.0.0.1:8080'
-      : 'http://localhost:8080';
+      ? 'https://the-dunes-api-production.up.railway.app'
+      : 'https://the-dunes-api-production.up.railway.app';
   static const String apiPrefix = '/api';
 
   // Headers
