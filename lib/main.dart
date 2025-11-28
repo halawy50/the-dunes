@@ -43,7 +43,6 @@ void main() async {
         Locale('es'),
       ],
       path: kDebugMode ? 'translations' : 'assets/translations',
-      
       useOnlyLangCode: true,
       saveLocale: true,
       child: const MyApp(),
