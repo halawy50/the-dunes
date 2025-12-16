@@ -301,22 +301,23 @@ class _InputTextState extends State<InputText> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 5,
       children: [
         Row(
-          spacing: 5,
           children: [
             Text(
               widget.headerHint,
               style: TextStyle(color: widget.headerHintColor),
             ),
-            if (widget.isRequired)
+            if (widget.isRequired) ...[
+              const SizedBox(width: 5),
               Text(
                 "*",
                 style: TextStyle(color: AppColor.RED),
               ),
+            ],
           ],
         ),
+        const SizedBox(height: 5),
         _buildInputWidget(),
       ],
     );
