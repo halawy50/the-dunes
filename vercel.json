@@ -1,6 +1,6 @@
 {
   "buildCommand": null,
-  "outputDirectory": null,
+  "outputDirectory": "build/web",
   "ignoreCommand": "exit 0",
   "framework": null,
   "rewrites": [
