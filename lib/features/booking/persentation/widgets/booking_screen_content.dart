@@ -10,7 +10,9 @@ import 'package:the_dunes/features/booking/persentation/cubit/booking_cubit.dart
 import 'package:the_dunes/core/widgets/base_table/base_table_header.dart';
 import 'package:the_dunes/features/booking/persentation/widgets/booking_table_widget.dart';
 import 'package:the_dunes/features/booking/persentation/widgets/booking_filter_dialog.dart';
+import 'package:the_dunes/features/booking/persentation/widgets/booking_export_dialog.dart';
 import 'package:the_dunes/features/booking/persentation/widgets/booking_statistics_widget.dart';
+import 'package:the_dunes/core/widgets/base_table/base_table_load_more_button.dart';
 import 'package:the_dunes/core/widgets/base_table/base_table_pagination.dart';
 
 class BookingScreenContent extends StatefulWidget {
@@ -112,8 +114,7 @@ class _BookingScreenContentState extends State<BookingScreenContent> {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: BaseTableHeader(
                   onAdd: () => context.go('/booking/new'),
-                  onDownload: () {},
-                  onInvoice: () {},
+                  onDownload: () => BookingExportDialog.show(context),
                   onSearch: widget.onSearchChanged,
                   onRefresh: () async {
                     final cubit = context.read<BookingCubit>();
@@ -143,8 +144,7 @@ class _BookingScreenContentState extends State<BookingScreenContent> {
                   hasActiveFilter: cubit.currentFilter != null &&
                       cubit.currentFilter!.hasFilters,
                   addButtonText: 'booking.new_book'.tr(),
-                  downloadButtonText: 'booking.download_sheet'.tr(),
-                  invoiceButtonText: 'booking.invoice'.tr(),
+                  downloadButtonText: 'booking.invoice'.tr(),
                   searchHint: 'booking.search_by_name'.tr(),
                   filterButtonText: 'booking.filter'.tr(),
                 ),
@@ -184,11 +184,11 @@ class _BookingScreenContentState extends State<BookingScreenContent> {
                           )
                         else
                           BookingTableWidget(
-                            bookings: filteredBookings,
                             selectedBookings: widget.selectedBookings,
                             onBookingSelect: widget.onBookingSelect,
                             onBookingEdit: widget.onBookingEdit,
                             onBookingDelete: widget.onBookingDelete,
+                            searchQuery: widget.searchQuery,
                           ),
                       ],
                     ),
@@ -196,6 +196,17 @@ class _BookingScreenContentState extends State<BookingScreenContent> {
                 ),
               ),
               const SizedBox(height: 20),
+              BlocBuilder<BookingCubit, BookingState>(
+                builder: (context, state) {
+                  final hasMore = currentPage < totalPages;
+                  final isLoading = state is BookingLoading;
+                  return BaseTableLoadMoreButton(
+                    hasMore: hasMore,
+                    isLoading: isLoading,
+                    onLoadMore: () => cubit.loadMore(),
+                  );
+                },
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: BaseTablePagination(

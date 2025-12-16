@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_dunes/core/data/datasources/token_storage.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/features/navbar/persentation/cubit/navbar_cubit.dart';
-import 'package:the_dunes/features/navbar/persentation/widgets/action_circle_button.dart';
 import 'package:the_dunes/features/navbar/persentation/widgets/language_switcher.dart';
 import 'package:the_dunes/features/navbar/persentation/widgets/user_chip.dart';
 
@@ -83,11 +82,6 @@ class TopBar extends StatelessWidget {
             ),
           ),
           const LanguageSwitcher(),
-          const SizedBox(width: 16),
-          ActionCircleButton(
-            asset: 'assets/icons/notification.svg',
-            onTap: () {},
-          ),
           const SizedBox(width: 16),
           FutureBuilder(
             future: TokenStorage.getUserData(),

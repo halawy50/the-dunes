@@ -16,21 +16,22 @@ class BaseTableTextCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 35,
       width: double.infinity,
       child: Align(
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
           child: Text(
             text ?? placeholder,
             style: style ??
                 TextStyle(
-                  fontSize: 13,
+                  fontSize: 11,
                   color: text == null || text!.isEmpty ? AppColor.GRAY_HULF : AppColor.BLACK_0,
                 ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
           ),
         ),
       ),

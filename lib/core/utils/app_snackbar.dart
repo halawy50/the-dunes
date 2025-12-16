@@ -56,6 +56,9 @@ class AppSnackbar {
         break;
     }
 
+    final mediaQuery = MediaQuery.of(context);
+    final topPadding = mediaQuery.padding.top;
+    
     scaffoldMessenger.showSnackBar(
       SnackBar(
         content: Row(
@@ -80,7 +83,12 @@ class AppSnackbar {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        margin: EdgeInsets.all(16),
+        margin: EdgeInsets.only(
+          top: topPadding + 8,
+          left: 16,
+          right: 16,
+          bottom: 0,
+        ),
         action: actionLabel != null && onActionPressed != null
             ? SnackBarAction(
                 label: actionLabel,

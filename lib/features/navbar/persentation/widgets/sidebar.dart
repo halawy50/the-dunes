@@ -23,7 +23,10 @@ class Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasSettings = sections.contains(NavbarSection.settings);
     final mainSections = sections
-        .where((section) => section != NavbarSection.settings)
+        .where((section) => 
+            section != NavbarSection.settings && 
+            section != NavbarSection.history &&
+            section != NavbarSection.operations)
         .toList();
 
     return Container(

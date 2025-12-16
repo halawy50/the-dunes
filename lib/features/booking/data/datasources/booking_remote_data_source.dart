@@ -153,5 +153,39 @@ class BookingRemoteDataSource {
       );
     }
   }
+
+  Future<String> exportBookingsToExcel({
+    required int agentId,
+    String? startDate,
+    String? endDate,
+    String? status,
+  }) async {
+    try {
+      final queryParams = <String, String>{
+        'agentId': agentId.toString(),
+      };
+      if (startDate != null && startDate.isNotEmpty) {
+        queryParams['startDate'] = startDate;
+      }
+      if (endDate != null && endDate.isNotEmpty) {
+        queryParams['endDate'] = endDate;
+      }
+      if (status != null && status.isNotEmpty) {
+        queryParams['status'] = status;
+      }
+      final response = await apiClient.get(
+        ApiConstants.bookingsExportExcelEndpoint,
+        queryParams: queryParams,
+      );
+      return response['data'] as String;
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(
+        message: e.toString(),
+        statusCode: 500,
+      );
+    }
+  }
 }
 

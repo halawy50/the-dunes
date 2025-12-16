@@ -77,9 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         }
         
-        // Navigate to home
+        // Navigate to first allowed page based on permissions
         if (mounted) {
-          context.go(AppRouter.home);
+          final permissions = await TokenStorage.getPermissions();
+          final firstRoute = AppRouter.getFirstAllowedRoute(permissions);
+          context.go(firstRoute);
         }
       } else {
         print('[LoginScreen] ❌ Token is invalid, showing login form');
@@ -106,15 +108,19 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocProvider(
       create: (context) => di<LoginCubit>(),
       child: BlocListener<LoginCubit, LoginState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is LoginSuccess) {
             AppSnackbar.showTranslated(
               context: context,
               translationKey: 'login.login_success',
               type: SnackbarType.success,
             );
-            // Navigate to navbar screen (analysis page)
-            context.go(AppRouter.home);
+            // Navigate to first allowed page based on permissions
+            final permissions = await TokenStorage.getPermissions();
+            final firstRoute = AppRouter.getFirstAllowedRoute(permissions);
+            if (context.mounted) {
+              context.go(firstRoute);
+            }
           } else if (state is LoginError) {
             // Check if message is a translation key (contains dots) or plain text from API
             if (state.message.contains('.') && 

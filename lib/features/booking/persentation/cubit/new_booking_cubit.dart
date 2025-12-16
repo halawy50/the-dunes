@@ -235,6 +235,40 @@ class NewBookingCubit extends Cubit<NewBookingState> {
     // This ensures default values are not sent in the request body
   }
 
+  void addBookingRowsFromAnalysis(List<NewBookingRow> rows) async {
+    emit(NewBookingAddingRow());
+    await Future.delayed(const Duration(milliseconds: 50));
+    
+    if (rows.isEmpty) {
+      emit(NewBookingLoaded());
+      return;
+    }
+
+    // Check if first row is empty (guestName is empty)
+    bool firstRowUsed = false;
+    if (_bookingRows.isNotEmpty) {
+      final firstRow = _bookingRows[0];
+      if (firstRow.guestName.trim().isEmpty && 
+          firstRow.agent == null && 
+          firstRow.services.isEmpty) {
+        // First row is empty, use it for first analyzed row
+        final firstAnalyzedRow = rows[0];
+        firstAnalyzedRow.calculateTotals();
+        _bookingRows[0] = firstAnalyzedRow;
+        firstRowUsed = true;
+      }
+    }
+
+    // Add remaining rows (skip first if it was used)
+    final startIndex = firstRowUsed ? 1 : 0;
+    for (int i = startIndex; i < rows.length; i++) {
+      rows[i].calculateTotals();
+      _bookingRows.add(rows[i]);
+    }
+    
+    emit(NewBookingLoaded());
+  }
+
   void updateBookingRow(int index, NewBookingRow row) async {
     if (index >= 0 && index < _bookingRows.length) {
       // Emit loading state

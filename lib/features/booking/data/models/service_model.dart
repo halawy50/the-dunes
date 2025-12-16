@@ -10,9 +10,11 @@ class ServiceModel {
   });
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
+    // Support both 'name' and 'serviceName' fields from API
+    final serviceName = json['serviceName'] ?? json['name'] ?? '';
     return ServiceModel(
       id: json['id'] ?? 0,
-      name: json['name'] ?? '',
+      name: serviceName,
       description: json['description'],
     );
   }

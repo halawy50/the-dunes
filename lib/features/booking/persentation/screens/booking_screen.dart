@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_dunes/core/utils/app_snackbar.dart';
@@ -83,7 +84,19 @@ class _BookingScreenState extends State<BookingScreen> {
             }
 
             void handleBookingEdit(BookingModel booking, Map<String, dynamic> updates) {
-              context.read<BookingCubit>().updateBooking(booking.id, updates);
+              // استخدام ID من updates إذا كان موجودًا، وإلا استخدام booking.id
+              final bookingId = updates['id'] as int? ?? booking.id;
+              if (bookingId > 0) {
+                // إزالة id من updates لأنه لا يجب إرساله للـ API
+                final cleanUpdates = Map<String, dynamic>.from(updates);
+                cleanUpdates.remove('id');
+                context.read<BookingCubit>().updateBooking(bookingId, cleanUpdates);
+              } else {
+                // Log error if ID is invalid
+                if (kDebugMode) {
+                  print('[BookingScreen] Invalid booking ID: $bookingId, booking.id: ${booking.id}, updates: $updates');
+                }
+              }
             }
 
             Future<void> handleBookingDelete(BookingModel booking) async {

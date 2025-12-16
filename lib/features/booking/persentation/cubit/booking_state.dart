@@ -16,8 +16,16 @@ class BookingLoadingMore extends BookingState {}
 class BookingSuccess extends BookingState {
   final bool showSnackbar;
   final bool isDelete;
+  final DateTime timestamp;
 
-  const BookingSuccess({this.showSnackbar = true, this.isDelete = false});
+  BookingSuccess({
+    this.showSnackbar = true,
+    this.isDelete = false,
+    DateTime? timestamp,
+  }) : timestamp = timestamp ?? DateTime(0);
+
+  @override
+  List<Object?> get props => [showSnackbar, isDelete, timestamp];
 }
 
 class BookingError extends BookingState {

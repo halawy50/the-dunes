@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:the_dunes/core/data/datasources/token_storage.dart';
@@ -29,6 +30,13 @@ class NavbarContent extends StatelessWidget {
 
         if (allowedSections.isEmpty) {
           return NavbarPermissionsChecker.buildNoPermissionsWidget();
+        }
+
+        // Debug: Check if initialSection is allowed
+        if (kDebugMode) {
+          debugPrint('[NavbarContent] Initial section: $initialSection');
+          debugPrint('[NavbarContent] Allowed sections: $allowedSections');
+          debugPrint('[NavbarContent] Is initial section allowed: ${allowedSections.contains(initialSection)}');
         }
 
         return NavbarContentBuilder.buildContent(

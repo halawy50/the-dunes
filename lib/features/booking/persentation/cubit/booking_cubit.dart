@@ -96,7 +96,7 @@ class BookingCubit extends Cubit<BookingState> {
       _pageResponseCache[cacheKey] = response;
       
       if (!isClosed) {
-        emit(BookingSuccess(showSnackbar: filter != null));
+        emit(BookingSuccess(showSnackbar: filter != null, timestamp: DateTime.now()));
       }
     } catch (e) {
       if (!isClosed) {
@@ -127,6 +127,79 @@ class BookingCubit extends Cubit<BookingState> {
   Future<void> goToNextPage({int? employeeId}) async {
     if (_bookings != null && _currentPage < _bookings!.pagination.totalPages) {
       await goToPage(_currentPage + 1, employeeId: employeeId);
+    }
+  }
+
+  Future<void> loadMore({int? employeeId}) async {
+    if (_bookings != null && _currentPage < _bookings!.pagination.totalPages) {
+      final nextPage = _currentPage + 1;
+      final cacheKey = _getCacheKey(nextPage, _currentFilter);
+      
+      if (_pageCache.containsKey(cacheKey)) {
+        _currentPage = nextPage;
+        _allBookings.addAll(_pageCache[cacheKey]!);
+        _bookings = PaginatedResponse(
+          success: _bookings!.success,
+          message: _bookings!.message,
+          data: List.from(_allBookings),
+          pagination: PaginationInfo(
+            currentPage: nextPage,
+            pageSize: _bookings!.pagination.pageSize,
+            totalItems: _bookings!.pagination.totalItems,
+            totalPages: _bookings!.pagination.totalPages,
+            hasNext: nextPage < _bookings!.pagination.totalPages,
+            hasPrevious: nextPage > 1,
+          ),
+          totalPrice: _bookings!.totalPrice,
+          totalCount: _bookings!.totalCount,
+          statistics: _bookings!.statistics,
+        );
+        if (!isClosed) {
+          emit(BookingSuccess(timestamp: DateTime.now()));
+        }
+        return;
+      }
+
+      try {
+        final response = await remoteDataSource.getBookings(
+          employeeId: employeeId,
+          page: nextPage,
+          pageSize: _pageSize,
+          filter: _currentFilter,
+        );
+        
+        _currentPage = nextPage;
+        _allBookings.addAll(response.data);
+        _hasMore = response.pagination.hasNext;
+        
+        _pageCache[cacheKey] = List.from(response.data);
+        _pageResponseCache[cacheKey] = response;
+        
+        _bookings = PaginatedResponse(
+          success: _bookings!.success,
+          message: _bookings!.message,
+          data: List.from(_allBookings),
+          pagination: PaginationInfo(
+            currentPage: nextPage,
+            pageSize: _bookings!.pagination.pageSize,
+            totalItems: _bookings!.pagination.totalItems,
+            totalPages: _bookings!.pagination.totalPages,
+            hasNext: _hasMore,
+            hasPrevious: nextPage > 1,
+          ),
+          totalPrice: _bookings!.totalPrice,
+          totalCount: _bookings!.totalCount,
+          statistics: _bookings!.statistics,
+        );
+        
+        if (!isClosed) {
+          emit(BookingSuccess(timestamp: DateTime.now()));
+        }
+      } catch (e) {
+        if (!isClosed) {
+          emit(BookingError(e.toString()));
+        }
+      }
     }
   }
 
@@ -218,47 +291,124 @@ class BookingCubit extends Cubit<BookingState> {
     try {
       BookingModel updatedBooking;
       
-      // إذا كان التحديث يحتوي على حقل واحد فقط (statusBook أو pickupStatus)
-      // استخدم endpoints الخاصة، وإلا استخدم endpoint الرئيسي
       if (hasOnlyStatusBook) {
-        // استخدام endpoint خاص لتحديث statusBook فقط
-        updatedBooking = await remoteDataSource.updateBookingStatus(
+        final newStatus = updates['statusBook'] as String;
+        if (kDebugMode) {
+          print('[BookingCubit] Updating status for booking $id');
+          print('[BookingCubit] Old status: ${oldBooking.statusBook}');
+          print('[BookingCubit] New status: $newStatus');
+        }
+        await remoteDataSource.updateBookingStatus(
           id,
-          updates['statusBook'] as String,
+          newStatus,
+        );
+        // استخدام oldBooking كأساس وتحديث statusBook فقط للحفاظ على جميع البيانات الأخرى
+        updatedBooking = BookingModel(
+          id: id,
+          time: oldBooking.time,
+          voucher: oldBooking.voucher,
+          orderNumber: oldBooking.orderNumber,
+          pickupTime: oldBooking.pickupTime,
+          pickupStatus: oldBooking.pickupStatus,
+          employeeId: oldBooking.employeeId,
+          employeeName: oldBooking.employeeName,
+          guestName: oldBooking.guestName,
+          phoneNumber: oldBooking.phoneNumber,
+          statusBook: newStatus,
+          agentName: oldBooking.agentName,
+          agentNameStr: oldBooking.agentNameStr,
+          locationId: oldBooking.locationId,
+          locationName: oldBooking.locationName,
+          hotelName: oldBooking.hotelName,
+          room: oldBooking.room,
+          note: oldBooking.note,
+          driver: oldBooking.driver,
+          carNumber: oldBooking.carNumber,
+          payment: oldBooking.payment,
+          typeOperation: oldBooking.typeOperation,
+          services: oldBooking.services,
+          priceBeforePercentage: oldBooking.priceBeforePercentage,
+          priceAfterPercentage: oldBooking.priceAfterPercentage,
+          finalPrice: oldBooking.finalPrice,
+          bookingDate: oldBooking.bookingDate,
         );
       } else if (hasOnlyPickupStatus) {
-        // استخدام endpoint خاص لتحديث pickupStatus فقط
-        updatedBooking = await remoteDataSource.updateBookingPickupStatus(
+        final newPickupStatus = updates['pickupStatus'] as String;
+        if (kDebugMode) {
+          print('[BookingCubit] Updating pickup status for booking $id');
+          print('[BookingCubit] Old pickup status: ${oldBooking.pickupStatus ?? 'YET'}');
+          print('[BookingCubit] New pickup status: $newPickupStatus');
+        }
+        await remoteDataSource.updateBookingPickupStatus(
           id,
-          updates['pickupStatus'] as String,
+          newPickupStatus,
+        );
+        // استخدام oldBooking كأساس وتحديث pickupStatus فقط للحفاظ على جميع البيانات الأخرى
+        updatedBooking = BookingModel(
+          id: id,
+          time: oldBooking.time,
+          voucher: oldBooking.voucher,
+          orderNumber: oldBooking.orderNumber,
+          pickupTime: oldBooking.pickupTime,
+          pickupStatus: newPickupStatus,
+          employeeId: oldBooking.employeeId,
+          employeeName: oldBooking.employeeName,
+          guestName: oldBooking.guestName,
+          phoneNumber: oldBooking.phoneNumber,
+          statusBook: oldBooking.statusBook,
+          agentName: oldBooking.agentName,
+          agentNameStr: oldBooking.agentNameStr,
+          locationId: oldBooking.locationId,
+          locationName: oldBooking.locationName,
+          hotelName: oldBooking.hotelName,
+          room: oldBooking.room,
+          note: oldBooking.note,
+          driver: oldBooking.driver,
+          carNumber: oldBooking.carNumber,
+          payment: oldBooking.payment,
+          typeOperation: oldBooking.typeOperation,
+          services: oldBooking.services,
+          priceBeforePercentage: oldBooking.priceBeforePercentage,
+          priceAfterPercentage: oldBooking.priceAfterPercentage,
+          finalPrice: oldBooking.finalPrice,
+          bookingDate: oldBooking.bookingDate,
         );
       } else {
-        // استخدام endpoint الرئيسي مع الـ body الكامل
         updatedBooking = await remoteDataSource.updateBooking(id, updates);
       }
       
-      // استبدال البيانات القديمة بالجديدة من API
-      _allBookings[index] = updatedBooking;
+      // Update the booking in the list - create a completely new list
+      final updatedList = List<BookingModel>.from(_allBookings);
+      updatedList[index] = updatedBooking;
+      _allBookings = updatedList;
       
-      // تحديث PaginatedResponse فقط إذا كان موجوداً
       if (_bookings != null) {
         _bookings = PaginatedResponse(
           success: _bookings!.success,
           message: _bookings!.message,
-          data: _allBookings,
+          data: List.from(_allBookings),
           pagination: _bookings!.pagination,
           totalPrice: _bookings!.totalPrice,
           totalCount: _bookings!.totalCount,
         );
       }
       
+      // Update cache
+      final cacheKey = _getCacheKey(_currentPage, _currentFilter);
+      if (_pageCache.containsKey(cacheKey)) {
+        _pageCache[cacheKey] = List.from(_allBookings);
+      }
+      if (_pageResponseCache.containsKey(cacheKey)) {
+        _pageResponseCache[cacheKey] = _bookings!;
+      }
+      
       if (fieldName != null) {
         _updatingBookings.remove(id);
       }
-      // إظهار snackbar عند التحديث من dialog (عندما لا يكون تحديث حالة فقط)
       final showSnackbar = !hasOnlyStatusBook && !hasOnlyPickupStatus;
       if (!isClosed) {
-        emit(BookingSuccess(showSnackbar: showSnackbar));
+        // Emit with a new timestamp to force rebuild
+        emit(BookingSuccess(showSnackbar: showSnackbar, timestamp: DateTime.now()));
       }
     } catch (e) {
       _allBookings[index] = oldBooking;
@@ -272,10 +422,19 @@ class BookingCubit extends Cubit<BookingState> {
           totalCount: _bookings!.totalCount,
         );
       }
+      
+      // Update cache with old booking
+      final cacheKey = _getCacheKey(_currentPage, _currentFilter);
+      if (_pageCache.containsKey(cacheKey)) {
+        _pageCache[cacheKey] = List.from(_allBookings);
+      }
+      if (_pageResponseCache.containsKey(cacheKey)) {
+        _pageResponseCache[cacheKey] = _bookings!;
+      }
+      
       if (fieldName != null) {
         _updatingBookings.remove(id);
       }
-      // إظهار snackbar عند الخطأ
       if (!isClosed) {
         emit(BookingError('booking.update_error'.tr()));
       }
@@ -331,7 +490,7 @@ class BookingCubit extends Cubit<BookingState> {
       }
       if (_pageResponseCache.containsKey(cacheKey)) {
         final cachedResponse = _pageResponseCache[cacheKey]!;
-        final cachedData = cachedResponse.data.where((b) => b.id != id).toList();
+        final cachedData = cachedResponse.data.where((b) => b.id != id).cast<BookingModel>().toList();
         final cachedTotalCount = (cachedResponse.totalCount ?? 0) - 1;
         final cachedTotalPages = _pageSize > 0
             ? ((cachedTotalCount + _pageSize - 1) / _pageSize).ceil()
@@ -357,7 +516,7 @@ class BookingCubit extends Cubit<BookingState> {
       // إخفاء loading وإرسال state للتحديث مع snackbar
       _deletingBookingId = null;
       if (!isClosed) {
-        emit(BookingSuccess(showSnackbar: true, isDelete: true));
+        emit(BookingSuccess(showSnackbar: true, isDelete: true, timestamp: DateTime.now()));
       }
     } catch (e) {
       // في حالة فشل الحذف من API، إخفاء loading وإظهار خطأ

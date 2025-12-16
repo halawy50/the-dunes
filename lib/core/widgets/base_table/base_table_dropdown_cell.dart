@@ -81,12 +81,18 @@ class _BaseTableDropdownCellState<T> extends State<BaseTableDropdownCell<T>> {
       child: SizedBox(
         height: 40,
         width: double.infinity,
-        child: DropdownButtonFormField<T>(
-          value: validValue,
-          isExpanded: true,
-          menuMaxHeight: 300,
-          iconSize: 20,
-          enableFeedback: false,
+            child: DropdownButtonFormField<T>(
+              value: validValue,
+              isExpanded: true,
+              menuMaxHeight: 200,
+              iconSize: 20,
+              enableFeedback: false,
+              borderRadius: BorderRadius.circular(8),
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
           icon: Container(
             alignment: Alignment.center,
             child: Icon(
@@ -96,16 +102,11 @@ class _BaseTableDropdownCellState<T> extends State<BaseTableDropdownCell<T>> {
             ),
           ),
           alignment: AlignmentDirectional.centerStart,
-          style: TextStyle(
-            fontSize: 13,
-            color: isEnabled ? Colors.black : AppColor.GRAY_HULF,
-            fontWeight: FontWeight.w600,
-          ),
           decoration: InputDecoration(
             hintText: validValue == null && widget.hint != null ? widget.hint!.tr() : null,
             hintStyle: const TextStyle(
               fontSize: 13,
-              color: AppColor.GRAY_HULF,
+              color: Colors.black54,
               fontWeight: FontWeight.normal,
             ),
             border: OutlineInputBorder(
@@ -136,8 +137,8 @@ class _BaseTableDropdownCellState<T> extends State<BaseTableDropdownCell<T>> {
               ),
               borderRadius: BorderRadius.circular(8),
             ),
-            filled: true,
-            fillColor: isEnabled ? AppColor.WHITE : AppColor.GRAY_F6F6F6,
+            filled: false,
+            fillColor: Colors.transparent,
             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             isDense: true,
             suffixIconConstraints: const BoxConstraints(
@@ -146,22 +147,30 @@ class _BaseTableDropdownCellState<T> extends State<BaseTableDropdownCell<T>> {
             ),
           ),
           items: widget.items.map((item) {
+            final text = widget.displayText != null ? widget.displayText!(item) : item.toString();
             return DropdownMenuItem<T>(
               value: item,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(
-                  widget.displayText != null ? widget.displayText!(item) : item.toString(),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Tooltip(
+                    message: text,
+                    child: Text(
+                      text,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             );
           }).toList(),
+          itemHeight: null,
           onChanged: isEnabled ? (T? newValue) {
             setState(() {
               _currentValue = newValue;
@@ -173,33 +182,50 @@ class _BaseTableDropdownCellState<T> extends State<BaseTableDropdownCell<T>> {
                   widget.hint!.tr(),
                   style: const TextStyle(
                     fontSize: 13,
-                    color: AppColor.GRAY_HULF,
+                    color: Colors.black54,
                     fontWeight: FontWeight.normal,
                   ),
                   overflow: TextOverflow.ellipsis,
                 )
               : null,
-          selectedItemBuilder: widget.items.isNotEmpty ? (context) {
+          selectedItemBuilder: (context) {
             return widget.items.map((item) {
-              final isSelected = item == validValue;
-              final text = isSelected && validValue != null
-                  ? (widget.displayText != null ? widget.displayText!(validValue) : validValue.toString())
-                  : (widget.hint != null ? widget.hint!.tr() : '');
-              
-              return Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: isSelected && validValue != null ? Colors.black : AppColor.GRAY_HULF,
-                    fontWeight: isSelected && validValue != null ? FontWeight.w600 : FontWeight.normal,
+              if (item == validValue && validValue != null) {
+                final text = widget.displayText != null 
+                    ? widget.displayText!(validValue) 
+                    : validValue.toString();
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    text,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              );
+                );
+              } else {
+                return widget.hint != null && validValue == null
+                    ? Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          widget.hint!.tr(),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      )
+                    : const SizedBox.shrink();
+              }
             }).toList();
-          } : null,
+          },
         ),
       ),
     );

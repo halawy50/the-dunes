@@ -16,17 +16,25 @@ class BaseTableStatusCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      constraints: const BoxConstraints(
+        minWidth: 60,
+        maxWidth: 100,
+        minHeight: 20,
+        maxHeight: 24,
+      ),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.center,
       child: Text(
         status,
         textAlign: TextAlign.center,
         style: textStyle ??
-            const TextStyle(fontSize: 12, color: AppColor.WHITE),
+            const TextStyle(fontSize: 10, color: AppColor.WHITE),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

@@ -11,8 +11,31 @@ class CampInitial extends CampState {}
 
 class CampLoading extends CampState {}
 
+class CampLoaded extends CampState {
+  final CampDataEntity data;
+
+  const CampLoaded(this.data);
+
+  @override
+  List<Object?> get props => [data];
+}
+
 class CampSuccess extends CampState {
-  const CampSuccess();
+  final String message;
+
+  const CampSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class CampUpdatingBookingStatus extends CampState {
+  final int bookingId;
+  final String status;
+  const CampUpdatingBookingStatus(this.bookingId, this.status);
+
+  @override
+  List<Object?> get props => [bookingId, status];
 }
 
 class CampError extends CampState {
@@ -23,4 +46,3 @@ class CampError extends CampState {
   @override
   List<Object?> get props => [message];
 }
-

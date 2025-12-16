@@ -1,0 +1,24 @@
+class EmployeeSalaryMonthHelper {
+  static List<String> getMonths() {
+    return [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+  }
+
+  static String getMonthName(int month) {
+    final months = getMonths();
+    return months[month - 1];
+  }
+}
+

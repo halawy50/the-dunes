@@ -11,9 +11,22 @@ class ServiceInitial extends ServiceState {}
 
 class ServiceLoading extends ServiceState {}
 
+class ServiceLoaded extends ServiceState {
+  final List<ServiceEntity> services;
+
+  const ServiceLoaded(this.services);
+
+  @override
+  List<Object?> get props => [services];
+}
+
 class ServiceSuccess extends ServiceState {
-  // TODO: Add success data here
-  const ServiceSuccess();
+  final String message;
+
+  const ServiceSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
 
 class ServiceError extends ServiceState {

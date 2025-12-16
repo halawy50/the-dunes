@@ -18,10 +18,14 @@ class AnalysisCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: AppColor.WHITE,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (icon != null)
               Container(
@@ -32,7 +36,7 @@ class AnalysisCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  icon,
+                  icon, 
                   color: color ?? AppColor.YELLOW,
                 ),
               ),
@@ -40,8 +44,9 @@ class AnalysisCard extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  Text( 
                     title,
                     style: const TextStyle(
                       color: AppColor.GRAY_HULF,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
 
-class BookingStatusDropdownCell extends StatelessWidget {
+class BookingStatusDropdownCell extends StatefulWidget {
   const BookingStatusDropdownCell({
     super.key,
     required this.value,
@@ -18,10 +18,45 @@ class BookingStatusDropdownCell extends StatelessWidget {
   final bool isLoading;
 
   @override
+  State<BookingStatusDropdownCell> createState() => _BookingStatusDropdownCellState();
+}
+
+class _BookingStatusDropdownCellState extends State<BookingStatusDropdownCell> {
+  String? _currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(BookingStatusDropdownCell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // تحديث القيمة عندما تتغير من الخارج
+    if (oldWidget.value != widget.value || oldWidget.key != widget.key) {
+      _currentValue = widget.value;
+      // إجبار إعادة البناء الفوري مباشرة بدون تأخير
+      if (oldWidget.value != widget.value) {
+        setState(() {});
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // التأكد من أن value موجود في items، وإلا نستخدم null
-    final validValue = value != null && items.contains(value) ? value : null;
-    final bgColor = validValue != null ? getColor(validValue) : AppColor.WHITE;
+    // تحديث _currentValue إذا تغير widget.value
+    if (widget.value != _currentValue) {
+      _currentValue = widget.value;
+    }
+    
+    // استخدام widget.value مباشرة كمصدر الحقيقة - هذا يضمن التحديث الفوري
+    final valueToUse = widget.value ?? _currentValue;
+    // التأكد من أن القيمة موجودة في العناصر، وإلا نستخدم null
+    final validValue = valueToUse != null && widget.items.contains(valueToUse)
+        ? valueToUse
+        : null;
+    final bgColor = validValue != null ? widget.getColor(validValue) : AppColor.WHITE;
     final textColor = validValue != null ? _getTextColor(validValue) : AppColor.BLACK;
     
     return Container(
@@ -30,7 +65,7 @@ class BookingStatusDropdownCell extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: isLoading
+      child: widget.isLoading
           ? Center(
               child: SizedBox(
                 width: 20,
@@ -42,6 +77,7 @@ class BookingStatusDropdownCell extends StatelessWidget {
               ),
             )
           : DropdownButtonFormField<String>(
+              key: ValueKey('dropdown_$validValue'),
               value: validValue,
               isExpanded: true,
               menuMaxHeight: 300,
@@ -69,7 +105,7 @@ class BookingStatusDropdownCell extends StatelessWidget {
                 contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                 isDense: true,
               ),
-              items: items.map((item) {
+              items: widget.items.map((item) {
                 return DropdownMenuItem<String>(
                   value: item,
                   child: Padding(
@@ -87,9 +123,18 @@ class BookingStatusDropdownCell extends StatelessWidget {
                   ),
                 );
               }).toList(),
-              onChanged: onChanged,
+              onChanged: (newValue) {
+                if (newValue != null && newValue != _currentValue) {
+                  // Update local state first
+                  setState(() {
+                    _currentValue = newValue;
+                  });
+                  // Then notify parent with the new value
+                  widget.onChanged(newValue);
+                }
+              },
               selectedItemBuilder: (context) {
-                return items.map((item) {
+                return widget.items.map((item) {
                   // selectedItemBuilder يعرض نفس النص للعنصر المحدد فقط
                   // إذا كان العنصر هو القيمة المحددة، نعرضه، وإلا نعرض نص فارغ
                   if (item == validValue && validValue != null) {

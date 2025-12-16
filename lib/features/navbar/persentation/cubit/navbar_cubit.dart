@@ -10,6 +10,7 @@ enum NavbarSection {
   pickupTime,
   receiptVoucher,
   employees,
+  agents,
   services,
   hotels,
   operations,
@@ -25,23 +26,72 @@ extension NavbarSectionPermissions on NavbarSection {
       case NavbarSection.analysis:
         return permissions.analysisScreen;
       case NavbarSection.bookings:
-        return permissions.bookingScreen;
+        // Allow if user has any booking-related permission
+        return permissions.bookingScreen ||
+            permissions.showAllBooking ||
+            permissions.showMyBookAdded ||
+            permissions.addNewBook ||
+            permissions.editBook ||
+            permissions.deleteBook;
       case NavbarSection.pickupTime:
-        return permissions.pickupTimeScreen;
+        // Allow if user has any pickup time-related permission
+        return permissions.pickupTimeScreen ||
+            permissions.showAllPickup ||
+            permissions.editAnyPickup;
       case NavbarSection.receiptVoucher:
-        return permissions.receiptVoucherScreen;
+        // Allow if user has any receipt voucher-related permission
+        return permissions.receiptVoucherScreen ||
+            permissions.showAllReceiptVoucher ||
+            permissions.showReceiptVoucherAdded ||
+            permissions.addNewReceiptVoucherMe ||
+            permissions.addNewReceiptVoucherOtherEmployee ||
+            permissions.editReceiptVoucher ||
+            permissions.deleteReceiptVoucher;
       case NavbarSection.employees:
-        return true;
+        // Employees page requires specific permissions
+        // For now, check if user has any employee-related permission from the permissions map
+        // Since PermissionsModel doesn't have employee permissions yet, we'll check if user has admin-like permissions
+        // If user has all receipt voucher permissions or other admin permissions, allow access
+        // Otherwise, employees page should not be accessible by default
+        // TODO: Add employee permissions to PermissionsModel
+        return permissions.receiptVoucherScreen && 
+               permissions.bookingScreen &&
+               permissions.serviceScreen;
+      case NavbarSection.agents:
+        // Allow if user has service screen permission (agents manage services)
+        return permissions.serviceScreen ||
+            permissions.showAllService ||
+            permissions.addNewService ||
+            permissions.editService ||
+            permissions.deleteService;
       case NavbarSection.services:
-        return permissions.serviceScreen;
+        // Allow if user has any service-related permission
+        return permissions.serviceScreen ||
+            permissions.showAllService ||
+            permissions.addNewService ||
+            permissions.editService ||
+            permissions.deleteService;
       case NavbarSection.hotels:
-        return permissions.hotelScreen;
+        // Allow if user has any hotel-related permission
+        return permissions.hotelScreen ||
+            permissions.showAllHotels ||
+            permissions.addNewHotels ||
+            permissions.editHotels ||
+            permissions.deleteHotels;
       case NavbarSection.operations:
-        return permissions.operationsScreen;
+        // Allow if user has any operation-related permission
+        return permissions.operationsScreen ||
+            permissions.showAllOperations ||
+            permissions.addNewOperation ||
+            permissions.editOperation ||
+            permissions.deleteOperation;
       case NavbarSection.camp:
-        return permissions.campScreen;
+        // Allow if user has any camp-related permission
+        return permissions.campScreen ||
+            permissions.showAllCampBookings ||
+            permissions.changeStateBooking;
       case NavbarSection.history:
-        return permissions.historyScreen;
+        return permissions.historyScreen || permissions.showAllHistory;
       case NavbarSection.settings:
         return permissions.settingScreen;
     }
@@ -61,6 +111,8 @@ extension NavbarSectionX on NavbarSection {
         return 'navbar.receipt_voucher';
       case NavbarSection.employees:
         return 'navbar.employees';
+      case NavbarSection.agents:
+        return 'navbar.agents';
       case NavbarSection.services:
         return 'navbar.services';
       case NavbarSection.hotels:
@@ -88,6 +140,8 @@ extension NavbarSectionX on NavbarSection {
         return 'navbar.receipt_voucher_subtitle';
       case NavbarSection.employees:
         return 'navbar.employees_subtitle';
+      case NavbarSection.agents:
+        return 'navbar.agents_subtitle';
       case NavbarSection.services:
         return 'navbar.services_subtitle';
       case NavbarSection.hotels:
@@ -115,6 +169,8 @@ extension NavbarSectionX on NavbarSection {
         return '/receipt_voucher';
       case NavbarSection.employees:
         return '/employees';
+      case NavbarSection.agents:
+        return '/agents';
       case NavbarSection.services:
         return '/services';
       case NavbarSection.hotels:
@@ -141,6 +197,8 @@ extension NavbarSectionX on NavbarSection {
       case NavbarSection.receiptVoucher:
         return 'assets/icons/money_recive.svg';
       case NavbarSection.employees:
+        return 'assets/icons/attach_files.svg';
+      case NavbarSection.agents:
         return 'assets/icons/attach_files.svg';
       case NavbarSection.services:
         return 'assets/icons/converte.svg';

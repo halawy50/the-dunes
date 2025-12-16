@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:the_dunes/core/data/models/pagination_info.dart';
 
 class PaginatedResponse<T> {
@@ -7,6 +8,7 @@ class PaginatedResponse<T> {
   final PaginationInfo pagination;
   final double? totalPrice;
   final int? totalCount;
+  final Map<String, dynamic>? statistics;
 
   PaginatedResponse({
     required this.success,
@@ -15,12 +17,14 @@ class PaginatedResponse<T> {
     required this.pagination,
     this.totalPrice,
     this.totalCount,
+    this.statistics,
   });
 
   factory PaginatedResponse.fromJson(
     Map<String, dynamic> json,
     T Function(dynamic) fromJsonT,
   ) {
+    debugStatistics(json);
     return PaginatedResponse<T>(
       success: json['success'] ?? false,
       message: json['message'] ?? '',
@@ -35,7 +39,16 @@ class PaginatedResponse<T> {
           ? (json['totalPrice'] as num).toDouble()
           : null,
       totalCount: json['totalCount'] as int?,
+      statistics: json['statistics'] as Map<String, dynamic>?,
     );
+  }
+  
+  static void debugStatistics(Map<String, dynamic> json) {
+    if (kDebugMode && json['statistics'] != null) {
+      print('[PaginatedResponse] Statistics found: ${json['statistics']}');
+    } else if (kDebugMode) {
+      print('[PaginatedResponse] Statistics is null or missing');
+    }
   }
 }
 

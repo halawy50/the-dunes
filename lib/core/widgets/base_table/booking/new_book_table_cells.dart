@@ -5,6 +5,7 @@ import 'package:the_dunes/features/booking/data/models/hotel_model.dart';
 import 'package:the_dunes/features/booking/persentation/cubit/new_booking_cubit.dart';
 import 'package:the_dunes/features/booking/persentation/models/new_booking_row.dart';
 import 'package:the_dunes/core/widgets/base_table/booking/new_book_dropdowns.dart';
+import 'package:the_dunes/core/widgets/searchable_hotel_dropdown.dart';
 
 class NewBookTableCells {
   static Widget buildTicketNumber(
@@ -119,15 +120,26 @@ class NewBookTableCells {
     NewBookingRow row,
     int index,
     NewBookingCubit cubit,
-  ) => BaseTableCellFactory.editable(
-        value: row.hotel?.name ?? '',
-        hint: 'booking.hotel_name',
-        onChanged: (value) {
-          // Create new HotelModel with the entered name (id: 0 for custom hotel)
-          row.hotel = HotelModel(id: 0, name: value);
-          cubit.updateBookingRow(index, row);
-        },
-      );
+  ) {
+    final hotelName = row.hotel?.name;
+
+    return SearchableHotelDropdown(
+      value: hotelName,
+      hotels: cubit.hotels,
+      onChanged: (value) {
+        if (value != null && value.isNotEmpty) {
+          final hotel = cubit.hotels.firstWhere(
+            (h) => h.name == value,
+            orElse: () => HotelModel(id: 0, name: value),
+          );
+          row.hotel = hotel;
+        } else {
+          row.hotel = null;
+        }
+        cubit.updateBookingRow(index, row);
+      },
+    );
+  }
 
   static Widget buildRoom(
     BuildContext context,

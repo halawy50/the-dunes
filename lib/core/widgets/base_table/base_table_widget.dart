@@ -25,6 +25,8 @@ class BaseTableWidget<T> extends StatefulWidget {
     this.addNewRowTitle,
     this.onNewRowAdded,
     this.autoExpandAllOnInit = false,
+    this.allItems,
+    this.onRowCollapseClick,
   });
 
   final List<BaseTableColumn<T>> columns;
@@ -42,6 +44,8 @@ class BaseTableWidget<T> extends StatefulWidget {
   final String? addNewRowTitle;
   final void Function(int rowIndex)? onNewRowAdded;
   final bool autoExpandAllOnInit;
+  final List<T>? allItems;
+  final void Function(T item, int rowIndex)? onRowCollapseClick;
 
   @override
   State<BaseTableWidget<T>> createState() => _BaseTableWidgetState<T>();
@@ -52,6 +56,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
   // Cache for sub-columns to avoid rebuilding them
   final Map<int, List<BaseTableColumn<dynamic>>> _subColumnsCache = {};
   bool _isInitialLoad = true;
+  double? _columnWidth;
 
   @override
   void initState() {
@@ -206,21 +211,38 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
     // Use a key that includes expanded rows state to force rebuild when collapsing
     final tableKey = ValueKey('table_${_expandedRows.keys.join('_')}_${_expandedRows.values.join('_')}');
     
-    return DataTable(
-      key: tableKey,
-      headingRowColor: MaterialStateProperty.all(
-        widget.config.headerColor ?? AppColor.GRAY_F6F6F6,
-      ),
-      headingRowHeight: 60,
-      dataRowMinHeight: widget.config.rowMinHeight ?? 40,
-      dataRowMaxHeight: double.infinity,
-      horizontalMargin: 0,
-      columnSpacing: 0,
-      columns: [
-        if (widget.getSubRows != null)
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate total width needed for columns
+        final fixedWidthColumns = widget.columns.fold<double>(
+          0,
+          (sum, col) => sum + (col.width ?? 100.0),
+        );
+        final extraWidth = (widget.getSubRows != null ? 40.0 : 0.0) + (widget.showCheckbox ? 48.0 : 0.0);
+        final totalColumnWidth = fixedWidthColumns + extraWidth;
+        
+        // If fillWidth is enabled, calculate column width to fill available space
+        final availableWidth = constraints.maxWidth;
+        final shouldFillWidth = widget.config.fillWidth && availableWidth > totalColumnWidth;
+        _columnWidth = shouldFillWidth 
+            ? (availableWidth - extraWidth) / widget.columns.length 
+            : null;
+        
+        return DataTable(
+          key: tableKey,
+          headingRowColor: MaterialStateProperty.all(
+            widget.config.headerColor ?? AppColor.GRAY_F6F6F6,
+          ),
+          headingRowHeight: widget.config.rowMinHeight ?? 56,
+          dataRowMinHeight: widget.config.rowMinHeight ?? 56,
+          dataRowMaxHeight: double.infinity,
+          horizontalMargin: 0,
+          columnSpacing: 0,
+          columns: [
+        if (widget.getSubRows != null && widget.onRowCollapseClick == null)
           DataColumn(
-            label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
+            label: SizedBox(
+              height: widget.config.rowMinHeight ?? 56,
               child: Tooltip(
                 message: 'common.collapse_all'.tr(),
                 child: SizedBox(
@@ -256,64 +278,181 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
           ),
         if (widget.showCheckbox)
           DataColumn(
-            label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
-              child: Checkbox(
-                value: widget.selectedRows.length == widget.data.length &&
-                    widget.data.isNotEmpty,
-                onChanged: (value) {
-                  if (widget.onRowSelect != null) {
-                    for (var item in widget.data) {
-                      widget.onRowSelect!(item, value ?? false);
+            label: SizedBox(
+              height: widget.config.rowMinHeight ?? 56,
+              child: Center(
+                child: Checkbox(
+                  value: widget.selectedRows.length == widget.data.length &&
+                      widget.data.isNotEmpty,
+                  onChanged: (value) {
+                    if (widget.onRowSelect != null) {
+                      for (var item in widget.data) {
+                        widget.onRowSelect!(item, value ?? false);
+                      }
                     }
-                  }
-                },
+                  },
+                ),
               ),
             ),
           ),
         ...widget.columns.map((col) {
+          final colWidth = _columnWidth ?? col.width;
+          final isEmptyHeader = col.headerKey.isEmpty;
           return DataColumn(
-            label: Padding(
-              padding: col.headerPadding ?? 
-                  const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
-              child: SizedBox(
-                width: col.width,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Text(
-                    col.headerKey.tr(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+            label: SizedBox(
+              width: colWidth,
+              height: widget.config.rowMinHeight ?? 56,
+              child: isEmptyHeader
+                  ? const SizedBox.shrink()
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          col.headerKey.tr(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
             ),
           );
         }),
       ],
       rows: _buildRows(),
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: Container(
-        decoration: BoxDecoration(
-          color: widget.config.backgroundColor ?? AppColor.BLACK,
-          borderRadius: BorderRadius.circular(widget.config.borderRadius ?? 8),
-          border: widget.config.showBorder
-              ? Border.all(color: AppColor.GRAY_D8D8D8)
-              : null,
-        ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: _buildDataTable(),
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final tableWidget = _buildDataTable();
+          
+          if (widget.config.fillWidth) {
+            return Container(
+              decoration: BoxDecoration(
+                color: widget.config.backgroundColor ?? AppColor.BLACK,
+                borderRadius: BorderRadius.circular(widget.config.borderRadius ?? 8),
+                border: widget.config.showBorder
+                    ? Border.all(color: AppColor.GRAY_D8D8D8)
+                    : null,
+              ),
+              width: constraints.maxWidth,
+              child: tableWidget,
+            );
+          }
+          
+          return Container(
+            decoration: BoxDecoration(
+              color: widget.config.backgroundColor ?? AppColor.BLACK,
+              borderRadius: BorderRadius.circular(widget.config.borderRadius ?? 8),
+              border: widget.config.showBorder
+                  ? Border.all(color: AppColor.GRAY_D8D8D8)
+                  : null,
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: tableWidget,
+            ),
+          );
+        },
       ),
     );
+  }
+
+  int _getGroupItemCount(dynamic item) {
+    try {
+      final groupId = (item as dynamic).pickupGroupId;
+      if (groupId == null || groupId.toString().isEmpty) return 1;
+      
+      final itemsToCheck = widget.allItems ?? widget.data;
+      int count = 0;
+      
+      for (int i = 0; i < itemsToCheck.length; i++) {
+        final checkItem = itemsToCheck[i];
+        final checkGroupId = (checkItem as dynamic).pickupGroupId;
+        if (checkGroupId != null && checkGroupId.toString() == groupId.toString()) {
+          count++;
+        }
+      }
+      
+      return count > 0 ? count : 1;
+    } catch (e) {
+      return 1;
+    }
+  }
+
+  bool _isFirstInGroup(dynamic item, int index) {
+    try {
+      // Check if item has pickupGroupId property
+      final groupId = (item as dynamic).pickupGroupId;
+      if (groupId == null || groupId.toString().isEmpty) return false;
+      
+      // Use allItems if available, otherwise use widget.data
+      final itemsToCheck = widget.allItems ?? widget.data;
+      
+      // Find global index in allItems by comparing pickupGroupId and item type/id
+      int globalIndex = -1;
+      final itemId = _getItemId(item);
+      final itemType = _getItemType(item);
+      
+      for (int i = 0; i < itemsToCheck.length; i++) {
+        final checkItem = itemsToCheck[i];
+        final checkId = _getItemId(checkItem);
+        final checkType = _getItemType(checkItem);
+        if (checkId == itemId && checkType == itemType) {
+          globalIndex = i;
+          break;
+        }
+      }
+      
+      if (globalIndex < 0) {
+        // Fallback to local index if item not found in allItems
+        if (index == 0) return true;
+        final previousItem = widget.data[index - 1];
+        final previousGroupId = (previousItem as dynamic).pickupGroupId;
+        return previousGroupId != groupId;
+      }
+      
+      if (globalIndex == 0) return true;
+      
+      final previousItem = itemsToCheck[globalIndex - 1];
+      final previousGroupId = (previousItem as dynamic).pickupGroupId;
+      if (previousGroupId == null || previousGroupId.toString().isEmpty) return true;
+      
+      return previousGroupId != groupId;
+    } catch (e) {
+      return false;
+    }
+  }
+  
+  String? _getItemId(dynamic item) {
+    try {
+      if (item is Map) {
+        return item['id']?.toString();
+      }
+      return (item as dynamic).id?.toString();
+    } catch (e) {
+      return null;
+    }
+  }
+  
+  String? _getItemType(dynamic item) {
+    try {
+      if (item is Map) {
+        return item['type']?.toString();
+      }
+      return (item as dynamic).type?.toString();
+    } catch (e) {
+      return null;
+    }
   }
 
   List<DataRow> _buildRows() {
@@ -346,7 +485,15 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
                   shape: const CircleBorder(),
                   child: InkWell(
                     customBorder: const CircleBorder(),
-                    onTap: hasSubRows ? () => _toggleRow(index) : null,
+                    onTap: hasSubRows
+                        ? () {
+                            if (widget.onRowCollapseClick != null) {
+                              widget.onRowCollapseClick!(item, index);
+                            } else {
+                              _toggleRow(index);
+                            }
+                          }
+                        : null,
                     child: Container(
                       width: 32,
                       height: 32,
@@ -377,20 +524,45 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
         ...widget.columns.asMap().entries.map((entry) {
           final colIndex = entry.key;
           final col = entry.value;
+          final isFirstInGroup = _isFirstInGroup(item, index);
+          final isCarNumberOrDriver = colIndex == 2 || colIndex == 3; // Car Number and Driver columns
+          final shouldMerge = isCarNumberOrDriver && !isFirstInGroup;
+          final shouldCenter = isCarNumberOrDriver && isFirstInGroup;
+          
+          // Calculate total height for centered content in merged cells
+          final groupItemCount = shouldCenter ? _getGroupItemCount(item) : 1;
+          final rowHeight = widget.config.rowMinHeight ?? 56.0;
+          final totalHeight = groupItemCount * rowHeight;
+          
           return DataCell(
             RepaintBoundary(
               key: ValueKey('main_cell_${index}_$colIndex'),
-              child: SizedBox(
-                width: col.width,
-                height: 56,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 5,
-                    right: 5,
-                    top: 12,
-                    bottom: 8,
+              child: GestureDetector(
+                onTap: widget.onRowSelect != null
+                    ? () {
+                        widget.onRowSelect!(item, !isSelected);
+                      }
+                    : null,
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  width: _columnWidth ?? col.width,
+                  height: shouldMerge ? rowHeight : (shouldCenter ? totalHeight : rowHeight),
+                  alignment: AlignmentDirectional.centerStart,
+                  decoration: shouldMerge
+                      ? BoxDecoration(
+                          color: widget.config.backgroundColor ?? AppColor.WHITE,
+                          border: Border(
+                            top: BorderSide(
+                              color: AppColor.GRAY_D8D8D8,
+                              width: 1,
+                            ),
+                          ),
+                        )
+                      : null,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: col.cellBuilder(item, index),
                   ),
-                  child: col.cellBuilder(item, index),
                 ),
               ),
             ),
@@ -404,7 +576,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
         cells: mainRowCells,
       ));
 
-      if (isExpanded && hasSubRows && widget.subRowColumns != null) {
+      if (isExpanded && hasSubRows && widget.subRowColumns != null && widget.onRowCollapseClick == null) {
         // Wrap sub-rows in RepaintBoundary for better performance
         final subRows = subRowsList;
         
@@ -445,11 +617,12 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
             // Start sub-columns immediately after expand/collapse button
             ...subColumns.map((col) => DataCell(
                   RepaintBoundary(
-                    child: SizedBox(
+                    child: Container(
                       width: col.width,
                       height: 50,
+                      alignment: AlignmentDirectional.centerStart,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -465,6 +638,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
                             ),
                             const SizedBox(height: 2),
                             if (col.headerHint != null)
@@ -478,6 +652,7 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
                               ),
                           ],
                         ),
@@ -505,10 +680,11 @@ class _BaseTableWidgetState<T> extends State<BaseTableWidget<T>> {
               // Start sub-columns immediately after expand/collapse button
               ...subColumns.map((col) => DataCell(
                     RepaintBoundary(
-                      child: SizedBox(
+                      child: Container(
                         width: col.width,
+                        alignment: AlignmentDirectional.centerStart,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           child: col.cellBuilder(subRow, subIndex),
                         ),
                       ),

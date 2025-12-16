@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:the_dunes/core/data/datasources/token_storage.dart';
 import 'package:the_dunes/core/network/api_constants.dart';
@@ -72,14 +73,6 @@ class ApiClient {
       // Value: Bearer {accessToken}
       final authValue = '${ApiConstants.bearerPrefix} $cleanToken';
       headers[ApiConstants.authorizationHeader] = authValue;
-      
-      if (kDebugMode) {
-        print('[ApiClient] ✅✅✅ Authorization Header Added ✅✅✅');
-        print('[ApiClient]    Key: ${ApiConstants.authorizationHeader}');
-        print('[ApiClient]    Value: Bearer ${cleanToken.substring(0, cleanToken.length > 20 ? 20 : cleanToken.length)}...');
-        print('[ApiClient]    Full Value: $authValue');
-        print('[ApiClient]    Token length: ${cleanToken.length}');
-      }
     } else {
       if (kDebugMode) {
         print('[ApiClient] ❌❌❌ CRITICAL ERROR: NO TOKEN AVAILABLE! ❌❌❌');
@@ -105,6 +98,14 @@ class ApiClient {
     Map<String, dynamic> body,
   ) async {
     return _methods.post(endpoint, body);
+  }
+
+  Future<Map<String, dynamic>> postMultipart(
+    String endpoint,
+    Map<String, dynamic> fields,
+    Map<String, Uint8List>? files,
+  ) async {
+    return _methods.postMultipart(endpoint, fields, files);
   }
 
   Future<Map<String, dynamic>> put(

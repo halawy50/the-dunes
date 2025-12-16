@@ -25,16 +25,23 @@ class AppRouterRedirect {
     final apiClient = di.di<ApiClient>();
     apiClient.setToken(token);
     
-    // If on login page and token exists, redirect to home
+    // If on login page and token exists, redirect to first allowed page
     // (LoginScreen will check token validity)
     if (isLoginPage) {
       return null; // Let LoginScreen handle the check
     }
     
+    // For root path, redirect to first allowed page based on permissions
+    if (path == '/') {
+      final permissions = await TokenStorage.getPermissions();
+      return AppRouter.getFirstAllowedRoute(permissions);
+    }
+    
     // For other pages, just check if path is valid
     final section = AppRouter.getSectionFromPath(path);
-    if (section == null && path != '/') {
-      return AppRouter.home;
+    if (section == null) {
+      final permissions = await TokenStorage.getPermissions();
+      return AppRouter.getFirstAllowedRoute(permissions);
     }
     
     return null;

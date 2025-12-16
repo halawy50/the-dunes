@@ -11,9 +11,30 @@ class HotelInitial extends HotelState {}
 
 class HotelLoading extends HotelState {}
 
+class HotelLoaded extends HotelState {
+  final List<HotelEntity> hotels;
+  final int currentPage;
+  final int totalPages;
+  final int totalItems;
+
+  const HotelLoaded({
+    required this.hotels,
+    required this.currentPage,
+    required this.totalPages,
+    required this.totalItems,
+  });
+
+  @override
+  List<Object?> get props => [hotels, currentPage, totalPages, totalItems];
+}
+
 class HotelSuccess extends HotelState {
-  // TODO: Add success data here
-  const HotelSuccess();
+  final String message;
+
+  const HotelSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
 
 class HotelError extends HotelState {

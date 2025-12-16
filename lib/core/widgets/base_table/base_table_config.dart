@@ -8,6 +8,7 @@ class BaseTableConfig {
   final double? rowMaxHeight;
   final double? borderRadius;
   final bool showBorder;
+  final bool fillWidth;
 
   const BaseTableConfig({
     this.backgroundColor,
@@ -16,6 +17,7 @@ class BaseTableConfig {
     this.rowMaxHeight,
     this.borderRadius,
     this.showBorder = false,
+    this.fillWidth = false,
   });
 
   static const BaseTableConfig defaultConfig = BaseTableConfig(

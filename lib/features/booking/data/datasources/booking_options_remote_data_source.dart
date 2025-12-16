@@ -45,12 +45,25 @@ class BookingOptionsRemoteDataSource {
 
   Future<List<ServiceModel>> getAllServices() async {
     try {
+      print('[getAllServices] Fetching from: ${ApiConstants.servicesAllEndpoint}');
       final response = await apiClient.get(ApiConstants.servicesAllEndpoint);
       final data = response['data'] as List<dynamic>? ?? [];
-      return data.map((json) => ServiceModel.fromJson(json)).toList();
+      print('[getAllServices] Response data length: ${data.length}');
+      if (data.isNotEmpty) {
+        print('[getAllServices] First item keys: ${(data.first as Map).keys.toList()}');
+        print('[getAllServices] First item: ${data.first}');
+      }
+      final services = data.map((json) {
+        final service = ServiceModel.fromJson(json);
+        print('[getAllServices] Parsed service: id=${service.id}, name="${service.name}"');
+        return service;
+      }).toList();
+      print('[getAllServices] Total services parsed: ${services.length}');
+      return services;
     } on ApiException {
       rethrow;
     } catch (e) {
+      print('[getAllServices] Error: $e');
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }

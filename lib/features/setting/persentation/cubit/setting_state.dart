@@ -11,8 +11,16 @@ class SettingInitial extends SettingState {}
 
 class SettingLoading extends SettingState {}
 
+class SettingLoaded extends SettingState {
+  final ExchangeRatesEntity exchangeRates;
+
+  const SettingLoaded(this.exchangeRates);
+
+  @override
+  List<Object?> get props => [exchangeRates];
+}
+
 class SettingSuccess extends SettingState {
-  // TODO: Add success data here
   const SettingSuccess();
 }
 

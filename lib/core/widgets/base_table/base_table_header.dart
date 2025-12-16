@@ -53,7 +53,7 @@ class BaseTableHeader extends StatelessWidget {
                     onChanged: onSearch,
                     decoration: InputDecoration(
                       hintText: searchHint ?? 'common.search'.tr(),
-                      prefixIcon: const Icon(Icons.search, size: 20),
+                      prefixIcon: const Icon(Icons.search, size: 18),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: const BorderSide(
@@ -61,8 +61,8 @@ class BaseTableHeader extends StatelessWidget {
                         ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
+                        horizontal: 12,
+                        vertical: 8,
                       ),
                     ),
                   ),
@@ -74,15 +74,15 @@ class BaseTableHeader extends StatelessWidget {
                       children: [
                         OutlinedButton.icon(
                           onPressed: onFilter,
-                          icon: const Icon(Icons.filter_list, size: 16),
+                          icon: const Icon(Icons.filter_list, size: 14),
                           label: Text(
                             filterButtonText ?? 'common.filter'.tr(),
-                            style: const TextStyle(fontSize: 13),
+                            style: const TextStyle(fontSize: 11),
                           ),
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 10,
+                              horizontal: 12,
+                              vertical: 8,
                             ),
                             side: BorderSide(
                               color: hasActiveFilter
@@ -127,17 +127,17 @@ class BaseTableHeader extends StatelessWidget {
                 if (onAdd != null) ...[
                   ElevatedButton.icon(
                     onPressed: onAdd,
-                    icon: const Icon(Icons.add, size: 16),
+                    icon: const Icon(Icons.add, size: 14),
                     label: Text(
                       addButtonText ?? 'common.add'.tr(),
-                      style: const TextStyle(fontSize: 13),
+                      style: const TextStyle(fontSize: 11),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.YELLOW,
                       foregroundColor: AppColor.WHITE,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
+                        horizontal: 12,
+                        vertical: 8,
                       ),
                     ),
                   ),
@@ -146,17 +146,17 @@ class BaseTableHeader extends StatelessWidget {
                   const SizedBox(width: 12),
                   ElevatedButton.icon(
                     onPressed: onDownload,
-                    icon: const Icon(Icons.download, size: 16),
+                    icon: const Icon(Icons.download, size: 14),
                     label: Text(
                       downloadButtonText ?? 'common.download'.tr(),
-                      style: const TextStyle(fontSize: 13),
+                      style: const TextStyle(fontSize: 11),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: AppColor.WHITE,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
+                        horizontal: 12,
+                        vertical: 8,
                       ),
                     ),
                   ),
@@ -165,17 +165,17 @@ class BaseTableHeader extends StatelessWidget {
                   const SizedBox(width: 12),
                   ElevatedButton.icon(
                     onPressed: onInvoice,
-                    icon: const Icon(Icons.receipt, size: 16),
+                    icon: const Icon(Icons.receipt, size: 14),
                     label: Text(
                       invoiceButtonText ?? 'common.invoice'.tr(),
-                      style: const TextStyle(fontSize: 13),
+                      style: const TextStyle(fontSize: 11),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: AppColor.WHITE,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
+                        horizontal: 12,
+                        vertical: 8,
                       ),
                     ),
                   ),

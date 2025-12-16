@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:the_dunes/core/widgets/base_table/base_table_cell_factory.dart';
 import 'package:the_dunes/core/widgets/base_table/booking/booking_status_dropdown_cell.dart';
@@ -31,13 +32,26 @@ class BookingTableHelpers {
     bool isLoading,
   ) {
     final statuses = ['PENDING', 'ACCEPTED', 'COMPLETED', 'CANCELLED'];
+    // حفظ ID محلياً لضمان استخدام ID الصحيح حتى بعد تحديث booking
+    final bookingId = booking.id;
+    final currentStatus = booking.statusBook;
+    // استخدام key فريد يتضمن الحالة الحالية لإجبار إعادة البناء عند التغيير
     return BookingStatusDropdownCell(
-      value: booking.statusBook,
+      key: ValueKey('status_${bookingId}_$currentStatus'),
+      value: currentStatus,
       items: statuses,
       isLoading: isLoading,
       onChanged: (newStatus) {
-        if (newStatus != null && newStatus != booking.statusBook && !isLoading) {
-          onBookingEdit(booking, {'statusBook': newStatus});
+        if (newStatus != null && newStatus != currentStatus && !isLoading && bookingId > 0) {
+          if (kDebugMode) {
+            print('[BookingTableHelpers] buildStatusBookDropdown - bookingId: $bookingId, booking.id: ${booking.id}, newStatus: $newStatus');
+          }
+          // استخدام bookingId المحفوظ محلياً مباشرة - لا نعتمد على booking object
+          onBookingEdit(booking, {'id': bookingId, 'statusBook': newStatus});
+        } else {
+          if (kDebugMode) {
+            print('[BookingTableHelpers] buildStatusBookDropdown - Skipped: newStatus=$newStatus, currentStatus=$currentStatus, isLoading=$isLoading, bookingId=$bookingId');
+          }
         }
       },
       getColor: _getStatusBookColor,
@@ -50,17 +64,29 @@ class BookingTableHelpers {
     bool isLoading,
   ) {
     final statuses = ['YET', 'PICKED', 'INWAY'];
+    // حفظ ID محلياً لضمان استخدام ID الصحيح حتى بعد تحديث booking
+    final bookingId = booking.id;
     // إذا كان pickupStatus null أو فارغ، نستخدم 'YET' كقيمة افتراضية
     final currentStatus = booking.pickupStatus != null && booking.pickupStatus!.isNotEmpty
         ? booking.pickupStatus!
         : 'YET';
+    // استخدام key فريد يتضمن الحالة الحالية لإجبار إعادة البناء عند التغيير
     return BookingStatusDropdownCell(
+      key: ValueKey('pickup_status_${bookingId}_$currentStatus'),
       value: currentStatus,
       items: statuses,
       isLoading: isLoading,
       onChanged: (newStatus) {
-        if (newStatus != null && newStatus != currentStatus && !isLoading) {
-          onBookingEdit(booking, {'pickupStatus': newStatus});
+        if (newStatus != null && newStatus != currentStatus && !isLoading && bookingId > 0) {
+          if (kDebugMode) {
+            print('[BookingTableHelpers] buildPickupStatusDropdown - bookingId: $bookingId, booking.id: ${booking.id}, newStatus: $newStatus');
+          }
+          // استخدام bookingId المحفوظ محلياً مباشرة - لا نعتمد على booking object
+          onBookingEdit(booking, {'id': bookingId, 'pickupStatus': newStatus});
+        } else {
+          if (kDebugMode) {
+            print('[BookingTableHelpers] buildPickupStatusDropdown - Skipped: newStatus=$newStatus, currentStatus=$currentStatus, isLoading=$isLoading, bookingId=$bookingId');
+          }
         }
       },
       getColor: (status) => _getStatusColor(status),

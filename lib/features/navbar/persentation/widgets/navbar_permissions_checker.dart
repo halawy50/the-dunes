@@ -14,16 +14,37 @@ class NavbarPermissionsChecker {
   }
 
   static NavbarSection getValidSection({
-    required NavbarSection requestedSection,
+    required NavbarSection requestedSection, 
     required NavbarSection selectedSection,
     required List<NavbarSection> allowedSections,
   }) {
+    // If requested section is allowed, use it
     if (allowedSections.contains(requestedSection)) {
       return requestedSection;
     }
+    // If selected section is allowed, use it
     if (allowedSections.contains(selectedSection)) {
       return selectedSection;
     }
+    // Otherwise, redirect to first allowed section (but not employees if user doesn't have permission)
+    // Prefer receiptVoucher, bookings, or other sections over employees
+    final preferredSections = [
+      NavbarSection.receiptVoucher,
+      NavbarSection.bookings,
+      NavbarSection.pickupTime,
+      NavbarSection.services,
+      NavbarSection.hotels,
+      NavbarSection.camp,
+    ];
+    
+    // Try to find a preferred section first
+    for (final section in preferredSections) {
+      if (allowedSections.contains(section)) {
+        return section;
+      }
+    }
+    
+    // If no preferred section found, return first allowed (which might be employees)
     return allowedSections.first;
   }
 
@@ -33,14 +54,19 @@ class NavbarPermissionsChecker {
     NavbarSection validSection,
     List<NavbarSection> allowedSections,
   ) {
+    // Only show error if requested section is not allowed AND valid section is different
+    // But don't show error if valid section is the same as requested (user has permission)
     if (!allowedSections.contains(requestedSection) && 
-        requestedSection != validSection) {
+        requestedSection != validSection &&
+        allowedSections.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        AppSnackbar.showTranslated(
-          context: context,
-          translationKey: 'errors.no_page_permission',
-          type: SnackbarType.error,
-        );
+        if (context.mounted) {
+          AppSnackbar.showTranslated(
+            context: context,
+            translationKey: 'errors.no_page_permission',
+            type: SnackbarType.error,
+          );
+        }
       });
     }
   }
@@ -54,3 +80,4 @@ class NavbarPermissionsChecker {
   }
 }
 
+ 
