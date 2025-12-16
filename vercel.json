@@ -1,7 +1,7 @@
 {
-  "buildCommand": "echo 'Build handled by GitHub Actions' && exit 0",
+  "buildCommand": null,
   "outputDirectory": "build/web",
-  "ignoreCommand": "exit 0",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD .",
   "framework": null,
   "rewrites": [
     {
