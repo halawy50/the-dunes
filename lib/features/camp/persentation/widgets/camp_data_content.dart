@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
 import 'package:the_dunes/features/camp/domain/entities/camp_data_entity.dart';
-import 'package:the_dunes/features/camp/persentation/widgets/camp_table_widget.dart';
-import 'package:the_dunes/features/camp/persentation/widgets/camp_voucher_table_widget.dart';
+import 'package:the_dunes/features/camp/domain/entities/camp_item_entity.dart';
+import 'package:the_dunes/features/camp/persentation/widgets/camp_unified_table_widget.dart';
 
 class CampDataContent extends StatelessWidget {
   const CampDataContent({
@@ -17,7 +17,7 @@ class CampDataContent extends StatelessWidget {
   final ScrollController horizontalScrollController;
   final void Function(int, String) onBookingStatusUpdate;
 
-  double _calculateTableWidth(bool isBooking) => isBooking ? 1180.0 : 1010.0;
+  double _calculateTableWidth() => 1300.0;
 
   Widget _buildNoDataWidget() {
     return Padding(
@@ -46,6 +46,13 @@ class CampDataContent extends StatelessWidget {
     return height != null ? SizedBox(height: height, child: scrollView) : scrollView;
   }
 
+  List<CampItemEntity> _combineData() {
+    final items = <CampItemEntity>[];
+    items.addAll(data.bookings.map((b) => CampItemEntity(booking: b)));
+    items.addAll(data.vouchers.map((v) => CampItemEntity(voucher: v)));
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -54,41 +61,28 @@ class CampDataContent extends StatelessWidget {
             ? constraints.maxHeight
             : null;
         final availableWidth = constraints.maxWidth - 48;
-        final shouldFillBookings = availableWidth >= _calculateTableWidth(true);
-        final shouldFillVouchers = availableWidth >= _calculateTableWidth(false);
+        final shouldFillWidth = availableWidth >= _calculateTableWidth();
+        final combinedItems = _combineData();
         
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (data.bookings.isNotEmpty)
-              _buildTableWrapper(
-                CampTableWidget(
-                  bookings: data.bookings,
-                  onStatusUpdate: (booking, status) {
-                    onBookingStatusUpdate(booking.id, status);
-                  },
-                  fillWidth: shouldFillBookings,
-                ),
-                height,
-                shouldFillBookings,
-              ),
-            if (data.vouchers.isNotEmpty)
-              _buildTableWrapper(
-                CampVoucherTableWidget(
-                  vouchers: data.vouchers,
-                  fillWidth: shouldFillVouchers,
-                ),
-                height,
-                shouldFillVouchers,
-              ),
-            if (data.bookings.isEmpty && data.vouchers.isEmpty)
-              height != null
-                  ? SizedBox(
-                      height: height,
-                      child: _buildNoDataWidget(),
-                    )
-                  : _buildNoDataWidget(),
-          ],
+        if (combinedItems.isEmpty) {
+          return height != null
+              ? SizedBox(
+                  height: height,
+                  child: _buildNoDataWidget(),
+                )
+              : _buildNoDataWidget();
+        }
+        
+        return _buildTableWrapper(
+          CampUnifiedTableWidget(
+            items: combinedItems,
+            onStatusUpdate: (item, status) {
+              onBookingStatusUpdate(item.id, status);
+            },
+            fillWidth: shouldFillWidth,
+          ),
+          height,
+          shouldFillWidth,
         );
       },
     );

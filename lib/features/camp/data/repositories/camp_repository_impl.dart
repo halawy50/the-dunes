@@ -16,5 +16,10 @@ class CampRepositoryImpl implements CampRepository {
   Future<void> updateBookingStatus(int bookingId, String status) async {
     await dataSource.updateBookingStatus(bookingId, status);
   }
+
+  @override
+  Future<void> updateVoucherStatus(int voucherId, String status) async {
+    await dataSource.updateVoucherStatus(voucherId, status);
+  }
 }
 

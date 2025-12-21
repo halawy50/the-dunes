@@ -604,6 +604,7 @@
     "title": "Camp",
     "success": "Camp bookings updated",
     "booking_status_updated": "Booking status updated successfully",
+    "voucher_status_updated": "Voucher status updated successfully",
     "bookings": "Bookings",
     "vouchers": "Vouchers",
     "no_data": "No accepted bookings or vouchers available",

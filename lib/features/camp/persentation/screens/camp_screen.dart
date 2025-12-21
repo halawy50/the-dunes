@@ -39,11 +39,14 @@ class _CampScreenState extends State<CampScreen> {
               type: SnackbarType.success,
             );
           } else if (state is CampError) {
-            AppSnackbar.show(
-              context: context,
-              message: state.message.replaceAll('ApiException: ', ''),
-              type: SnackbarType.error,
-            );
+            final errorMessage = state.message.replaceAll('ApiException: ', '');
+            if (errorMessage.isNotEmpty) {
+              AppSnackbar.show(
+                context: context,
+                message: errorMessage,
+                type: SnackbarType.error,
+              );
+            }
           }
         },
         child: Scaffold(

@@ -25,7 +25,29 @@ class CampContentStateHandler {
       return buildContent(state.data);
     }
 
+    if (state is CampSuccess) {
+      if (lastLoadedData != null) {
+        return buildContent(lastLoadedData);
+      }
+      return Container(
+        color: AppColor.WHITE,
+        alignment: Alignment.center,
+        child: Text('camp.error_loading'.tr()),
+      );
+    }
+
     if (state is CampUpdatingBookingStatus) {
+      if (lastLoadedData != null) {
+        return buildContent(lastLoadedData);
+      }
+      return Container(
+        color: AppColor.WHITE,
+        alignment: Alignment.center,
+        child: const CircularProgressIndicator(),
+      );
+    }
+
+    if (state is CampUpdatingVoucherStatus) {
       if (lastLoadedData != null) {
         return buildContent(lastLoadedData);
       }

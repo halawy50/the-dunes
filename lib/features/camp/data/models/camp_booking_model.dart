@@ -22,19 +22,19 @@ class CampBookingModel extends CampBookingEntity {
   factory CampBookingModel.fromJson(Map<String, dynamic> json) {
     final servicesData = json['services'] as List<dynamic>? ?? [];
     return CampBookingModel(
-      id: json['id'] as int,
-      guestName: json['guestName'] as String,
+      id: json['id'] as int? ?? 0,
+      guestName: json['guestName'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String?,
       hotelName: json['hotelName'] as String?,
       room: json['room'] as int?,
-      agentName: json['agentName'] as int,
-      statusBook: json['statusBook'] as String,
+      agentName: json['agentName'] as int? ?? 0,
+      statusBook: json['statusBook'] as String? ?? '',
       pickupTime: json['pickupTime'] as String?,
       driver: json['driver'] as String?,
       carNumber: json['carNumber'] as int?,
       note: json['note'] as String?,
-      typeOperation: json['typeOperation'] as String,
-      finalPrice: (json['finalPrice'] as num).toDouble(),
+      typeOperation: json['typeOperation'] as String? ?? '',
+      finalPrice: (json['finalPrice'] as num?)?.toDouble() ?? 0.0,
       services: servicesData
           .map((item) => CampServiceModel.fromJson(item as Map<String, dynamic>))
           .toList(),

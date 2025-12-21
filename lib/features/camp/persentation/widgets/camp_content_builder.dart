@@ -57,9 +57,17 @@ class _CampContentBuilderState extends State<CampContentBuilder> {
         final cubit = context.read<CampCubit>();
         await cubit.refreshCampData();
       },
-      onBookingStatusUpdate: (bookingId, status) async {
+      onBookingStatusUpdate: (id, status) async {
         final cubit = context.read<CampCubit>();
-        await cubit.updateBookingStatus(bookingId, status);
+        final currentState = cubit.state;
+        if (currentState is CampLoaded) {
+          final isBooking = currentState.data.bookings.any((b) => b.id == id);
+          if (isBooking) {
+            await cubit.updateBookingStatus(id, status);
+          } else {
+            await cubit.updateVoucherStatus(id, status);
+          }
+        }
       },
     );
   }
@@ -70,6 +78,11 @@ class _CampContentBuilderState extends State<CampContentBuilder> {
       builder: (context, state) {
         if (state is CampLoaded) {
           _lastLoadedData = state.data;
+        } else if (state is CampSuccess && _lastLoadedData == null) {
+          final currentState = context.read<CampCubit>().state;
+          if (currentState is CampLoaded) {
+            _lastLoadedData = currentState.data;
+          }
         }
         return CampContentStateHandler.buildWidget(
           state,

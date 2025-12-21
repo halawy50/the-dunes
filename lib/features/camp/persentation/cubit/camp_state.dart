@@ -38,6 +38,15 @@ class CampUpdatingBookingStatus extends CampState {
   List<Object?> get props => [bookingId, status];
 }
 
+class CampUpdatingVoucherStatus extends CampState {
+  final int voucherId;
+  final String status;
+  const CampUpdatingVoucherStatus(this.voucherId, this.status);
+
+  @override
+  List<Object?> get props => [voucherId, status];
+}
+
 class CampError extends CampState {
   final String message;
 

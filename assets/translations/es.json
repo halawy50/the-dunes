@@ -580,6 +580,7 @@
     "title": "Campamento",
     "success": "Reservas de campamento actualizadas",
     "booking_status_updated": "Estado de reserva actualizado exitosamente",
+    "voucher_status_updated": "Estado de vale actualizado exitosamente",
     "bookings": "Reservas",
     "vouchers": "Vales",
     "no_data": "No hay reservas o vales aceptados disponibles",

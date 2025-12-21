@@ -31,5 +31,18 @@ class CampRemoteDataSource {
       throw ApiException(message: e.toString(), statusCode: 500);
     }
   }
+
+  Future<void> updateVoucherStatus(int voucherId, String status) async {
+    try {
+      await apiClient.put(
+        ApiConstants.campVoucherStatusEndpoint(voucherId),
+        {'status': status},
+      );
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: e.toString(), statusCode: 500);
+    }
+  }
 }
 
