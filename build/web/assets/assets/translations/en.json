@@ -612,6 +612,7 @@
     "complete": "Complete",
     "cancel": "Cancel",
     "table": {
+      "id": "ID",
       "guest_name": "Guest Name",
       "phone": "Phone",
       "hotel": "Hotel",
