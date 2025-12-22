@@ -4,7 +4,6 @@ import 'package:the_dunes/features/camp/domain/entities/camp_data_entity.dart';
 import 'package:the_dunes/features/camp/persentation/cubit/camp_cubit.dart';
 import 'package:the_dunes/features/camp/persentation/widgets/camp_content_body.dart';
 import 'package:the_dunes/features/camp/persentation/widgets/camp_content_state_handler.dart';
-import 'package:the_dunes/features/camp/persentation/widgets/camp_scroll_handler.dart';
 
 class CampContentBuilder extends StatefulWidget {
   const CampContentBuilder({
@@ -20,8 +19,6 @@ class CampContentBuilder extends StatefulWidget {
 
 class _CampContentBuilderState extends State<CampContentBuilder> {
   final ScrollController _horizontalScrollController = ScrollController();
-  double _dragStartPosition = 0.0;
-  double _dragStartScrollPosition = 0.0;
   CampDataEntity? _lastLoadedData;
 
   @override
@@ -30,29 +27,11 @@ class _CampContentBuilderState extends State<CampContentBuilder> {
     super.dispose();
   }
 
-  void _handleDragStart(double position, double scrollPosition) {
-    _dragStartPosition = position;
-    _dragStartScrollPosition = scrollPosition;
-  }
-
-  void _handleDragUpdate(double localPosition) {
-    CampScrollHandler.handleDragUpdate(
-      _horizontalScrollController,
-      _dragStartPosition,
-      _dragStartScrollPosition,
-      localPosition,
-    );
-  }
-
   Widget _buildContent(CampDataEntity data) {
     return CampContentBody(
       scrollController: widget.scrollController,
       horizontalScrollController: _horizontalScrollController,
       data: data,
-      dragStartPosition: _dragStartPosition,
-      dragStartScrollPosition: _dragStartScrollPosition,
-      onDragStart: _handleDragStart,
-      onDragUpdate: _handleDragUpdate,
       onRefresh: () async {
         final cubit = context.read<CampCubit>();
         await cubit.refreshCampData();

@@ -588,6 +588,7 @@
     "complete": "Abschließen",
     "cancel": "Abbrechen",
     "table": {
+      "id": "ID",
       "guest_name": "Gastname",
       "phone": "Telefon",
       "hotel": "Hotel",

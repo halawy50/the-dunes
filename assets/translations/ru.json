@@ -588,6 +588,7 @@
     "complete": "Завершить",
     "cancel": "Отменить",
     "table": {
+      "id": "ID",
       "guest_name": "Имя гостя",
       "phone": "Телефон",
       "hotel": "Отель",

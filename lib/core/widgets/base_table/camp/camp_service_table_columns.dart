@@ -46,39 +46,6 @@ class CampServiceTableColumns {
           text: service.kidNumber.toString(),
         ),
       ),
-      BaseTableColumn<CampServiceEntity>(
-        headerKey: 'camp.table.adult_price',
-        width: 120,
-        cellBuilder: (service, index) => BaseTableCellFactory.text(
-          text: '${service.adultPrice.toStringAsFixed(2)} AED',
-        ),
-      ),
-      BaseTableColumn<CampServiceEntity>(
-        headerKey: 'camp.table.child_price',
-        width: 120,
-        cellBuilder: (service, index) => BaseTableCellFactory.text(
-          text: '${service.childPrice.toStringAsFixed(2)} AED',
-        ),
-      ),
-      BaseTableColumn<CampServiceEntity>(
-        headerKey: 'camp.table.kid_price',
-        width: 120,
-        cellBuilder: (service, index) => BaseTableCellFactory.text(
-          text: '${service.kidPrice.toStringAsFixed(2)} AED',
-        ),
-      ),
-      BaseTableColumn<CampServiceEntity>(
-        headerKey: 'camp.table.total_price',
-        width: 130,
-        cellBuilder: (service, index) => BaseTableCellFactory.text(
-          text: '${service.totalPrice.toStringAsFixed(2)} AED',
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.bold,
-            color: Colors.green,
-          ),
-        ),
-      ),
     ];
   }
 }

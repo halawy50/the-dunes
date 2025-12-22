@@ -577,6 +577,7 @@
     "complete": "पूर्ण",
     "cancel": "रद्द करें",
     "table": {
+      "id": "आईडी",
       "guest_name": "अतिथि का नाम",
       "phone": "फोन",
       "hotel": "होटल",

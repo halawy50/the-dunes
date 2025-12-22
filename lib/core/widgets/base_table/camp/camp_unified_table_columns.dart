@@ -13,6 +13,13 @@ class CampUnifiedTableColumns {
   }) {
     return [
       BaseTableColumn<CampItemEntity>(
+        headerKey: 'camp.table.id',
+        width: 80,
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.id.toString(),
+        ),
+      ),
+      BaseTableColumn<CampItemEntity>(
         headerKey: 'camp.table.guest_name',
         width: 150,
         cellBuilder: (item, index) => BaseTableCellFactory.text(
@@ -66,13 +73,6 @@ class CampUnifiedTableColumns {
         width: 100,
         cellBuilder: (item, index) => BaseTableCellFactory.text(
           text: item.carNumber?.toString() ?? '-',
-        ),
-      ),
-      BaseTableColumn<CampItemEntity>(
-        headerKey: 'camp.table.price',
-        width: 100,
-        cellBuilder: (item, index) => BaseTableCellFactory.text(
-          text: item.price.toStringAsFixed(2),
         ),
       ),
       if (onStatusUpdate != null)

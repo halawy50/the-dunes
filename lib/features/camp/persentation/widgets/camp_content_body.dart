@@ -11,10 +11,6 @@ class CampContentBody extends StatelessWidget {
     required this.scrollController,
     required this.horizontalScrollController,
     required this.data,
-    required this.dragStartPosition,
-    required this.dragStartScrollPosition,
-    required this.onDragStart,
-    required this.onDragUpdate,
     required this.onRefresh,
     required this.onBookingStatusUpdate,
   });
@@ -22,10 +18,6 @@ class CampContentBody extends StatelessWidget {
   final ScrollController scrollController;
   final ScrollController horizontalScrollController;
   final CampDataEntity data;
-  final double dragStartPosition;
-  final double dragStartScrollPosition;
-  final void Function(double, double) onDragStart;
-  final void Function(double) onDragUpdate;
   final void Function() onRefresh;
   final void Function(int, String) onBookingStatusUpdate;
 
@@ -44,32 +36,23 @@ class CampContentBody extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                controller: scrollController,
-                physics: const ClampingScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
-                  ),
-                  child: CampDataContent(
-                    data: data,
-                    horizontalScrollController: horizontalScrollController,
-                    onBookingStatusUpdate: onBookingStatusUpdate,
-                  ),
+          child: SingleChildScrollView(
+            controller: scrollController,
+            physics: const ClampingScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CampDataContent(
+                  data: data,
+                  onBookingStatusUpdate: onBookingStatusUpdate,
                 ),
-              );
-            },
+                CampHorizontalScrollIndicator(
+                  scrollController: horizontalScrollController,
+                ),
+              ],
+            ),
           ),
-        ),
-        CampHorizontalScrollIndicator(
-          scrollController: horizontalScrollController,
-          dragStartPosition: dragStartPosition,
-          dragStartScrollPosition: dragStartScrollPosition,
-          onDragStart: onDragStart,
-          onDragUpdate: onDragUpdate,
         ),
       ],
     );

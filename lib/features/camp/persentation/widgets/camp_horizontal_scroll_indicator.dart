@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:the_dunes/core/utils/constants/app_colors.dart';
 
-class CampHorizontalScrollIndicator extends StatelessWidget {
+class CampHorizontalScrollIndicator extends StatefulWidget {
   const CampHorizontalScrollIndicator({
     super.key,
     required this.scrollController,
-    required this.dragStartPosition,
-    required this.dragStartScrollPosition,
-    required this.onDragStart,
-    required this.onDragUpdate,
   });
 
   final ScrollController scrollController;
-  final double dragStartPosition;
-  final double dragStartScrollPosition;
-  final void Function(double, double) onDragStart;
-  final void Function(double) onDragUpdate;
+
+  @override
+  State<CampHorizontalScrollIndicator> createState() =>
+      _CampHorizontalScrollIndicatorState();
+}
+
+class _CampHorizontalScrollIndicatorState
+    extends State<CampHorizontalScrollIndicator> {
+  double _dragStartPosition = 0.0;
+  double _dragStartScrollPosition = 0.0;
 
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: scrollController,
+      listenable: widget.scrollController,
       builder: (context, _) {
         try {
-          if (!scrollController.hasClients) {
+          if (!widget.scrollController.hasClients) {
             return const SizedBox.shrink();
           }
 
-          final position = scrollController.position;
+          final position = widget.scrollController.position;
           final maxScroll = position.maxScrollExtent;
 
           if (maxScroll <= 0 || maxScroll.isNaN || maxScroll.isInfinite) {
@@ -44,8 +46,10 @@ class CampHorizontalScrollIndicator extends StatelessWidget {
           final contentWidth = maxScroll + viewportWidth;
           final scrollPercentage = maxScroll > 0 ? currentScroll / maxScroll : 0.0;
 
-          final indicatorWidth = (viewportWidth / contentWidth) * viewportWidth;
-          final maxPosition = (viewportWidth - indicatorWidth).clamp(0.0, viewportWidth);
+          final indicatorWidth =
+              (viewportWidth / contentWidth) * viewportWidth;
+          final maxPosition =
+              (viewportWidth - indicatorWidth).clamp(0.0, viewportWidth);
           final indicatorPosition = scrollPercentage * maxPosition;
 
           return Container(
@@ -61,11 +65,40 @@ class CampHorizontalScrollIndicator extends StatelessWidget {
                   left: indicatorPosition.clamp(0.0, maxPosition),
                   child: GestureDetector(
                     onPanStart: (details) {
-                      if (!scrollController.hasClients) return;
-                      onDragStart(details.localPosition.dx, scrollController.position.pixels);
+                      if (!widget.scrollController.hasClients) return;
+                      _dragStartPosition = details.localPosition.dx;
+                      _dragStartScrollPosition =
+                          widget.scrollController.position.pixels;
                     },
                     onPanUpdate: (details) {
-                      onDragUpdate(details.localPosition.dx);
+                      if (!widget.scrollController.hasClients) return;
+
+                      final pos = widget.scrollController.position;
+                      final maxScrollValue = pos.maxScrollExtent;
+                      final viewportWidthValue = pos.viewportDimension;
+
+                      if (maxScrollValue <= 0 || viewportWidthValue <= 0) return;
+
+                      final contentWidthValue =
+                          maxScrollValue + viewportWidthValue;
+                      final indicatorWidthValue =
+                          (viewportWidthValue / contentWidthValue) *
+                              viewportWidthValue;
+                      final maxPositionValue =
+                          (viewportWidthValue - indicatorWidthValue)
+                              .clamp(0.0, viewportWidthValue);
+
+                      if (maxPositionValue <= 0) return;
+
+                      final dragDelta =
+                          details.localPosition.dx - _dragStartPosition;
+                      final scrollDelta =
+                          (dragDelta / maxPositionValue) * maxScrollValue;
+                      final newScrollPosition =
+                          (_dragStartScrollPosition + scrollDelta)
+                              .clamp(0.0, maxScrollValue);
+
+                      widget.scrollController.jumpTo(newScrollPosition);
                     },
                     child: Container(
                       width: indicatorWidth.clamp(20.0, viewportWidth),
@@ -80,11 +113,12 @@ class CampHorizontalScrollIndicator extends StatelessWidget {
               ],
             ),
           );
-        } catch (e) {
+        } catch (_) {
           return const SizedBox.shrink();
         }
       },
     );
   }
 }
+
 

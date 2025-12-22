@@ -37,7 +37,7 @@ class BaseTableHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 20.0, bottom: 16.0),
       child: SizedBox(
         width: double.infinity,
         child: Row(

@@ -580,6 +580,7 @@
     "title": "Lager",
     "success": "Lagerbuchungen aktualisiert",
     "booking_status_updated": "Buchungsstatus erfolgreich aktualisiert",
+    "voucher_status_updated": "Gutscheinstatus erfolgreich aktualisiert",
     "bookings": "Buchungen",
     "vouchers": "Gutscheine",
     "no_data": "Keine akzeptierten Buchungen oder Gutscheine verfügbar",

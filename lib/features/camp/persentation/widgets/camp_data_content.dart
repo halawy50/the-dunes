@@ -9,15 +9,11 @@ class CampDataContent extends StatelessWidget {
   const CampDataContent({
     super.key,
     required this.data,
-    required this.horizontalScrollController,
     required this.onBookingStatusUpdate,
   });
 
   final CampDataEntity data;
-  final ScrollController horizontalScrollController;
   final void Function(int, String) onBookingStatusUpdate;
-
-  double _calculateTableWidth() => 1300.0;
 
   Widget _buildNoDataWidget() {
     return Padding(
@@ -26,24 +22,12 @@ class CampDataContent extends StatelessWidget {
     );
   }
 
-  Widget _buildTableWrapper(Widget child, double? height, bool shouldFillWidth) {
-    final container = Container(
+  Widget _buildTableWrapper(Widget child) {
+    return Container(
       color: AppColor.WHITE,
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: child,
     );
-
-    if (shouldFillWidth) {
-      return height != null ? SizedBox(height: height, child: container) : container;
-    }
-
-    final scrollView = SingleChildScrollView(
-      controller: horizontalScrollController,
-      physics: const ClampingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      child: container,
-    );
-    return height != null ? SizedBox(height: height, child: scrollView) : scrollView;
   }
 
   List<CampItemEntity> _combineData() {
@@ -55,36 +39,24 @@ class CampDataContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight.isFinite && constraints.maxHeight > 0
-            ? constraints.maxHeight
-            : null;
-        final availableWidth = constraints.maxWidth - 48;
-        final shouldFillWidth = availableWidth >= _calculateTableWidth();
-        final combinedItems = _combineData();
-        
-        if (combinedItems.isEmpty) {
-          return height != null
-              ? SizedBox(
-                  height: height,
-                  child: _buildNoDataWidget(),
-                )
-              : _buildNoDataWidget();
-        }
-        
-        return _buildTableWrapper(
-          CampUnifiedTableWidget(
-            items: combinedItems,
-            onStatusUpdate: (item, status) {
-              onBookingStatusUpdate(item.id, status);
-            },
-            fillWidth: shouldFillWidth,
-          ),
-          height,
-          shouldFillWidth,
-        );
-      },
+    final combinedItems = _combineData();
+
+    if (combinedItems.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: _buildTableWrapper(
+        CampUnifiedTableWidget(
+          items: combinedItems,
+          onStatusUpdate: (item, status) {
+            onBookingStatusUpdate(item.id, status);
+          },
+          fillWidth: false,
+        ),
+      ),
     );
   }
 }
