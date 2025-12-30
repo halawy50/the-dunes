@@ -32661,7 +32661,7 @@ aJR:function aJR(){},
 aJS:function aJS(){},
 aJT:function aJT(){},
 bCJ(a,b,c,d){var s=null,r=t.zz
-return A.a([new A.W("booking.num",60,new A.aJU(d),!1,s,s,s,r),new A.W("pickup_times.type",100,new A.aJV(),!1,s,s,s,r),new A.W("booking.car_number",100,new A.aJW(c,a),!1,s,s,s,r),new A.W("booking.driver",100,new A.aK0(c,a),!1,s,s,s,r),new A.W("booking.guest_name",180,new A.aK1(),!1,s,s,s,r),new A.W("booking.phone_number",150,new A.aK2(),!1,s,s,s,r),new A.W("booking.status",160,new A.aK3(b),!1,s,s,s,r),new A.W("booking.pickup_time_col",150,new A.aK4(),!1,s,s,s,r),new A.W("booking.pickup_status",140,new A.aK5(b),!1,s,s,s,r),new A.W("booking.location",120,new A.aK6(),!1,s,s,s,r),new A.W("booking.agent_name",120,new A.aK7(),!1,s,s,s,r),new A.W("booking.hotel_name",200,new A.aJX(),!1,s,s,s,r),new A.W("booking.room",80,new A.aJY(),!1,s,s,s,r),new A.W("booking.payment",100,new A.aJZ(),!1,s,s,s,r),new A.W("booking.t_revenue",130,new A.aK_(),!1,s,s,s,r)],t.c6)},
+return A.a([new A.W("booking.num",60,new A.aJU(d),!1,s,s,s,r),new A.W("booking.car_number",100,new A.aJV(c,a),!1,s,s,s,r),new A.W("booking.driver",100,new A.aJW(c,a),!1,s,s,s,r),new A.W("booking.guest_name",180,new A.aK0(),!1,s,s,s,r),new A.W("booking.pickup_time_col",150,new A.aK1(),!1,s,s,s,r),new A.W("booking.location",120,new A.aK2(),!1,s,s,s,r),new A.W("booking.agent_name",120,new A.aK3(),!1,s,s,s,r),new A.W("booking.hotel_name",200,new A.aK4(),!1,s,s,s,r),new A.W("booking.room",80,new A.aK5(),!1,s,s,s,r),new A.W("booking.payment",100,new A.aK6(),!1,s,s,s,r),new A.W("booking.phone_number",150,new A.aK7(),!1,s,s,s,r),new A.W("booking.pickup_status",140,new A.aJX(b),!1,s,s,s,r),new A.W("pickup_times.type",100,new A.aJY(),!1,s,s,s,r),new A.W("booking.status",160,new A.aJZ(b),!1,s,s,s,r),new A.W("booking.t_revenue",130,new A.aK_(),!1,s,s,s,r)],t.c6)},
 bok(a,b,c){var s,r,q=c.length
 if(q===0)return!0
 if(b<0||b>=q)return!0
@@ -32673,21 +32673,21 @@ if(r==null||r.length===0)return!0
 if(r!==s)return!0
 return!1},
 aJU:function aJU(a){this.a=a},
-aJV:function aJV(){},
+aJV:function aJV(a,b){this.a=a
+this.b=b},
 aJW:function aJW(a,b){this.a=a
 this.b=b},
-aK0:function aK0(a,b){this.a=a
-this.b=b},
+aK0:function aK0(){},
 aK1:function aK1(){},
 aK2:function aK2(){},
-aK3:function aK3(a){this.a=a},
+aK3:function aK3(){},
 aK4:function aK4(){},
-aK5:function aK5(a){this.a=a},
+aK5:function aK5(){},
 aK6:function aK6(){},
 aK7:function aK7(){},
-aJX:function aJX(){},
+aJX:function aJX(a){this.a=a},
 aJY:function aJY(){},
-aJZ:function aJZ(){},
+aJZ:function aJZ(a){this.a=a},
 aK_:function aK_(){},
 bCN(a,b,c){var s=A.a(["PENDING","ACCEPTED","COMPLETED","CANCELLED"],t.s),r=a.gbI(0),q=a.gbN(0)
 return new A.rG(a.gbN(0),s,new A.aK9(a,!1,b),A.bLl(),!1,new A.bs("status_"+r+"_"+q,t.O))},
@@ -117338,31 +117338,21 @@ A.aJU.prototype={
 $2(a,b){return new A.aI(""+(this.a+b),null,"-",null)},
 $S:27}
 A.aJV.prototype={
-$2(a,b){var s=null
-return new A.aI(a.a==="booking"?A.i("pickup_times.booking",s):A.i("pickup_times.voucher",s),s,"-",s)},
-$S:27}
-A.aJW.prototype={
 $2(a,b){var s
 if(!A.bok(a,this.a+b,this.b))return B.P
 s=a.e
 return new A.aI(s!=null?B.e.j(s):"-",null,"-",null)},
 $S:27}
-A.aK0.prototype={
+A.aJW.prototype={
 $2(a,b){var s
 if(!A.bok(a,this.a+b,this.b))return B.P
 s=a.f
 return new A.aI(s!=null&&s.length!==0?s:"-",null,"-",null)},
 $S:27}
-A.aK1.prototype={
+A.aK0.prototype={
 $2(a,b){return new A.aI(a.gSf(),null,"-",null)},
 $S:27}
-A.aK2.prototype={
-$2(a,b){return new A.aI(a.ga6v(),null,"-",null)},
-$S:27}
-A.aK3.prototype={
-$2(a,b){return A.bCN(a,this.a,!1)},
-$S:27}
-A.aK4.prototype={
+A.aK1.prototype={
 $2(a,b){var s,r=null,q=a.b
 q=q==null?r:q.w
 if(q==null){q=a.c
@@ -117371,10 +117361,7 @@ q.toString
 s=new A.aZ(A.Ij(q*1000,0,!1),0,!1)
 q=B.c.eV(B.e.j(A.fi(s)),2,"0")+":"+B.c.eV(B.e.j(A.qd(s)),2,"0")}else q=r}return new A.aI(q==null?"-":q,r,"-",r)},
 $S:27}
-A.aK5.prototype={
-$2(a,b){return A.bCM(a,this.a,!1)},
-$S:27}
-A.aK6.prototype={
+A.aK2.prototype={
 $2(a,b){var s=null,r=a.b,q=r==null,p=q?s:r.at
 if(p==null)r=q?s:r.as
 else r=p
@@ -117382,30 +117369,43 @@ if(r==null){r=a.c
 r=r==null?s:r.as}if(r==null){r=a.c
 r=r==null?s:r.Q}return new A.aI(r==null?"-":r,s,"-",s)},
 $S:27}
-A.aK7.prototype={
+A.aK3.prototype={
 $2(a,b){var s=null,r=a.b
 r=r==null?s:r.Q
 if(r==null){r=a.c
 r=r==null?s:r.z}return new A.aI(r==null?"-":r,s,"-",s)},
 $S:27}
-A.aJX.prototype={
+A.aK4.prototype={
 $2(a,b){var s=null,r=a.b
 r=r==null?s:r.ax
 if(r==null){r=a.c
 r=r==null?s:r.at}return new A.aI(r==null?"-":r,s,"-",s)},
 $S:27}
-A.aJY.prototype={
+A.aK5.prototype={
 $2(a,b){var s=null,r=a.b
 r=r==null?s:r.y
 if(r==null){r=a.c
 r=r==null?s:r.y}r=r==null?s:B.e.j(r)
 return new A.aI(r==null?"-":r,s,"-",s)},
 $S:27}
-A.aJZ.prototype={
+A.aK6.prototype={
 $2(a,b){var s=null,r=a.b
 r=r==null?s:r.e
 if(r==null){r=a.c
 r=r==null?s:r.e}return new A.aI(r==null?"":r,s,"-",s)},
+$S:27}
+A.aK7.prototype={
+$2(a,b){return new A.aI(a.ga6v(),null,"-",null)},
+$S:27}
+A.aJX.prototype={
+$2(a,b){return A.bCM(a,this.a,!1)},
+$S:27}
+A.aJY.prototype={
+$2(a,b){var s=null
+return new A.aI(a.a==="booking"?A.i("pickup_times.booking",s):A.i("pickup_times.voucher",s),s,"-",s)},
+$S:27}
+A.aJZ.prototype={
+$2(a,b){return A.bCN(a,this.a,!1)},
 $S:27}
 A.aK_.prototype={
 $2(a,b){return new A.aI(B.d.Z(a.gaEx(),2)+" AED",B.qy,"-",null)},
