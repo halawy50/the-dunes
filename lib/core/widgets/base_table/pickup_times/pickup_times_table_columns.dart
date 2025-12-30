@@ -21,15 +21,6 @@ class PickupTimesTableColumns {
         ),
       ),
       BaseTableColumn<PickupTableItem>(
-        headerKey: 'pickup_times.type',
-        width: 100,
-        cellBuilder: (item, index) => BaseTableCellFactory.text(
-          text: item.type == 'booking' 
-              ? 'pickup_times.booking'.tr() 
-              : 'pickup_times.voucher'.tr(),
-        ),
-      ),
-      BaseTableColumn<PickupTableItem>(
         headerKey: 'booking.car_number',
         width: 100,
         cellBuilder: (item, index) {
@@ -71,35 +62,10 @@ class PickupTimesTableColumns {
         ),
       ),
       BaseTableColumn<PickupTableItem>(
-        headerKey: 'booking.phone_number',
-        width: 150,
-        cellBuilder: (item, index) => BaseTableCellFactory.text(
-          text: item.phoneNumber,
-        ),
-      ),
-      BaseTableColumn<PickupTableItem>(
-        headerKey: 'booking.status',
-        width: 160,
-        cellBuilder: (item, index) => PickupTimesTableHelpers.buildStatusDropdown(
-          item,
-          onItemStatusUpdate,
-          false, // isLoading - can be passed from parent if needed
-        ),
-      ),
-      BaseTableColumn<PickupTableItem>(
         headerKey: 'booking.pickup_time_col',
         width: 150,
         cellBuilder: (item, index) => BaseTableCellFactory.text(
           text: item.pickupTime ?? '-',
-        ),
-      ),
-      BaseTableColumn<PickupTableItem>(
-        headerKey: 'booking.pickup_status',
-        width: 140,
-        cellBuilder: (item, index) => PickupTimesTableHelpers.buildPickupStatusDropdown(
-          item,
-          onItemStatusUpdate,
-          false, // isLoading - can be passed from parent if needed
         ),
       ),
       BaseTableColumn<PickupTableItem>(
@@ -135,6 +101,40 @@ class PickupTimesTableColumns {
         width: 100,
         cellBuilder: (item, index) => BaseTableCellFactory.text(
           text: item.payment,
+        ),
+      ),
+      BaseTableColumn<PickupTableItem>(
+        headerKey: 'booking.phone_number',
+        width: 150,
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.phoneNumber,
+        ),
+      ),
+      BaseTableColumn<PickupTableItem>(
+        headerKey: 'booking.pickup_status',
+        width: 140,
+        cellBuilder: (item, index) => PickupTimesTableHelpers.buildPickupStatusDropdown(
+          item,
+          onItemStatusUpdate,
+          false, // isLoading - can be passed from parent if needed
+        ),
+      ),
+      BaseTableColumn<PickupTableItem>(
+        headerKey: 'pickup_times.type',
+        width: 100,
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.type == 'booking' 
+              ? 'pickup_times.booking'.tr() 
+              : 'pickup_times.voucher'.tr(),
+        ),
+      ),
+      BaseTableColumn<PickupTableItem>(
+        headerKey: 'booking.status',
+        width: 160,
+        cellBuilder: (item, index) => PickupTimesTableHelpers.buildStatusDropdown(
+          item,
+          onItemStatusUpdate,
+          false, // isLoading - can be passed from parent if needed
         ),
       ),
       BaseTableColumn<PickupTableItem>(
