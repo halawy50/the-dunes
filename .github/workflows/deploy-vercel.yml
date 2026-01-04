@@ -11,6 +11,12 @@ on:
       - main
       - master
       - development
+  workflow_dispatch:
+    inputs:
+      redeploy:
+        description: 'Redeploy to Vercel'
+        required: false
+        default: 'true'
 
 jobs:
   build-and-deploy:
