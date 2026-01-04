@@ -27,7 +27,7 @@ class NewReceiptVoucherPreview extends StatelessWidget {
             children: [
               Text(
                 'receipt_voucher.preview_title'.tr(),
-                style: const TextStyle(
+                style: const TextStyle( 
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
