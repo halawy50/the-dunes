@@ -13,11 +13,11 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-echo [1/4] Checking Flutter installation...
+echo [1/6] Checking Flutter installation...
 flutter --version
 echo.
 
-echo [2/4] Getting Flutter dependencies...
+echo [2/6] Getting Flutter dependencies...
 flutter pub get
 if %ERRORLEVEL% NEQ 0 (
     echo [ERROR] Failed to get dependencies
@@ -26,7 +26,13 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo.
 
-echo [3/4] Building Flutter web (release mode)...
+echo [3/6] Cleaning previous build...
+if exist build\web (
+    rmdir /s /q build\web
+)
+echo.
+
+echo [4/6] Building Flutter web (release mode)...
 flutter build web --release
 if %ERRORLEVEL% NEQ 0 (
     echo [ERROR] Build failed
@@ -35,19 +41,29 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo.
 
-echo [4/4] Checking if Vercel CLI is installed...
-where vercel >nul 2>nul
+echo [5/6] Copying vercel.json to build/web...
+copy vercel.json build\web\vercel.json >nul
 if %ERRORLEVEL% NEQ 0 (
-    echo [WARNING] Vercel CLI is not installed
-    echo Installing Vercel CLI...
-    call npm install -g vercel@latest
-    if %ERRORLEVEL% NEQ 0 (
-        echo [ERROR] Failed to install Vercel CLI
-        echo Please install Node.js and npm first
-        pause
-        exit /b 1
-    )
+    echo [WARNING] Failed to copy vercel.json, but continuing...
 )
+echo.
+
+echo [6/6] Checking if Node.js and npm are installed...
+where node >nul 2>nul
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] Node.js is not installed
+    echo Please install Node.js from https://nodejs.org
+    pause
+    exit /b 1
+)
+where npm >nul 2>nul
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] npm is not installed
+    echo Please install Node.js from https://nodejs.org
+    pause
+    exit /b 1
+)
+echo Node.js and npm are installed. Using npx vercel...
 echo.
 
 echo ========================================
@@ -56,23 +72,23 @@ echo ========================================
 echo.
 echo Next steps:
 echo 1. Navigate to build/web directory: cd build\web
-echo 2. Deploy to Vercel: vercel --prod
+echo 2. Deploy to Vercel: npx vercel --prod
 echo.
 echo Or run this command now:
-echo   cd build\web ^&^& vercel --prod
+echo   cd build\web ^&^& npx vercel --prod
 echo.
 set /p deploy="Deploy now? (y/n): "
 if /i "%deploy%"=="y" (
     cd build\web
     echo.
     echo Deploying to Vercel...
-    vercel --prod
+    npx vercel --prod
 ) else (
     echo.
     echo Build files are ready in: build\web
     echo You can deploy manually later by running:
     echo   cd build\web
-    echo   vercel --prod
+    echo   npx vercel --prod
 )
 
 pause
