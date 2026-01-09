@@ -1,11 +1,11 @@
 {
-    "name": "the_dunes",
-    "short_name": "the_dunes",
+    "name": "The Dunes",
+    "short_name": "The Dunes",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Dashboard for The Dunes Company",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
