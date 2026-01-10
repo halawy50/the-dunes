@@ -16,6 +16,7 @@ class CampItemEntity extends Equatable {
   int get id => isBooking ? booking!.id : voucher!.id;
   String get guestName => isBooking ? booking!.guestName : voucher!.guestName;
   String? get phoneNumber => isBooking ? booking!.phoneNumber : voucher!.phoneNumber;
+  String? get agentName => isBooking ? booking!.agentNameStr : null;
   String? get hotel => isBooking ? booking!.hotelName : voucher!.hotel;
   int? get room => isBooking ? booking!.room : voucher!.room;
   String? get location => isBooking ? null : voucher!.location;

@@ -34,6 +34,13 @@ class CampUnifiedTableColumns {
         ),
       ),
       BaseTableColumn<CampItemEntity>(
+        headerKey: 'camp.table.agent_name',
+        width: 150,
+        cellBuilder: (item, index) => BaseTableCellFactory.text(
+          text: item.agentName ?? '-',
+        ),
+      ),
+      BaseTableColumn<CampItemEntity>(
         headerKey: 'camp.table.location',
         width: 150,
         cellBuilder: (item, index) => BaseTableCellFactory.text(

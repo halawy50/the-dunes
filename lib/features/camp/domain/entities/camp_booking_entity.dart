@@ -8,6 +8,7 @@ class CampBookingEntity extends Equatable {
   final String? hotelName;
   final int? room;
   final int agentName;
+  final String? agentNameStr;
   final String statusBook;
   final String? pickupTime;
   final String? driver;
@@ -24,6 +25,7 @@ class CampBookingEntity extends Equatable {
     this.hotelName,
     this.room,
     required this.agentName,
+    this.agentNameStr,
     required this.statusBook,
     this.pickupTime,
     this.driver,
@@ -42,6 +44,7 @@ class CampBookingEntity extends Equatable {
         hotelName,
         room,
         agentName,
+        agentNameStr,
         statusBook,
         pickupTime,
         driver,

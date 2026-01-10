@@ -20,7 +20,7 @@ class AnalysisDashboardCards extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final crossAxisCount = constraints.maxWidth > 1200
-            ? 4
+            ? 3
             : constraints.maxWidth > 800
                 ? 3
                 : constraints.maxWidth > 600
@@ -43,12 +43,6 @@ class AnalysisDashboardCards extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.all(16),
             children: [
-              AnalysisCard(
-                title: 'analysis.total_earnings'.tr(),
-                value: '${priceFormat.format(summary.totalEarnings)} AED',
-                icon: Icons.calendar_today,
-                color: AppColor.YELLOW,
-              ),
               AnalysisCard(
                 title: 'analysis.total_income'.tr(),
                 value: '${priceFormat.format(summary.totalIncome)} AED',

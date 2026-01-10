@@ -591,6 +591,7 @@
       "id": "ID",
       "guest_name": "Nombre del Huésped",
       "phone": "Teléfono",
+      "agent_name": "Nombre del Agente",
       "hotel": "Hotel",
       "room": "Habitación",
       "pickup_time": "Hora de Recogida",

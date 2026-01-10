@@ -615,6 +615,7 @@
       "id": "ID",
       "guest_name": "Guest Name",
       "phone": "Phone",
+      "agent_name": "Agent Name",
       "hotel": "Hotel",
       "room": "Room",
       "pickup_time": "Pickup Time",

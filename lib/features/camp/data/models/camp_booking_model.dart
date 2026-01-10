@@ -9,6 +9,7 @@ class CampBookingModel extends CampBookingEntity {
     super.hotelName,
     super.room,
     required super.agentName,
+    super.agentNameStr,
     required super.statusBook,
     super.pickupTime,
     super.driver,
@@ -21,13 +22,26 @@ class CampBookingModel extends CampBookingEntity {
 
   factory CampBookingModel.fromJson(Map<String, dynamic> json) {
     final servicesData = json['services'] as List<dynamic>? ?? [];
+    final agentData = json['agent'] as Map<String, dynamic>?;
+    final agentNameFromObject = agentData?['name'] as String?;
+    final agentIdFromObject = agentData?['id'] as int?;
+    
     return CampBookingModel(
       id: json['id'] as int? ?? 0,
       guestName: json['guestName'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String?,
       hotelName: json['hotelName'] as String?,
       room: json['room'] as int?,
-      agentName: json['agentName'] as int? ?? 0,
+      agentName: agentIdFromObject ?? 
+          (json['agentId'] is int 
+              ? json['agentId'] as int
+              : (json['agentName'] is int 
+                  ? json['agentName'] as int 
+                  : 0)),
+      agentNameStr: agentNameFromObject ??
+          (json['agentName'] is String 
+              ? json['agentName'] as String
+              : json['agentNameStr'] as String?),
       statusBook: json['statusBook'] as String? ?? '',
       pickupTime: json['pickupTime'] as String?,
       driver: json['driver'] as String?,
@@ -49,6 +63,7 @@ class CampBookingModel extends CampBookingEntity {
       'hotelName': hotelName,
       'room': room,
       'agentName': agentName,
+      'agentNameStr': agentNameStr,
       'statusBook': statusBook,
       'pickupTime': pickupTime,
       'driver': driver,
