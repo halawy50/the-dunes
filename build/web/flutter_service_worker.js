@@ -3,7 +3,9 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"assets/AssetManifest.bin": "31b418da4c23be73d0e5cef109e3ed74",
+const RESOURCES = {".vercel/project.json": "b67264699a340ef6c9d1c1596895fcd2",
+".vercel/README.txt": "2b13c79d37d6ed82a3255b83b6815034",
+"assets/AssetManifest.bin": "31b418da4c23be73d0e5cef109e3ed74",
 "assets/AssetManifest.bin.json": "2a9c9d02d80b01c671b0c58d137f07cf",
 "assets/AssetManifest.json": "d018df9ec999707b41fec8c9cfdcb37e",
 "assets/assets/fonts/ibm_bold.ttf": "2f1bf48f9ab5e7f3636ed99dfdd50dd6",
@@ -70,7 +72,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "31b418da4c23be73d0e5cef109e3ed74
 "canvaskit/skwasm.wasm": "39dd80367a4e71582d234948adc521c0",
 "favicon.png": "6c875f3dec8e308d7865b8d51c06adcb",
 "flutter.js": "83d881c1dbb6d6bcd6b42e274605b69c",
-"flutter_bootstrap.js": "c279f12f11cfeb2c85f6a7afef15349f",
+"flutter_bootstrap.js": "a179f033f4d31ac14cd181c2370e37b0",
 "icons/Icon-192.png": "6c875f3dec8e308d7865b8d51c06adcb",
 "icons/Icon-512.png": "6c875f3dec8e308d7865b8d51c06adcb",
 "icons/Icon-maskable-192.png": "6c875f3dec8e308d7865b8d51c06adcb",
