@@ -4,7 +4,7 @@
   "framework": null,
   "rewrites": [
     {
-      "source": "/((?!assets|canvaskit|icons|favicon\\.png|manifest\\.json|flutter\\.js|flutter_bootstrap\\.js|main\\.dart\\.js|flutter_service_worker\\.js|version\\.json).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
